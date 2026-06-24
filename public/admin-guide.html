@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel User Guide — Divine Travel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #C48A2D;
+      --dark: #1A1A1A;
+      --text: #2D2D2D;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --bg: #F9FAFB;
+      --white: #FFFFFF;
+      --success: #16A34A;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --info: #2563EB;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Layout ── */
+    .doc-wrapper { display: flex; min-height: 100vh; }
+
+    nav.toc {
+      position: fixed; top: 0; left: 0; bottom: 0;
+      width: 260px; background: var(--dark); color: #E5E7EB;
+      overflow-y: auto; padding: 0 0 40px; z-index: 100;
+    }
+    nav.toc .logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid #333;
+      margin-bottom: 8px;
+    }
+    nav.toc .logo h1 { font-size: 14px; font-weight: 700; color: var(--gold); letter-spacing: .05em; text-transform: uppercase; }
+    nav.toc .logo p { font-size: 11px; color: #9CA3AF; margin-top: 2px; }
+    nav.toc .section-label {
+      padding: 16px 20px 4px;
+      font-size: 10px; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: #6B7280;
+    }
+    nav.toc a {
+      display: block; padding: 7px 20px;
+      font-size: 13px; color: #D1D5DB; text-decoration: none;
+      transition: color .15s, background .15s;
+      border-left: 2px solid transparent;
+    }
+    nav.toc a:hover { color: #fff; background: #282828; border-left-color: var(--gold); }
+
+    main { margin-left: 260px; padding: 48px 60px 80px; max-width: 900px; }
+
+    /* ── Typography ── */
+    h1.page-title {
+      font-size: 32px; font-weight: 800; color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .page-subtitle { font-size: 16px; color: var(--muted); margin-bottom: 40px; }
+
+    h2.section-title {
+      font-size: 22px; font-weight: 700; color: var(--dark);
+      margin: 56px 0 4px; padding-top: 8px;
+      border-top: 2px solid var(--gold);
+      display: flex; align-items: center; gap: 10px;
+    }
+    h2.section-title .icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--gold); display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    h3 { font-size: 16px; font-weight: 700; margin: 24px 0 8px; color: var(--dark); }
+    p { margin-bottom: 12px; }
+
+    /* ── Mockup Screens ── */
+    .screen {
+      border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      margin: 20px 0 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+    }
+    .screen-bar {
+      background: #F3F4F6; border-bottom: 1px solid var(--border);
+      padding: 10px 16px; display: flex; align-items: center; gap: 6px;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #FF5F57; }
+    .dot.y { background: #FEBC2E; }
+    .dot.g { background: #28C840; }
+    .screen-bar .url {
+      flex: 1; text-align: center; font-size: 12px; color: var(--muted);
+    }
+    .screen-body { background: var(--white); }
+
+    /* Admin chrome */
+    .admin-chrome { display: flex; height: 480px; }
+    .admin-sidebar {
+      width: 200px; background: var(--dark); padding: 16px 0; flex-shrink: 0;
+    }
+    .admin-sidebar .s-logo { padding: 0 16px 16px; border-bottom: 1px solid #333; margin-bottom: 8px; }
+    .admin-sidebar .s-logo span { font-size: 12px; font-weight: 700; color: var(--gold); }
+    .sidebar-group { padding: 8px 0; }
+    .sidebar-label { padding: 4px 16px; font-size: 9px; color: #6B7280; text-transform: uppercase; letter-spacing: .08em; }
+    .sidebar-item {
+      padding: 6px 16px; font-size: 12px; color: #9CA3AF;
+      display: flex; align-items: center; gap: 8px; cursor: default;
+    }
+    .sidebar-item.active { color: #fff; background: #282828; border-left: 2px solid var(--gold); }
+    .sidebar-item .si { width: 14px; height: 14px; border-radius: 3px; background: #333; flex-shrink: 0; }
+    .admin-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .admin-topbar {
+      background: var(--white); border-bottom: 1px solid var(--border);
+      padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .admin-topbar .page-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+    .admin-topbar .right { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); }
+    .admin-content { flex: 1; overflow: auto; background: var(--bg); padding: 20px; }
+
+    /* Stat cards */
+    .stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+    .stat-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 12px;
+    }
+    .stat-card .label { font-size: 10px; color: var(--muted); margin-bottom: 4px; }
+    .stat-card .val { font-size: 22px; font-weight: 800; color: var(--dark); }
+    .stat-card .sub { font-size: 10px; color: var(--success); }
+
+    /* Recent leads mini-table */
+    .mini-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    .mini-table th { background: var(--bg); padding: 6px 8px; text-align: left; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+    .mini-table td { padding: 6px 8px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .badge {
+      display: inline-block; padding: 2px 6px; border-radius: 4px;
+      font-size: 10px; font-weight: 600;
+    }
+    .badge.new { background: #DBEAFE; color: #1D4ED8; }
+    .badge.contacted { background: #FEF9C3; color: #A16207; }
+    .badge.confirmed { background: #DCFCE7; color: #15803D; }
+    .badge.quoted { background: #F3E8FF; color: #7E22CE; }
+    .badge.lost { background: #FEE2E2; color: #B91C1C; }
+    .badge.high { background: #FEE2E2; color: #B91C1C; }
+    .badge.medium { background: #FEF9C3; color: #92400E; }
+    .badge.low { background: #F0FDF4; color: #166534; }
+    .badge.urgent { background: #7F1D1D; color: #fff; }
+
+    /* Kanban mini */
+    .kanban-cols { display: flex; gap: 8px; margin: 12px 0; overflow-x: auto; padding-bottom: 4px; }
+    .kanban-col { min-width: 130px; flex-shrink: 0; }
+    .kanban-col-hd { font-size: 10px; font-weight: 700; padding: 6px 8px; border-radius: 6px 6px 0 0; }
+    .col-new .kanban-col-hd { background: #DBEAFE; color: #1D4ED8; }
+    .col-contacted .kanban-col-hd { background: #FEF9C3; color: #A16207; }
+    .col-quoted .kanban-col-hd { background: #F3E8FF; color: #7E22CE; }
+    .col-confirmed .kanban-col-hd { background: #DCFCE7; color: #15803D; }
+    .kanban-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: 4px; padding: 8px; margin-top: 4px; font-size: 10px;
+    }
+    .kanban-card .kc-name { font-weight: 700; color: var(--dark); }
+    .kanban-card .kc-dest { color: var(--muted); margin-top: 2px; }
+
+    /* Form mockup */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .form-field { margin-bottom: 10px; }
+    .form-field label { display: block; font-size: 10px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+    .form-field input, .form-field select, .form-field textarea {
+      width: 100%; padding: 6px 8px; border: 1px solid var(--border);
+      border-radius: 6px; font-size: 11px; color: var(--text);
+      background: var(--white); outline: none;
+    }
+    .form-field textarea { height: 60px; resize: none; }
+    .form-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+    .form-tab {
+      padding: 6px 14px; font-size: 11px; cursor: default;
+      border-bottom: 2px solid transparent; color: var(--muted);
+    }
+    .form-tab.active { color: var(--gold); border-bottom-color: var(--gold); font-weight: 700; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: default; }
+    .btn-primary { background: var(--gold); color: #fff; }
+    .btn-ghost { background: var(--bg); border: 1px solid var(--border); color: var(--text); }
+    .btn-danger { background: #FEE2E2; color: var(--danger); }
+
+    /* Color swatch */
+    .color-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; }
+    .color-swatch { width: 60px; }
+    .color-swatch .swatch { height: 36px; border-radius: 6px; border: 1px solid var(--border); }
+    .color-swatch .swatch-label { font-size: 9px; color: var(--muted); margin-top: 3px; text-align: center; }
+
+    /* Section toggle rows */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 12px; background: var(--white);
+      border: 1px solid var(--border); border-radius: 6px; margin-bottom: 6px;
+    }
+    .toggle-row .tr-name { font-size: 11px; font-weight: 600; }
+    .toggle-row .tr-actions { display: flex; gap: 6px; align-items: center; }
+    .pill-toggle {
+      width: 32px; height: 18px; border-radius: 9px; background: var(--success);
+      display: flex; align-items: center; padding: 2px; cursor: default;
+    }
+    .pill-toggle.off { background: var(--border); }
+    .pill-toggle .knob { width: 14px; height: 14px; border-radius: 50%; background: #fff; margin-left: auto; }
+    .pill-toggle.off .knob { margin-left: 0; }
+
+    /* Callout boxes */
+    .callout {
+      border-radius: 8px; padding: 14px 16px; margin: 16px 0;
+      display: flex; gap: 12px; align-items: flex-start; font-size: 13px;
+    }
+    .callout.tip { background: #ECFDF5; border: 1px solid #6EE7B7; color: #065F46; }
+    .callout.warn { background: #FFFBEB; border: 1px solid #FCD34D; color: #78350F; }
+    .callout.info { background: #EFF6FF; border: 1px solid #93C5FD; color: #1E3A5F; }
+    .callout .ci { font-size: 18px; flex-shrink: 0; }
+
+    /* Steps */
+    .steps { counter-reset: step; list-style: none; padding: 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex; gap: 14px; margin-bottom: 16px; align-items: flex-start;
+    }
+    .steps li::before {
+      content: counter(step);
+      min-width: 28px; height: 28px; border-radius: 50%;
+      background: var(--dark); color: #fff;
+      font-size: 12px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .steps li .step-body { padding-top: 4px; }
+    .steps li .step-title { font-weight: 700; margin-bottom: 3px; }
+
+    /* Field reference table */
+    .field-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+    .field-table th { background: var(--dark); color: #fff; padding: 8px 12px; text-align: left; font-size: 12px; }
+    .field-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .field-table tr:nth-child(even) td { background: var(--bg); }
+    .req { color: var(--danger); font-weight: 700; }
+    .opt { color: var(--muted); font-size: 11px; }
+    code { background: #F3F4F6; border-radius: 4px; padding: 1px 5px; font-size: 12px; font-family: monospace; color: #7E22CE; }
+
+    /* Pill status legend */
+    .status-legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    @media (max-width: 860px) {
+      nav.toc { display: none; }
+      main { margin-left: 0; padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Table of Contents ── -->
+<nav class="toc">
+  <div class="logo">
+    <h1>Divine Travel</h1>
+    <p>Admin Panel User Guide</p>
+  </div>
+  <div class="section-label">Getting Started</div>
+  <a href="#login">Logging In</a>
+  <a href="#overview">Panel Overview</a>
+  <div class="section-label">Dashboard</div>
+  <a href="#dashboard">Dashboard</a>
+  <div class="section-label">Content</div>
+  <a href="#leads">Leads</a>
+  <a href="#packages">Packages</a>
+  <a href="#blogs">Blogs</a>
+  <a href="#testimonials">Testimonials</a>
+  <a href="#media">Media Library</a>
+  <div class="section-label">Site</div>
+  <a href="#homepage-builder">Homepage Builder</a>
+  <a href="#theme">Theme &amp; Branding</a>
+  <a href="#seo">SEO Pages</a>
+  <a href="#site-settings">Site Settings</a>
+  <div class="section-label">Taxonomies</div>
+  <a href="#destinations">Destinations</a>
+  <a href="#categories">Categories</a>
+  <div class="section-label">System</div>
+  <a href="#activity">Activity Log</a>
+  <a href="#tips">Tips &amp; Shortcuts</a>
+</nav>
+
+<!-- ── Main Content ── -->
+<main>
+
+  <h1 class="page-title">Admin Panel User Guide</h1>
+  <p class="page-subtitle">Complete reference for managing your Divine Travel website — content, leads, branding, and SEO.</p>
+
+  <!-- ════════════════════════════════════════ LOGIN -->
+  <h2 class="section-title" id="login"><span class="icon">🔐</span> Logging In</h2>
+  <p>The admin panel is at <code>/admin/login</code>. Enter your email and password and click <strong>Sign In</strong>. You will be redirected to the dashboard on success.</p>
+
+  <!-- Login screen mockup -->
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">yourdomain.com/admin/login</div></div>
+    <div class="screen-body" style="display:flex;align-items:center;justify-content:center;padding:40px;background:#F9FAFB;">
+      <div style="background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:32px;width:340px;box-shadow:0 4px 24px rgba(0,0,0,.08);">
+        <div style="text-align:center;margin-bottom:24px;">
+          <div style="font-size:22px;font-weight:800;color:#1A1A1A;">Divine Travel</div>
+          <div style="font-size:13px;color:#6B7280;margin-top:4px;">Admin Panel</div>
+        </div>
+        <div class="form-field"><label>Email address</label><input type="text" value="admin@yourdomain.com" readonly /></div>
+        <div class="form-field"><label>Password</label><input type="password" value="••••••••••" readonly /></div>
+        <div style="margin-top:16px;"><div class="btn btn-primary" style="width:100%;justify-content:center;">Sign In</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout warn"><span class="ci">⚠️</span><div>Never share your admin credentials. If you need to reset your password, contact your developer — there is no self-service reset by default.</div></div>
+
+  <!-- ════════════════════════════════════════ OVERVIEW -->
+  <h2 class="section-title" id="overview"><span class="icon">🗂️</span> Panel Overview</h2>
+  <p>Every admin page shares the same chrome: a <strong>sidebar</strong> on the left and a <strong>topbar</strong> at the top.</p>
+
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">yourdomain.com/admin</div></div>
+    <div class="screen-body">
+      <div class="admin-chrome">
+        <div class="admin-sidebar">
+          <div class="s-logo"><span>Divine Travel</span></div>
+          <div class="sidebar-group">
+            <div class="sidebar-label">Overview</div>
+            <div class="sidebar-item active"><div class="si"></div> Dashboard</div>
+            <div class="sidebar-item"><div class="si"></div> Activity Log</div>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-label">Content</div>
+            <div class="sidebar-item"><div class="si"></div> Leads</div>
+            <div class="sidebar-item"><div class="si"></div> Packages</div>
+            <div class="sidebar-item"><div class="si"></div> Blogs</div>
+            <div class="sidebar-item"><div class="si"></div> Testimonials</div>
+            <div class="sidebar-item"><div class="si"></div> Media Library</div>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-label">Site</div>
+            <div class="sidebar-item"><div class="si"></div> Homepage Builder</div>
+            <div class="sidebar-item"><div class="si"></div> Theme &amp; Branding</div>
+            <div class="sidebar-item"><div class="si"></div> SEO Pages</div>
+            <div class="sidebar-item"><div class="si"></div> Site Settings</div>
+          </div>
+          <div class="sidebar-group">
+            <div class="sidebar-label">Taxonomies</div>
+            <div class="sidebar-item"><div class="si"></div> Destinations</div>
+            <div class="sidebar-item"><div class="si"></div> Categories</div>
+          </div>
+        </div>
+        <div class="admin-main">
+          <div class="admin-topbar">
+            <div class="page-name">Dashboard</div>
+            <div class="right">
+              <span>admin@yourdomain.com</span>
+              <div class="btn btn-ghost" style="font-size:10px;padding:4px 10px;">View Site</div>
+            </div>
+          </div>
+          <div class="admin-content">
+            <div class="stat-grid">
+              <div class="stat-card"><div class="label">Total Leads</div><div class="val">48</div><div class="sub">+3 this week</div></div>
+              <div class="stat-card"><div class="label">New Leads</div><div class="val">12</div><div class="sub">Awaiting action</div></div>
+              <div class="stat-card"><div class="label">Follow-ups Today</div><div class="val">5</div><div class="sub">Due today</div></div>
+              <div class="stat-card"><div class="label">Confirmed</div><div class="val">8</div><div class="sub">This month</div></div>
+            </div>
+            <div style="background:#fff;border:1px solid #E5E7EB;border-radius:8px;padding:12px;">
+              <div style="font-size:11px;font-weight:700;margin-bottom:8px;">Recent Leads</div>
+              <table class="mini-table">
+                <thead><tr><th>Name</th><th>Mobile</th><th>Destination</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr><td>Rajesh Kumar</td><td>98765 43210</td><td>Kedarnath</td><td><span class="badge new">New</span></td></tr>
+                  <tr><td>Priya Sharma</td><td>87654 32109</td><td>Bali</td><td><span class="badge contacted">Contacted</span></td></tr>
+                  <tr><td>Amit Verma</td><td>76543 21098</td><td>Kerala</td><td><span class="badge confirmed">Confirmed</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Sidebar Navigation</h3>
+  <table class="field-table">
+    <thead><tr><th>Section</th><th>Items</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Overview</strong></td><td>Dashboard, Activity Log</td></tr>
+      <tr><td><strong>Content</strong></td><td>Leads, Packages, Blogs, Testimonials, Media Library</td></tr>
+      <tr><td><strong>Site</strong></td><td>Homepage Builder, Theme &amp; Branding, SEO Pages, Site Settings</td></tr>
+      <tr><td><strong>Taxonomies</strong></td><td>Destinations, Categories</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip"><span class="ci">💡</span><div>Click <strong>View Site</strong> in the topbar at any time to preview your live website in a new tab.</div></div>
+
+  <!-- ════════════════════════════════════════ DASHBOARD -->
+  <h2 class="section-title" id="dashboard"><span class="icon">📊</span> Dashboard</h2>
+  <p>The dashboard is your home screen. It shows the most important numbers at a glance.</p>
+
+  <h3>Stats Cards (top row)</h3>
+  <table class="field-table">
+    <thead><tr><th>Card</th><th>What it shows</th></tr></thead>
+    <tbody>
+      <tr><td>Total Leads</td><td>All enquiries ever received</td></tr>
+      <tr><td>New Leads</td><td>Leads with status "New" that haven't been contacted yet</td></tr>
+      <tr><td>Follow-ups Today</td><td>Leads where the follow-up date is set to today</td></tr>
+      <tr><td>Confirmed</td><td>Leads marked as "Confirmed" (bookings won)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Content Inventory (second row)</h3>
+  <p>Shows counts of published packages, published blog posts, published testimonials, and total media assets.</p>
+
+  <h3>Recent Leads (bottom)</h3>
+  <p>The last 6 leads received. Click any row to open the lead detail drawer. A red alert appears at the top if there are high-priority new leads waiting.</p>
+
+  <!-- ════════════════════════════════════════ LEADS -->
+  <h2 class="section-title" id="leads"><span class="icon">📋</span> Leads</h2>
+  <p>Leads are enquiries submitted through any contact form on the website. Go to <strong>Content → Leads</strong>.</p>
+
+  <h3>Two Views</h3>
+  <p>Use the toggle buttons at the top-right to switch between <strong>List View</strong> and <strong>Kanban View</strong>.</p>
+
+  <!-- Kanban mockup -->
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">yourdomain.com/admin/leads — Kanban View</div></div>
+    <div class="screen-body" style="padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <div style="font-size:14px;font-weight:700;">Leads Pipeline</div>
+        <div style="display:flex;gap:6px;">
+          <div class="btn btn-ghost">List</div>
+          <div class="btn btn-primary">Kanban</div>
+        </div>
+      </div>
+      <div class="kanban-cols">
+        <div class="kanban-col col-new">
+          <div class="kanban-col-hd">NEW (3)</div>
+          <div class="kanban-card"><div class="kc-name">Rajesh Kumar</div><div class="kc-dest">Kedarnath · High</div></div>
+          <div class="kanban-card"><div class="kc-name">Sunita Patel</div><div class="kc-dest">Bali · Medium</div></div>
+        </div>
+        <div class="kanban-col col-contacted">
+          <div class="kanban-col-hd">CONTACTED (2)</div>
+          <div class="kanban-card"><div class="kc-name">Priya Sharma</div><div class="kc-dest">Kerala · Medium</div></div>
+        </div>
+        <div class="kanban-col col-quoted">
+          <div class="kanban-col-hd">QUOTED (1)</div>
+          <div class="kanban-card"><div class="kc-name">Anil Mehta</div><div class="kc-dest">Manali · Low</div></div>
+        </div>
+        <div class="kanban-col col-confirmed">
+          <div class="kanban-col-hd">CONFIRMED (2)</div>
+          <div class="kanban-card"><div class="kc-name">Amit Verma</div><div class="kc-dest">Char Dham · High</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Kanban View</h3>
+  <p>Shows columns for each status: <strong>New → Contacted → Quoted → Negotiation → Confirmed → Lost</strong>.</p>
+  <ul style="margin:8px 0 12px 20px;">
+    <li>Drag a card to a different column to update its status instantly.</li>
+    <li>A note is automatically added to the lead's timeline when you move it.</li>
+    <li>Click any card to open the full detail drawer.</li>
+  </ul>
+
+  <h3>List View</h3>
+  <p>A sortable table with columns: Name, Mobile, Destination, Status, Priority, Assigned To, Follow-up Date, Created.</p>
+  <ul style="margin:8px 0 12px 20px;">
+    <li>Use the <strong>Search</strong> box to filter by name, mobile, or destination.</li>
+    <li>Use the <strong>Status</strong> dropdown to filter by a single status.</li>
+    <li>Click any row to open the detail drawer.</li>
+  </ul>
+
+  <h3>Lead Detail Drawer</h3>
+  <p>Click any lead to open a full panel on the right side of the screen.</p>
+
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">Lead Detail Drawer</div></div>
+    <div class="screen-body" style="display:flex;gap:0;">
+      <div style="flex:1;padding:16px;background:#F9FAFB;font-size:11px;color:#9CA3AF;display:flex;align-items:center;justify-content:center;">← Lead table behind drawer</div>
+      <div style="width:360px;background:#fff;border-left:1px solid #E5E7EB;padding:16px;font-size:12px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:12px;">Rajesh Kumar</div>
+        <div class="form-grid">
+          <div class="form-field"><label>Mobile</label><input value="98765 43210" readonly /></div>
+          <div class="form-field"><label>Email</label><input value="rajesh@email.com" readonly /></div>
+          <div class="form-field"><label>Destination</label><input value="Kedarnath" readonly /></div>
+          <div class="form-field"><label>Travel Date</label><input value="2026-09-15" readonly /></div>
+          <div class="form-field"><label>Status</label><select><option>New</option></select></div>
+          <div class="form-field"><label>Priority</label><select><option>High</option></select></div>
+          <div class="form-field"><label>Assigned To</label><input value="agent@company.com" readonly /></div>
+          <div class="form-field"><label>Follow-up Date</label><input value="2026-06-25" readonly /></div>
+        </div>
+        <div style="margin-top:10px;">
+          <div style="font-size:10px;font-weight:700;color:#6B7280;margin-bottom:6px;">NOTES</div>
+          <div style="background:#F9FAFB;border:1px solid #E5E7EB;border-radius:6px;padding:8px;font-size:10px;color:#374151;margin-bottom:6px;">Status changed to New — 24 Jun 2026, 10:32 AM</div>
+          <input style="width:100%;padding:6px 8px;border:1px solid #E5E7EB;border-radius:6px;font-size:10px;" placeholder="Add a note…" readonly />
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;">
+          <div class="btn btn-primary">Save</div>
+          <div class="btn btn-ghost">WhatsApp</div>
+          <div class="btn btn-danger" style="margin-left:auto;">Delete</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>Status</td><td>New / Contacted / Quoted / Negotiation / Confirmed / Lost</td></tr>
+      <tr><td>Priority</td><td>Low / Medium / High / Urgent</td></tr>
+      <tr><td>Assigned To</td><td>Email of the team member handling this lead</td></tr>
+      <tr><td>Follow-up Date</td><td>Date to follow up — shows on Dashboard "Follow-ups Today"</td></tr>
+      <tr><td>Notes</td><td>Internal timeline. Type and press Enter to add. Status changes are logged automatically.</td></tr>
+      <tr><td>WhatsApp</td><td>Opens WhatsApp with the lead's mobile number pre-filled</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip"><span class="ci">💡</span><div>Use <strong>Follow-up Date</strong> consistently — it feeds the "Follow-ups Today" counter on the dashboard so nothing falls through the cracks.</div></div>
+
+  <!-- ════════════════════════════════════════ PACKAGES -->
+  <h2 class="section-title" id="packages"><span class="icon">🧳</span> Packages</h2>
+  <p>Packages are your tour products shown on the website. Go to <strong>Content → Packages</strong>.</p>
+
+  <h3>Package List</h3>
+  <p>Shows all packages with title, slug, category, destination, price, status (published/draft), and featured flag. Use the <strong>New Package</strong> button to create one.</p>
+
+  <h3>Creating / Editing a Package</h3>
+  <p>The form is split into tabs:</p>
+
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">yourdomain.com/admin/packages/new</div></div>
+    <div class="screen-body" style="padding:16px;">
+      <div class="form-tabs">
+        <div class="form-tab active">Basics</div>
+        <div class="form-tab">Content</div>
+        <div class="form-tab">Pricing</div>
+        <div class="form-tab">Media</div>
+        <div class="form-tab">FAQs</div>
+        <div class="form-tab">SEO &amp; Status</div>
+      </div>
+      <div class="form-grid">
+        <div class="form-field"><label>Title <span class="req">*</span></label><input placeholder="e.g. Kedarnath Yatra 5N/6D" /></div>
+        <div class="form-field"><label>Slug <span class="req">*</span></label><input placeholder="kedarnath-yatra-5n-6d" /></div>
+        <div class="form-field"><label>Category</label><select><option>Divine Tours</option></select></div>
+        <div class="form-field"><label>Destination</label><select><option>Kedarnath</option></select></div>
+        <div class="form-field"><label>Duration (Days)</label><input type="number" value="6" /></div>
+        <div class="form-field"><label>Duration (Nights)</label><input type="number" value="5" /></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end;">
+        <div class="btn btn-ghost">Save as Draft</div>
+        <div class="btn btn-primary">Save &amp; Publish</div>
+      </div>
+    </div>
+  </div>
+
+  <table class="field-table">
+    <thead><tr><th>Tab</th><th>Fields</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Basics</strong></td><td>Title <span class="req">*</span>, Slug <span class="req">*</span>, Subtitle, Category, Destination, Duration (days &amp; nights)</td></tr>
+      <tr><td><strong>Content</strong></td><td>Overview text, Highlights (one per line), Inclusions (one per line), Exclusions (one per line)</td></tr>
+      <tr><td><strong>Pricing</strong></td><td>Starting Price (shown on cards), Pricing options (JSON array for detailed pricing tables)</td></tr>
+      <tr><td><strong>Media</strong></td><td>Cover Image URL, Gallery image URLs (one per line)</td></tr>
+      <tr><td><strong>FAQs</strong></td><td>Package-specific FAQs as JSON <code>[{"question":"…","answer":"…"}]</code></td></tr>
+      <tr><td><strong>SEO &amp; Status</strong></td><td>SEO Title, SEO Description, OG Image, Canonical Path, Published toggle, Featured toggle</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info"><span class="ci">ℹ️</span><div><strong>Slug</strong> is the URL path — e.g. slug <code>kedarnath-yatra-5n-6d</code> makes the page live at <code>/packages/kedarnath-yatra-5n-6d</code>. It must be unique and use only lowercase letters, numbers, and hyphens.</div></div>
+  <div class="callout warn"><span class="ci">⚠️</span><div>A package only appears on the website when <strong>Published</strong> is toggled on. Unpublished packages are invisible to visitors but fully editable.</div></div>
+
+  <!-- ════════════════════════════════════════ BLOGS -->
+  <h2 class="section-title" id="blogs"><span class="icon">✍️</span> Blogs</h2>
+  <p>Blog posts appear in the /blog section of the website. Go to <strong>Content → Blogs</strong>.</p>
+
+  <h3>Blog List</h3>
+  <p>Shows title, category, author, published date, and status. Click <strong>New Post</strong> to create one.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Title <span class="req">*</span></td><td>The headline of the blog post</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>URL path, e.g. <code>best-time-to-visit-kedarnath</code></td></tr>
+      <tr><td>Category</td><td>Free-text category label (e.g. "Travel Tips", "Spiritual")</td></tr>
+      <tr><td>Excerpt</td><td>Short summary shown on listing pages and social shares</td></tr>
+      <tr><td>Content <span class="req">*</span></td><td>Full article body — supports Markdown formatting</td></tr>
+      <tr><td>Tags</td><td>Comma-separated tags, e.g. <code>kedarnath, pilgrimage, 2026</code></td></tr>
+      <tr><td>Author</td><td>Defaults to "Divine Travel" — change if guest post</td></tr>
+      <tr><td>Cover Image</td><td>URL of the hero image for the post</td></tr>
+      <tr><td>SEO Title / Description</td><td>Overrides the default meta tags for this post</td></tr>
+      <tr><td>Published</td><td>Toggle on to make the post live on the website</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip"><span class="ci">💡</span><div>The <strong>Reading Time</strong> field auto-calculates based on word count — you don't need to fill it manually.</div></div>
+
+  <!-- ════════════════════════════════════════ TESTIMONIALS -->
+  <h2 class="section-title" id="testimonials"><span class="icon">⭐</span> Testimonials</h2>
+  <p>Customer reviews displayed on the homepage and the /testimonials page. Go to <strong>Content → Testimonials</strong>.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Author Name <span class="req">*</span></td><td>Customer's name</td></tr>
+      <tr><td>Location</td><td>City or state, e.g. "Mumbai"</td></tr>
+      <tr><td>Rating <span class="req">*</span></td><td>1–5 stars</td></tr>
+      <tr><td>Content <span class="req">*</span></td><td>The review text</td></tr>
+      <tr><td>Avatar URL</td><td>Optional photo URL for the customer</td></tr>
+      <tr><td>Tour Taken</td><td>Name of the package they travelled on</td></tr>
+      <tr><td>Published</td><td>Toggle on to show on the website</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ════════════════════════════════════════ MEDIA -->
+  <h2 class="section-title" id="media"><span class="icon">🖼️</span> Media Library</h2>
+  <p>A central library of image URLs used across packages, blogs, and the homepage. Go to <strong>Content → Media Library</strong>.</p>
+
+  <h3>Adding Media</h3>
+  <p>Click <strong>Upload</strong> (top-right) to open the "Add by URL" dialog. Paste any public image URL (Pexels, your CDN, Google Drive public link, etc.).</p>
+
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">Media Library</div></div>
+    <div class="screen-body" style="padding:16px;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div style="border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;">
+          <div style="height:80px;background:linear-gradient(135deg,#C48A2D22,#C48A2D55);display:flex;align-items:center;justify-content:center;font-size:24px;">🏔️</div>
+          <div style="padding:6px;font-size:10px;color:#6B7280;">kedarnath-hero.jpg</div>
+        </div>
+        <div style="border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;">
+          <div style="height:80px;background:linear-gradient(135deg,#8B1E3F22,#8B1E3F55);display:flex;align-items:center;justify-content:center;font-size:24px;">🌴</div>
+          <div style="padding:6px;font-size:10px;color:#6B7280;">bali-resort.jpg</div>
+        </div>
+        <div style="border:1px solid #E5E7EB;border-radius:8px;overflow:hidden;">
+          <div style="height:80px;background:linear-gradient(135deg,#2563EB22,#2563EB55);display:flex;align-items:center;justify-content:center;font-size:24px;">🕌</div>
+          <div style="padding:6px;font-size:10px;color:#6B7280;">char-dham.jpg</div>
+        </div>
+        <div style="border:1px dashed #E5E7EB;border-radius:8px;display:flex;align-items:center;justify-content:center;height:104px;cursor:pointer;color:#6B7280;font-size:11px;">+ Add URL</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Using Media</h3>
+  <p>Hover over any image card and click the <strong>Copy URL</strong> icon to copy the image URL to your clipboard. Paste it into any Cover Image or Gallery field in packages or blogs.</p>
+
+  <div class="callout info"><span class="ci">ℹ️</span><div>The media library stores URL references — not actual file uploads. You can use any publicly accessible image URL.</div></div>
+
+  <!-- ════════════════════════════════════════ HOMEPAGE BUILDER -->
+  <h2 class="section-title" id="homepage-builder"><span class="icon">🏠</span> Homepage Builder</h2>
+  <p>Control which sections appear on the homepage and in what order. Go to <strong>Site → Homepage Builder</strong>.</p>
+
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">yourdomain.com/admin/homepage-builder</div></div>
+    <div class="screen-body" style="padding:16px;">
+      <div class="toggle-row"><div class="tr-name">Hero</div><div class="tr-actions"><div class="pill-toggle"><div class="knob"></div></div><div class="btn btn-ghost" style="font-size:10px;padding:3px 8px;">Edit</div><div style="font-size:16px;color:#9CA3AF;cursor:pointer;">↑↓</div></div></div>
+      <div class="toggle-row"><div class="tr-name">Trust Bar</div><div class="tr-actions"><div class="pill-toggle"><div class="knob"></div></div><div class="btn btn-ghost" style="font-size:10px;padding:3px 8px;">Edit</div><div style="font-size:16px;color:#9CA3AF;cursor:pointer;">↑↓</div></div></div>
+      <div class="toggle-row"><div class="tr-name">Featured Packages</div><div class="tr-actions"><div class="pill-toggle"><div class="knob"></div></div><div class="btn btn-ghost" style="font-size:10px;padding:3px 8px;">Edit</div><div style="font-size:16px;color:#9CA3AF;cursor:pointer;">↑↓</div></div></div>
+      <div class="toggle-row"><div class="tr-name">Testimonials</div><div class="tr-actions"><div class="pill-toggle off"><div class="knob"></div></div><div class="btn btn-ghost" style="font-size:10px;padding:3px 8px;">Edit</div><div style="font-size:16px;color:#9CA3AF;cursor:pointer;">↑↓</div></div></div>
+      <div class="toggle-row"><div class="tr-name">Blog Section</div><div class="tr-actions"><div class="pill-toggle"><div class="knob"></div></div><div class="btn btn-ghost" style="font-size:10px;padding:3px 8px;">Edit</div><div style="font-size:16px;color:#9CA3AF;cursor:pointer;">↑↓</div></div></div>
+    </div>
+  </div>
+
+  <h3>Available Sections</h3>
+  <table class="field-table">
+    <thead><tr><th>Section</th><th>What it controls</th></tr></thead>
+    <tbody>
+      <tr><td>Hero</td><td>Main banner — headline, subheading, background image, CTA button label</td></tr>
+      <tr><td>Trust Bar</td><td>Row of trust indicators (years of experience, travellers, rating)</td></tr>
+      <tr><td>Divine Tours</td><td>Pilgrimage/Yatra section — heading and max items to show</td></tr>
+      <tr><td>Domestic Tours</td><td>India tours section — heading and max items</td></tr>
+      <tr><td>International Tours</td><td>International section — heading and max items</td></tr>
+      <tr><td>Featured Packages</td><td>Curated packages grid — heading and max items</td></tr>
+      <tr><td>Why Choose Us</td><td>USP section — heading and feature bullet points</td></tr>
+      <tr><td>Testimonials</td><td>Reviews carousel — heading and max items</td></tr>
+      <tr><td>Blog Section</td><td>Latest posts section — heading and max posts</td></tr>
+      <tr><td>Contact CTA</td><td>Bottom call-to-action banner — heading and button label</td></tr>
+    </tbody>
+  </table>
+
+  <ul style="margin:8px 0 12px 20px;">
+    <li>Toggle the switch to show or hide a section without deleting its config.</li>
+    <li>Use the <strong>↑ ↓</strong> arrows to reorder sections.</li>
+    <li>Click <strong>Edit</strong> to expand the section's configuration fields and update them.</li>
+    <li>Click <strong>Save</strong> on each section individually after editing.</li>
+  </ul>
+
+  <!-- ════════════════════════════════════════ THEME -->
+  <h2 class="section-title" id="theme"><span class="icon">🎨</span> Theme &amp; Branding</h2>
+  <p>Manage your brand identity and colour scheme. Go to <strong>Site → Theme &amp; Branding</strong>.</p>
+
+  <h3>Branding</h3>
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Brand Name</td><td>Displayed in the site header and browser tab</td></tr>
+      <tr><td>Logo URL</td><td>URL of your logo image (SVG or PNG recommended)</td></tr>
+      <tr><td>WhatsApp Number</td><td>Number with country code, e.g. <code>+919876543210</code> — used by the WhatsApp float button</td></tr>
+      <tr><td>Contact Phone</td><td>Shown in the footer</td></tr>
+      <tr><td>Contact Email</td><td>Shown in the footer</td></tr>
+      <tr><td>Address</td><td>Business address shown in the footer</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Colours</h3>
+
+  <div class="screen">
+    <div class="screen-bar"><div class="dot r"></div><div class="dot y"></div><div class="dot g"></div><div class="url">Theme Editor — Colours</div></div>
+    <div class="screen-body" style="padding:16px;">
+      <div class="color-row">
+        <div class="color-swatch"><div class="swatch" style="background:#C48A2D;"></div><div class="swatch-label">Primary</div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#8B1E3F;"></div><div class="swatch-label">Secondary</div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#F8F4EC;"></div><div class="swatch-label">Accent</div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#1A1A1A;"></div><div class="swatch-label">Dark</div></div>
+        <div class="color-swatch"><div class="swatch" style="background:#25D366;"></div><div class="swatch-label">Success</div></div>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:#6B7280;">Theme Presets</div>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <div style="padding:6px 14px;border-radius:20px;background:#C48A2D;color:#fff;font-size:11px;font-weight:600;">Divine Gold</div>
+        <div style="padding:6px 14px;border-radius:20px;background:#1E3A5F;color:#fff;font-size:11px;font-weight:600;">Ocean Blue</div>
+        <div style="padding:6px 14px;border-radius:20px;background:#1A6B45;color:#fff;font-size:11px;font-weight:600;">Forest Green</div>
+      </div>
+    </div>
+  </div>
+
+  <table class="field-table">
+    <thead><tr><th>Colour</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td>Primary</td><td>Buttons, headings, active states, links</td></tr>
+      <tr><td>Secondary</td><td>Accent accents, hover highlights</td></tr>
+      <tr><td>Accent</td><td>Light background tints, section backgrounds</td></tr>
+      <tr><td>Dark</td><td>Header background, footer, dark sections</td></tr>
+      <tr><td>Success</td><td>WhatsApp button, success messages, confirmed badges</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout tip"><span class="ci">💡</span><div>Use <strong>Theme Presets</strong> to apply a full colour scheme in one click. You can still fine-tune individual colours after applying a preset.</div></div>
+
+  <!-- ════════════════════════════════════════ SEO -->
+  <h2 class="section-title" id="seo"><span class="icon">🔍</span> SEO Pages</h2>
+  <p>Override SEO metadata for specific pages of the site. Go to <strong>Site → SEO Pages</strong>.</p>
+
+  <h3>How it works</h3>
+  <p>Each row targets a specific URL path (e.g. <code>/about</code>, <code>/contact</code>, <code>/divine-tours</code>). The metadata you enter here overrides the default site-wide values for that page only.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Path <span class="req">*</span></td><td>The URL path, e.g. <code>/about</code> or <code>/divine-tours</code></td></tr>
+      <tr><td>SEO Title</td><td>Browser tab title and Google search headline (50–60 characters ideal)</td></tr>
+      <tr><td>SEO Description</td><td>Google snippet description (150–160 characters ideal)</td></tr>
+      <tr><td>OG Image</td><td>Image URL shown when the page is shared on WhatsApp / social media</td></tr>
+      <tr><td>Canonical Path</td><td>Only needed if this page has duplicate content elsewhere</td></tr>
+      <tr><td>Index</td><td>Toggle off to tell Google NOT to index this page (e.g. thank-you pages)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ════════════════════════════════════════ SITE SETTINGS -->
+  <h2 class="section-title" id="site-settings"><span class="icon">⚙️</span> Site Settings</h2>
+  <p>Global configuration for analytics and notifications. Go to <strong>Site → Site Settings</strong>.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Site URL</td><td>Your full domain, e.g. <code>https://divinetravel.in</code>. Used for sitemaps and canonical URLs.</td></tr>
+      <tr><td>Default Social Title</td><td>Used when a page has no specific SEO title</td></tr>
+      <tr><td>Default Social Description</td><td>Used when a page has no specific SEO description</td></tr>
+      <tr><td>Default OG Image</td><td>Fallback share image for all pages without a specific OG image</td></tr>
+      <tr><td>GTM ID</td><td>Google Tag Manager container ID, e.g. <code>GTM-XXXXXXX</code></td></tr>
+      <tr><td>GA4 ID</td><td>Google Analytics 4 measurement ID, e.g. <code>G-XXXXXXXXXX</code></td></tr>
+      <tr><td>Meta Pixel ID</td><td>Facebook / Meta Pixel ID for ad tracking</td></tr>
+      <tr><td>Search Console Verification</td><td>Meta tag content value from Google Search Console</td></tr>
+      <tr><td>Notifications Email</td><td>Email address that receives alerts for new leads</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ════════════════════════════════════════ DESTINATIONS -->
+  <h2 class="section-title" id="destinations"><span class="icon">📍</span> Destinations</h2>
+  <p>Destinations are locations used to tag packages and power the tour category pages. Go to <strong>Taxonomies → Destinations</strong>.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Name <span class="req">*</span></td><td>Display name, e.g. "Kedarnath"</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>URL-safe version, e.g. <code>kedarnath</code></td></tr>
+      <tr><td>Region <span class="req">*</span></td><td><strong>Divine</strong> (pilgrimage), <strong>Domestic</strong> (India), or <strong>International</strong>. Controls which tour section the destination appears in.</td></tr>
+      <tr><td>Parent Destination</td><td>For sub-destinations, e.g. Kedarnath under "Uttarakhand"</td></tr>
+      <tr><td>Description</td><td>Short text used on the destination detail page</td></tr>
+      <tr><td>Cover Image</td><td>URL of the destination's hero image</td></tr>
+      <tr><td>Display Order</td><td>Lower numbers appear first in listings</td></tr>
+      <tr><td>Published</td><td>Unpublished destinations are hidden from the public site</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ════════════════════════════════════════ CATEGORIES -->
+  <h2 class="section-title" id="categories"><span class="icon">🏷️</span> Categories</h2>
+  <p>Package categories for filtering and grouping tours. Go to <strong>Taxonomies → Categories</strong>.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Name <span class="req">*</span></td><td>Display name, e.g. "Honeymoon Packages"</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>URL-safe, e.g. <code>honeymoon-packages</code></td></tr>
+      <tr><td>Parent Category</td><td>For nested categories, e.g. "Beaches" under "International"</td></tr>
+      <tr><td>Description</td><td>Optional short description</td></tr>
+      <tr><td>Display Order</td><td>Controls the order in dropdowns and filters</td></tr>
+      <tr><td>Published</td><td>Unpublished categories are hidden from filters</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ════════════════════════════════════════ ACTIVITY -->
+  <h2 class="section-title" id="activity"><span class="icon">📜</span> Activity Log</h2>
+  <p>A read-only audit trail of all admin actions. Go to <strong>Overview → Activity Log</strong>.</p>
+  <p>Every create, update, and delete action is logged with the user email, timestamp, action type, and the entity affected. Use this to track who changed what and when.</p>
+
+  <!-- ════════════════════════════════════════ TIPS -->
+  <h2 class="section-title" id="tips"><span class="icon">💡</span> Tips &amp; Shortcuts</h2>
+
+  <h3>Common Workflows</h3>
+  <ol class="steps">
+    <li>
+      <div class="step-body">
+        <div class="step-title">Adding a new tour package</div>
+        Create category and destination first (Taxonomies) → then create the package → upload images to Media Library → copy URLs into the Package gallery fields → toggle Published on.
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Handling a new lead</div>
+        Dashboard → click the lead → change Status to "Contacted" → set Follow-up Date → assign to a team member → add a note → Save.
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Publishing a blog post</div>
+        Blogs → New Post → fill Title, Slug, Content → add Cover Image → toggle Published on → Save.
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Updating contact details site-wide</div>
+        Theme &amp; Branding → update WhatsApp Number, Contact Phone, Contact Email, Address → Save.
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <div class="step-title">Connecting Google Analytics</div>
+        Site Settings → paste your GA4 ID (e.g. <code>G-XXXXXXXXXX</code>) → Save. Analytics starts tracking immediately on next page load.
+      </div>
+    </li>
+  </ol>
+
+  <h3>Status Reference</h3>
+  <div class="status-legend">
+    <span class="badge new">New</span>
+    <span class="badge contacted">Contacted</span>
+    <span class="badge quoted">Quoted</span>
+    <span style="display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;background:#FEF3C7;color:#92400E;">Negotiation</span>
+    <span class="badge confirmed">Confirmed</span>
+    <span class="badge lost">Lost</span>
+  </div>
+  <div class="status-legend" style="margin-top:6px;">
+    <strong style="font-size:12px;">Priority:</strong>
+    <span class="badge low">Low</span>
+    <span class="badge medium">Medium</span>
+    <span class="badge high">High</span>
+    <span class="badge urgent">Urgent</span>
+  </div>
+
+  <div class="callout warn" style="margin-top:24px;"><span class="ci">⚠️</span><div><strong>Before going live:</strong> Fill in Site Settings (Site URL, analytics IDs), update Theme &amp; Branding (WhatsApp number, logo, contact details), and make sure at least one package is Published.</div></div>
+
+  <hr />
+  <p style="color:var(--muted);font-size:12px;text-align:center;">Divine Travel Admin Guide · Generated 2026 · For support contact your developer.</p>
+
+</main>
+</body>
+</html>
