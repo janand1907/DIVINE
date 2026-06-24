@@ -83,6 +83,7 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) {
+    console.error('[/api/leads] Supabase insert error:', error.message, error.code, error.details);
     return NextResponse.json(
       { error: 'Failed to submit lead. Please try again.' },
       { status: 500 },
