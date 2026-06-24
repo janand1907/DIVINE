@@ -63,28 +63,35 @@ export async function POST(req: NextRequest) {
   const landingPage = req.headers.get('referer') ?? null;
 
   const supabase = createPublicClient();
+
+  const insertPayload = {
+    name: parsed.data.name,
+    mobile: parsed.data.mobile,
+    email: parsed.data.email || null,
+    destination: parsed.data.destination || null,
+    travel_date: parsed.data.travel_date || null,
+    adults: parsed.data.adults ?? null,
+    children: parsed.data.children ?? null,
+    budget: parsed.data.budget || null,
+    message: parsed.data.message || null,
+    source: parsed.data.source,
+    package_id: parsed.data.package_id || null,
+    package_slug: parsed.data.package_slug || null,
+    ...utm,
+    landing_page: landingPage,
+    notes: [],
+  };
+
   const { data, error } = await supabase
     .from('leads')
-    .insert({
-      ...parsed.data,
-      email: parsed.data.email || null,
-      destination: parsed.data.destination || null,
-      travel_date: parsed.data.travel_date || null,
-      budget: parsed.data.budget || null,
-      message: parsed.data.message || null,
-      package_id: parsed.data.package_id || null,
-      package_slug: parsed.data.package_slug || null,
-      ...utm,
-      landing_page: landingPage,
-      notes: [],
-    })
+    .insert(insertPayload)
     .select('id, name, mobile, destination')
     .single();
 
   if (error) {
     console.error('[/api/leads] Supabase insert error:', error.message, error.code, error.details);
     return NextResponse.json(
-      { error: 'Failed to submit lead. Please try again.' },
+      { error: 'Failed to submit lead. Please try again.', detail: error.message },
       { status: 500 },
     );
   }

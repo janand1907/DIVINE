@@ -22,7 +22,7 @@ export const leadSchema = z.object({
   source: z.enum(LEAD_SOURCES).default('contact'),
   package_id: z.string().uuid().optional(),
   package_slug: z.string().max(200).optional(),
-}).passthrough();
+});
 
 export const packageSchema = z.object({
   slug: z.string().min(2).max(200).regex(/^[a-z0-9-]+$/, 'Slug must be lowercase, hyphens, digits only'),
