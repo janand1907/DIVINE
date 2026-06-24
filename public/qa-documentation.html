@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Divine Travel — QA Documentation Pack v1.0</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #1a1a2e;
+    background: #f8f9fa;
+  }
+
+  /* ── COVER PAGE ── */
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    page-break-after: always;
+  }
+  .cover-badge {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #e2b96f;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 6px 20px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+  }
+  .cover h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .cover h1 span { color: #e2b96f; }
+  .cover .subtitle {
+    font-size: 18px;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 48px;
+  }
+  .cover-meta {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 700px;
+    width: 100%;
+    margin-bottom: 48px;
+  }
+  .cover-meta-item {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .cover-meta-item .label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+  .cover-meta-item .value {
+    font-size: 13px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .cover-stats {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .cover-stat { text-align: center; }
+  .cover-stat .num {
+    font-size: 32px;
+    font-weight: 800;
+    color: #e2b96f;
+    display: block;
+  }
+  .cover-stat .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── TOC ── */
+  .toc-page {
+    background: #fff;
+    padding: 60px 72px;
+    page-break-after: always;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .toc-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0f3460;
+    margin-bottom: 32px;
+    padding-bottom: 12px;
+    border-bottom: 3px solid #e2b96f;
+  }
+  .toc-group { margin-bottom: 8px; }
+  .toc-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 0;
+    border-bottom: 1px dotted #ddd;
+    color: #333;
+    font-size: 13px;
+  }
+  .toc-entry.major {
+    font-weight: 700;
+    color: #0f3460;
+    font-size: 14px;
+    margin-top: 12px;
+  }
+  .toc-entry .page-num { color: #999; font-size: 11px; min-width: 20px; text-align: right; }
+
+  /* ── CONTENT ── */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 0 72px;
+  }
+
+  /* ── DOCUMENT HEADER ── */
+  .doc-header {
+    padding: 56px 0 32px;
+    border-bottom: 4px solid #0f3460;
+    margin-bottom: 40px;
+    page-break-before: always;
+  }
+  .doc-header:first-child { page-break-before: avoid; }
+  .doc-num {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #e2b96f;
+    margin-bottom: 8px;
+  }
+  .doc-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #0f3460;
+    line-height: 1.25;
+  }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 40px; }
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f3460;
+    margin-bottom: 16px;
+    padding: 8px 0 8px 12px;
+    border-left: 4px solid #e2b96f;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+    margin: 20px 0 10px;
+  }
+
+  /* ── TABLES ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 12px;
+  }
+  thead tr { background: #0f3460; color: #fff; }
+  thead th {
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  tbody tr { border-bottom: 1px solid #eee; }
+  tbody tr:nth-child(even) { background: #f7f9fc; }
+  tbody td { padding: 9px 12px; vertical-align: top; color: #333; }
+  tbody td strong { color: #0f3460; font-weight: 600; }
+
+  /* ── FIELD BLOCKS ── */
+  .field-block {
+    border: 1px solid #e0e7f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .field-block-header {
+    background: #0f3460;
+    color: #fff;
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .field-block-header span { color: #e2b96f; margin-right: 8px; font-size: 11px; }
+  .field-block-body { padding: 0; }
+  .field-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    border-bottom: 1px solid #eee;
+  }
+  .field-row:last-child { border-bottom: none; }
+  .field-label {
+    background: #f0f4f8;
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 11px;
+    color: #0f3460;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 1px solid #e0e7f0;
+  }
+  .field-value {
+    padding: 10px 14px;
+    font-size: 12px;
+    color: #333;
+    line-height: 1.5;
+  }
+
+  /* ── TEST CASE BLOCKS ── */
+  .tc-block {
+    border: 1px solid #e0e7f0;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    page-break-inside: avoid;
+  }
+  .tc-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #16213e;
+    padding: 12px 16px;
+  }
+  .tc-id {
+    background: #e2b96f;
+    color: #16213e;
+    font-weight: 800;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .tc-name { color: #fff; font-weight: 600; font-size: 13px; }
+  .tc-body { display: grid; grid-template-columns: 160px 1fr; }
+  .tc-label {
+    background: #f5f7fa;
+    padding: 9px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-right: 1px solid #e0e7f0;
+    border-bottom: 1px solid #eee;
+  }
+  .tc-value {
+    padding: 9px 14px;
+    font-size: 12px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    line-height: 1.5;
+  }
+  .tc-row:last-child .tc-label,
+  .tc-row:last-child .tc-value { border-bottom: none; }
+  .tc-row { display: contents; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-blue { background: #dbeafe; color: #1e40af; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-orange { background: #fed7aa; color: #9a3412; }
+  .badge-red { background: #fee2e2; color: #991b1b; }
+  .badge-gold { background: #fef3c7; color: #92400e; }
+
+  /* ── PILLS / TAGS ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+  .tag {
+    background: #e0e7f0;
+    color: #0f3460;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+
+  /* ── COVERAGE BARS ── */
+  .coverage-row {
+    display: grid;
+    grid-template-columns: 220px 1fr 50px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .coverage-label { font-size: 12px; color: #333; }
+  .bar-track {
+    height: 8px;
+    background: #e0e7f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #0f3460, #e2b96f);
+  }
+  .coverage-pct { font-size: 11px; font-weight: 700; color: #0f3460; text-align: right; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: #fffbeb;
+    border: 1px solid #f59e0b;
+    border-left: 4px solid #f59e0b;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #78350f;
+  }
+  .callout strong { color: #92400e; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center;
+    padding: 40px 0 60px;
+    color: #999;
+    font-size: 11px;
+    border-top: 1px solid #eee;
+    margin-top: 60px;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; font-size: 11px; }
+    .cover { page-break-after: always; min-height: 100vh; }
+    .toc-page { page-break-after: always; }
+    .doc-header { page-break-before: always; }
+    .tc-block, .field-block { page-break-inside: avoid; }
+    .content { padding: 0 48px; }
+    a { color: inherit; text-decoration: none; }
+  }
+
+  @page { margin: 0.6in 0.5in; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ COVER ═══════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">Confidential — Internal QA Document</div>
+  <h1>Divine <span>Travel</span></h1>
+  <p class="subtitle">Complete QA Documentation Pack — Version 1.0</p>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="label">Application</div>
+      <div class="value">Divine Travel Platform</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Prepared Date</div>
+      <div class="value">2026-06-24</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Version</div>
+      <div class="value">1.0 — Initial Release</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Stack</div>
+      <div class="value">Next.js 14 + Supabase</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Hosting</div>
+      <div class="value">Netlify + Supabase Cloud</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="label">Coverage</div>
+      <div class="value">~82% Estimated</div>
+    </div>
+  </div>
+
+  <div class="cover-stats">
+    <div class="cover-stat"><span class="num">14</span><span class="lbl">Documents</span></div>
+    <div class="cover-stat"><span class="num">30</span><span class="lbl">User Stories</span></div>
+    <div class="cover-stat"><span class="num">28</span><span class="lbl">Acceptance Criteria</span></div>
+    <div class="cover-stat"><span class="num">20</span><span class="lbl">Test Cases</span></div>
+    <div class="cover-stat"><span class="num">5</span><span class="lbl">UAT Scenarios</span></div>
+    <div class="cover-stat"><span class="num">26</span><span class="lbl">API Endpoints</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOC ═══════════════════════ -->
+<div class="toc-page">
+  <div class="toc-title">Table of Contents</div>
+  <div class="toc-entry major"><span>Document 1 — Product Requirement Document (PRD)</span><span class="page-num">3</span></div>
+  <div class="toc-entry"><span>1.1 Application Purpose</span><span class="page-num">3</span></div>
+  <div class="toc-entry"><span>1.2 Target Users</span><span class="page-num">3</span></div>
+  <div class="toc-entry"><span>1.3 Business Goals</span><span class="page-num">3</span></div>
+  <div class="toc-entry"><span>1.4 Core Modules</span><span class="page-num">3</span></div>
+
+  <div class="toc-entry major"><span>Document 2 — Software Requirement Specification (SRS)</span><span class="page-num">4</span></div>
+  <div class="toc-entry"><span>2.1–2.9 Feature Specifications</span><span class="page-num">4</span></div>
+
+  <div class="toc-entry major"><span>Document 3 — Functional Requirement Document (FRD)</span><span class="page-num">6</span></div>
+  <div class="toc-entry"><span>Public Pages FR-PUB-001 to FR-PUB-011</span><span class="page-num">6</span></div>
+  <div class="toc-entry"><span>Admin Pages FR-ADM-001 to FR-ADM-009</span><span class="page-num">7</span></div>
+
+  <div class="toc-entry major"><span>Document 4 — User Stories</span><span class="page-num">9</span></div>
+  <div class="toc-entry"><span>US-001 to US-030 (Public + Admin)</span><span class="page-num">9</span></div>
+
+  <div class="toc-entry major"><span>Document 5 — Use Cases</span><span class="page-num">10</span></div>
+  <div class="toc-entry"><span>UC-001 to UC-006</span><span class="page-num">10</span></div>
+
+  <div class="toc-entry major"><span>Document 6 — Feature Inventory</span><span class="page-num">12</span></div>
+  <div class="toc-entry"><span>Pages, Forms, Tables, Search, Admin Modules</span><span class="page-num">12</span></div>
+
+  <div class="toc-entry major"><span>Document 7 — Acceptance Criteria</span><span class="page-num">14</span></div>
+  <div class="toc-entry"><span>AC-001 to AC-028</span><span class="page-num">14</span></div>
+
+  <div class="toc-entry major"><span>Document 8 — Requirement Traceability Matrix (RTM)</span><span class="page-num">15</span></div>
+
+  <div class="toc-entry major"><span>Document 9 — Test Scenarios</span><span class="page-num">16</span></div>
+  <div class="toc-entry"><span>TS-001 to TS-020</span><span class="page-num">16</span></div>
+
+  <div class="toc-entry major"><span>Document 10 — Detailed Test Cases</span><span class="page-num">17</span></div>
+  <div class="toc-entry"><span>TC-001 to TC-020</span><span class="page-num">17</span></div>
+
+  <div class="toc-entry major"><span>Document 11 — UAT Test Cases</span><span class="page-num">21</span></div>
+  <div class="toc-entry"><span>UAT-001 to UAT-005</span><span class="page-num">21</span></div>
+
+  <div class="toc-entry major"><span>Document 12 — API Inventory</span><span class="page-num">22</span></div>
+  <div class="toc-entry major"><span>Document 13 — Database Entity Map</span><span class="page-num">23</span></div>
+  <div class="toc-entry major"><span>Document 14 — QA Coverage Report</span><span class="page-num">24</span></div>
+</div>
+
+<!-- ═══════════════════════ CONTENT ═══════════════════════ -->
+<div class="content">
+
+<!-- ────────────────── DOC 1: PRD ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 01</div>
+  <div class="doc-title">Product Requirement Document (PRD)</div>
+</div>
+
+<div class="section">
+  <div class="section-title">1.1 Application Purpose</div>
+  <p>Divine Travel is a full-stack travel agency web platform serving two distinct audiences: <strong>public visitors</strong> who discover pilgrimage, domestic, and international tour packages, submit inquiries, read travel blogs, and view testimonials; and <strong>admin staff</strong> who manage all content, handle leads through a CRM-style sales pipeline, and configure site branding, SEO, and homepage layout.</p>
+</div>
+
+<div class="section">
+  <div class="section-title">1.2 Target Users</div>
+  <table>
+    <thead><tr><th>Persona</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Prospective Traveler</strong></td><td>Individual or family seeking pilgrimage / leisure tours from India</td></tr>
+      <tr><td><strong>Pilgrim / Devotee</strong></td><td>User specifically looking for divine/spiritual yatra packages</td></tr>
+      <tr><td><strong>Honeymoon Couple</strong></td><td>Couple seeking romantic domestic/international packages</td></tr>
+      <tr><td><strong>Admin / Sales Agent</strong></td><td>Internal staff managing leads and content via the admin dashboard</td></tr>
+      <tr><td><strong>Marketing Manager</strong></td><td>Staff configuring SEO, analytics IDs, and homepage layout</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">1.3 Business Goals</div>
+  <table>
+    <thead><tr><th>#</th><th>Goal</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Generate qualified leads through inquiry forms (contact, quick quote, package inquiry)</td></tr>
+      <tr><td>2</td><td>Showcase tour packages to drive booking enquiries</td></tr>
+      <tr><td>3</td><td>Manage the full lead lifecycle from initial contact to booking confirmation</td></tr>
+      <tr><td>4</td><td>Maintain SEO-optimized content (packages, blogs, destination pages) to drive organic traffic</td></tr>
+      <tr><td>5</td><td>Provide admin team a centralized CMS for all site content</td></tr>
+      <tr><td>6</td><td>Track marketing attribution via UTM parameters stored on every lead</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">1.4 Core Modules</div>
+  <table>
+    <thead><tr><th>Module</th><th>Scope</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Homepage Builder</strong></td><td>Dynamic section management — enable/disable and reorder 10 homepage sections</td></tr>
+      <tr><td><strong>Package Catalog</strong></td><td>CRUD, public listing with search/filter/sort, detail pages with structured data</td></tr>
+      <tr><td><strong>Lead Management</strong></td><td>Capture via forms, Kanban pipeline (6 statuses), notes, priority, UTM attribution</td></tr>
+      <tr><td><strong>Blog CMS</strong></td><td>Create/edit/publish blog posts with auto reading time and SEO fields</td></tr>
+      <tr><td><strong>Destination Management</strong></td><td>Region-specific destination pages (divine / domestic / international)</td></tr>
+      <tr><td><strong>Testimonials</strong></td><td>Publish/unpublish customer reviews with star ratings</td></tr>
+      <tr><td><strong>Media Library</strong></td><td>Upload and manage image assets for use across all content</td></tr>
+      <tr><td><strong>Site Settings</strong></td><td>Analytics IDs (GTM, GA4, Meta Pixel), social defaults, notification email</td></tr>
+      <tr><td><strong>Theme Editor</strong></td><td>Brand colors, logo, WhatsApp number, contact details, color presets</td></tr>
+      <tr><td><strong>SEO Management</strong></td><td>Per-page SEO overrides, robots, canonical, JSON-LD injection</td></tr>
+      <tr><td><strong>Authentication</strong></td><td>Admin login/logout, protected route middleware via Supabase Auth</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 2: SRS ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 02</div>
+  <div class="doc-title">Software Requirement Specification (SRS)</div>
+</div>
+
+<div class="section">
+  <div class="section-title">2.1 Lead Capture Form</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Feature Name</div><div class="field-value">Lead Capture Form</div></div>
+      <div class="field-row"><div class="field-label">Description</div><div class="field-value">Collects visitor contact and travel intent details and stores as a lead in the CRM pipeline</div></div>
+      <div class="field-row"><div class="field-label">Inputs</div><div class="field-value">name (required), mobile (required, Indian regex), email (optional), destination, travel_date, adults, children, budget, message, source (enum), package_id, package_slug</div></div>
+      <div class="field-row"><div class="field-label">Outputs</div><div class="field-value">Lead record in DB; activity log entry; JSON response <code>{ ok: true, id, message }</code></div></div>
+      <div class="field-row"><div class="field-label">Business Rules</div><div class="field-value">Mobile must match Indian phone regex; travel_date must be future date; rate limit 5 requests / 60 s / IP; UTM params parsed from cookies; source distinguishes origin (contact / quick-quote / package-inquiry / callback)</div></div>
+      <div class="field-row"><div class="field-label">Dependencies</div><div class="field-value">Supabase <code>leads</code> table; <code>/api/leads</code> route; Zod <code>leadSchema</code></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">2.2 Package Catalog</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Feature Name</div><div class="field-value">Package Catalog</div></div>
+      <div class="field-row"><div class="field-label">Description</div><div class="field-value">Browseable, searchable, filterable listing of all published tour packages</div></div>
+      <div class="field-row"><div class="field-label">Inputs</div><div class="field-value">Search query; category filter; sort selection (updated / price_low / price_high / duration)</div></div>
+      <div class="field-row"><div class="field-label">Outputs</div><div class="field-value">Filtered package cards: title, price, duration, cover image, category badge</div></div>
+      <div class="field-row"><div class="field-label">Business Rules</div><div class="field-value">Only <code>is_published = true</code> packages shown publicly; hierarchical categories (parent/child); <code>is_featured</code> flag controls homepage section</div></div>
+      <div class="field-row"><div class="field-label">Dependencies</div><div class="field-value">Supabase <code>packages</code>, <code>package_categories</code> tables</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">2.3 Package Detail Page</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Feature Name</div><div class="field-value">Package Detail</div></div>
+      <div class="field-row"><div class="field-label">Description</div><div class="field-value">Full single-package view with all content sections and inquiry CTA</div></div>
+      <div class="field-row"><div class="field-label">Inputs</div><div class="field-value">URL slug</div></div>
+      <div class="field-row"><div class="field-label">Outputs</div><div class="field-value">Overview, itinerary (day-by-day), pricing, inclusions/exclusions, gallery, FAQs, related packages, inquiry form, sticky CTA, JSON-LD (TouristTrip + BreadcrumbList + FAQPage)</div></div>
+      <div class="field-row"><div class="field-label">Business Rules</div><div class="field-value">Must return 404 for unpublished or non-existent slugs; related packages from same category; structured data mandatory in page source</div></div>
+      <div class="field-row"><div class="field-label">Dependencies</div><div class="field-value"><code>packages</code>, <code>package_categories</code> tables; SEO metadata system</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">2.4 Blog System</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Feature Name</div><div class="field-value">Blog</div></div>
+      <div class="field-row"><div class="field-label">Description</div><div class="field-value">Travel content articles with category filtering and full Markdown rendering</div></div>
+      <div class="field-row"><div class="field-label">Inputs</div><div class="field-value">Search query; category filter</div></div>
+      <div class="field-row"><div class="field-label">Outputs</div><div class="field-value">Blog cards (list); full article with ToC, author, publish date, reading time, related posts; JSON-LD Article</div></div>
+      <div class="field-row"><div class="field-label">Business Rules</div><div class="field-value">Only <code>is_published = true</code> shown publicly; <code>reading_time_minutes</code> auto-calculated (words / 200, min 1); <code>published_at</code> auto-set on first publish</div></div>
+      <div class="field-row"><div class="field-label">Dependencies</div><div class="field-value"><code>blogs</code> table; Markdown renderer component</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">2.5 Lead Pipeline (Admin)</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Feature Name</div><div class="field-value">Lead Pipeline</div></div>
+      <div class="field-row"><div class="field-label">Description</div><div class="field-value">CRM-style Kanban board for managing leads from initial contact to confirmed booking</div></div>
+      <div class="field-row"><div class="field-label">Inputs</div><div class="field-value">Drag-drop between columns; status filter; search (name / mobile / destination)</div></div>
+      <div class="field-row"><div class="field-label">Outputs</div><div class="field-value">Lead cards with priority, assigned user, follow-up date; status auto-updated with audit note and timestamp</div></div>
+      <div class="field-row"><div class="field-label">Business Rules</div><div class="field-value">6 statuses: new → contacted → quoted → negotiation → confirmed → lost; 4 priority levels: low / medium / high / urgent; max 500 leads fetched; status changes appended to <code>notes</code> JSONB array with timestamp</div></div>
+      <div class="field-row"><div class="field-label">Dependencies</div><div class="field-value"><code>leads</code> table; activity log</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">2.6–2.9 Additional Feature Specifications</div>
+  <table>
+    <thead><tr><th>Feature</th><th>Key Business Rules</th><th>Dependencies</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Homepage Builder</strong></td>
+        <td>10 fixed section keys; enable/disable + display_order; config JSONB for text overrides</td>
+        <td><code>homepage_sections</code> table; <code>lib/homepage/registry.tsx</code></td>
+      </tr>
+      <tr>
+        <td><strong>Theme Editor</strong></td>
+        <td>Singleton (id=1); 5 presets (default, festival, temple, corporate, dark); one active preset at a time</td>
+        <td><code>theme_settings</code>, <code>theme_presets</code> tables; ThemeProvider</td>
+      </tr>
+      <tr>
+        <td><strong>SEO Management</strong></td>
+        <td>Path must be unique; page-level overrides global defaults; sitemap.xml and robots.txt auto-generated</td>
+        <td><code>seo_pages</code>, <code>site_settings</code>; Next.js Metadata API</td>
+      </tr>
+      <tr>
+        <td><strong>Authentication</strong></td>
+        <td>Middleware refreshes session on every request; authenticated users redirected from /admin/login; Supabase email/password only</td>
+        <td>Supabase Auth; <code>middleware.ts</code>; <code>@supabase/ssr</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 3: FRD ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 03</div>
+  <div class="doc-title">Functional Requirement Document (FRD)</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Public Pages</div>
+  <table>
+    <thead><tr><th>ID</th><th>Page / URL</th><th>Functional Behaviour</th><th>User Actions</th><th>Expected System Response</th></tr></thead>
+    <tbody>
+      <tr><td>FR-PUB-001</td><td>Homepage <code>/</code></td><td>Dynamic sections in configured order; force-dynamic (no cache)</td><td>View sections; click CTAs; use WhatsApp float</td><td>All enabled sections render with live data; hero, destinations, featured packages, testimonials, blog visible</td></tr>
+      <tr><td>FR-PUB-002</td><td>Packages <code>/packages</code></td><td>All published packages; client-side filter</td><td>Search; click category; change sort</td><td>Real-time filter; category count updates; "No packages" empty state</td></tr>
+      <tr><td>FR-PUB-003</td><td>Package Detail <code>/packages/[slug]</code></td><td>Full content; sticky CTA on desktop</td><td>Browse itinerary; view pricing; submit inquiry; click WhatsApp</td><td>All sections render; inquiry submits to <code>/api/leads</code>; 404 for invalid slug</td></tr>
+      <tr><td>FR-PUB-004</td><td>Contact <code>/contact</code></td><td>Multi-field lead form + 5 contact info cards</td><td>Fill and submit form</td><td>Zod validation on blur/submit; loading state; success message on success; error toast on failure</td></tr>
+      <tr><td>FR-PUB-005</td><td>Blog List <code>/blog</code></td><td>Searchable/filterable grid of published posts</td><td>Search; filter by category</td><td>Client-side filter; "No posts" empty state</td></tr>
+      <tr><td>FR-PUB-006</td><td>Blog Detail <code>/blog/[slug]</code></td><td>Markdown rendering, ToC, related posts</td><td>Scroll; click ToC links; click related posts</td><td>ToC anchors scroll to heading; Markdown renders as HTML; 404 for invalid slug</td></tr>
+      <tr><td>FR-PUB-007</td><td>Destination Pages <code>/{region}</code></td><td>Grid of published destinations by region</td><td>Click destination card</td><td>Cards with name/image/description; link to <code>/{region}/[slug]</code>; empty state if none</td></tr>
+      <tr><td>FR-PUB-008</td><td>Testimonials <code>/testimonials</code></td><td>3-column grid of published testimonials</td><td>Browse</td><td>Stars render 1–5; avatar or fallback; tour taken label visible</td></tr>
+      <tr><td>FR-PUB-009</td><td>FAQ <code>/faq</code></td><td>Accordion grouped by category; FAQPage JSON-LD</td><td>Click accordion item</td><td>Item expands; JSON-LD in page source</td></tr>
+      <tr><td>FR-PUB-010</td><td>Gallery <code>/gallery</code></td><td>Grid of published gallery images; lazy loading</td><td>Browse</td><td>Images load; empty state when no items</td></tr>
+      <tr><td>FR-PUB-011</td><td>About <code>/about</code></td><td>Static content — mission, values, why-choose-us, contact sidebar</td><td>Click WhatsApp / phone links</td><td>WhatsApp opens <code>wa.me</code> URL; phone triggers <code>tel:</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Admin Pages</div>
+  <table>
+    <thead><tr><th>ID</th><th>Page / URL</th><th>Functional Behaviour</th><th>User Actions</th><th>Expected System Response</th></tr></thead>
+    <tbody>
+      <tr><td>FR-ADM-001</td><td>Dashboard <code>/admin</code></td><td>KPI cards + pipeline summary + recent leads</td><td>View stats; click recent lead</td><td>Stats reflect live DB counts; high-priority alert if new urgent leads</td></tr>
+      <tr><td>FR-ADM-002</td><td>Leads <code>/admin/leads</code></td><td>Kanban + List view; search and filter</td><td>Switch view; drag card; click to open drawer; search; filter</td><td>Drag updates status in DB with auto-note; detail drawer opens; search filters in real time</td></tr>
+      <tr><td>FR-ADM-003</td><td>Packages <code>/admin/packages</code></td><td>Table with CRUD actions</td><td>New; Edit; Delete</td><td>New → <code>/packages/new</code>; Edit → <code>/packages/[id]/edit</code>; Delete → confirmation dialog; table refreshes</td></tr>
+      <tr><td>FR-ADM-004</td><td>Blog <code>/admin/blog</code></td><td>Table of all posts</td><td>New; Edit; Delete; toggle published</td><td>Reading time auto-calc; <code>published_at</code> auto-set; table refreshes</td></tr>
+      <tr><td>FR-ADM-005</td><td>Homepage Builder</td><td>Toggle + reorder 10 sections</td><td>Enable/disable toggle; change order</td><td>Changes persist; public homepage reflects on next load</td></tr>
+      <tr><td>FR-ADM-006</td><td>Theme Editor</td><td>Brand settings + color presets</td><td>Edit fields; pick colors; activate preset</td><td>Persists to singleton; site-wide CSS updates on next load</td></tr>
+      <tr><td>FR-ADM-007</td><td>Site Settings</td><td>Analytics IDs + social metadata</td><td>Enter IDs; set OG image; set email</td><td>Values persist; scripts inject into <code>&lt;head&gt;</code></td></tr>
+      <tr><td>FR-ADM-008</td><td>SEO Pages</td><td>Per-path SEO overrides</td><td>Create or edit SEO record</td><td>Path-specific metadata overrides global defaults</td></tr>
+      <tr><td>FR-ADM-009</td><td>Media Library</td><td>Upload + manage image assets</td><td>Upload; view; delete</td><td>File stored in Supabase Storage; URL available for forms</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 4: USER STORIES ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 04</div>
+  <div class="doc-title">User Stories</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Public User Stories</div>
+  <table>
+    <thead><tr><th>ID</th><th>As a…</th><th>I want to…</th><th>So that…</th></tr></thead>
+    <tbody>
+      <tr><td>US-001</td><td>Prospective traveler</td><td>Browse all available tour packages</td><td>I can find a trip that suits my interests and budget</td></tr>
+      <tr><td>US-002</td><td>Pilgrim</td><td>Filter packages by divine tour category</td><td>I can quickly find pilgrimage-specific yatra packages</td></tr>
+      <tr><td>US-003</td><td>Prospective traveler</td><td>View full package details including itinerary, pricing and inclusions</td><td>I can make an informed booking decision</td></tr>
+      <tr><td>US-004</td><td>Visitor</td><td>Submit a contact form with my travel requirements</td><td>A travel agent can call me back with a quote</td></tr>
+      <tr><td>US-005</td><td>Visitor</td><td>Get a quick quote directly from the homepage</td><td>I do not need to navigate to a separate page</td></tr>
+      <tr><td>US-006</td><td>Visitor on a package page</td><td>Submit an inquiry pre-filled with the package name</td><td>The agent knows exactly which tour I am interested in</td></tr>
+      <tr><td>US-007</td><td>Visitor</td><td>Read travel blog articles</td><td>I can learn about destinations before booking</td></tr>
+      <tr><td>US-008</td><td>Visitor</td><td>Search blog posts by keyword</td><td>I can find articles about specific destinations</td></tr>
+      <tr><td>US-009</td><td>Visitor</td><td>Read customer testimonials</td><td>I can trust the quality of the company's service</td></tr>
+      <tr><td>US-010</td><td>Visitor</td><td>Browse the image gallery</td><td>I can see real photos from tours</td></tr>
+      <tr><td>US-011</td><td>Visitor</td><td>Browse destinations by type (divine / domestic / international)</td><td>I can explore options in my preferred category</td></tr>
+      <tr><td>US-012</td><td>Visitor</td><td>Read FAQs</td><td>I can get answers without contacting support</td></tr>
+      <tr><td>US-013</td><td>Mobile visitor</td><td>Use the site fully responsively</td><td>I can browse and submit forms comfortably on my phone</td></tr>
+      <tr><td>US-014</td><td>Visitor</td><td>Click the WhatsApp float button</td><td>I can instantly message the agency</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Admin User Stories</div>
+  <table>
+    <thead><tr><th>ID</th><th>As a…</th><th>I want to…</th><th>So that…</th></tr></thead>
+    <tbody>
+      <tr><td>US-015</td><td>Admin</td><td>Log in securely</td><td>I can access the management dashboard</td></tr>
+      <tr><td>US-016</td><td>Sales agent</td><td>See all incoming leads on a Kanban board</td><td>I can visually manage the sales pipeline</td></tr>
+      <tr><td>US-017</td><td>Sales agent</td><td>Drag a lead card to a new status column</td><td>The pipeline reflects current progress</td></tr>
+      <tr><td>US-018</td><td>Sales agent</td><td>Open a lead detail drawer and add notes</td><td>I can record call outcomes and follow-up actions</td></tr>
+      <tr><td>US-019</td><td>Sales agent</td><td>Search leads by name or mobile number</td><td>I can quickly find a specific customer</td></tr>
+      <tr><td>US-020</td><td>Admin</td><td>Create and publish tour packages with full details</td><td>They appear on the public website</td></tr>
+      <tr><td>US-021</td><td>Admin</td><td>Mark a package as featured</td><td>It appears in the homepage featured section</td></tr>
+      <tr><td>US-022</td><td>Admin</td><td>Write and publish blog posts</td><td>The site has fresh content for SEO</td></tr>
+      <tr><td>US-023</td><td>Admin</td><td>Enable or disable homepage sections</td><td>I can control the page layout without a developer</td></tr>
+      <tr><td>US-024</td><td>Admin</td><td>Change the site's brand colors</td><td>The website reflects the current theme/season</td></tr>
+      <tr><td>US-025</td><td>Admin</td><td>Configure Google Analytics and Meta Pixel IDs</td><td>Marketing can track conversions</td></tr>
+      <tr><td>US-026</td><td>Admin</td><td>Set custom SEO titles and descriptions for any page</td><td>Organic search rankings improve</td></tr>
+      <tr><td>US-027</td><td>Admin</td><td>Manage package categories hierarchically</td><td>Packages are logically organized</td></tr>
+      <tr><td>US-028</td><td>Admin</td><td>Upload media assets to the library</td><td>They can be reused across packages and blogs</td></tr>
+      <tr><td>US-029</td><td>Admin</td><td>Publish testimonials</td><td>Positive reviews appear on the website</td></tr>
+      <tr><td>US-030</td><td>Admin</td><td>Manage destinations by region</td><td>Destination landing pages are accurate</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 5: USE CASES ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 05</div>
+  <div class="doc-title">Use Cases</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UC-001 — Submit Lead via Contact Form</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Actor</div><div class="field-value">Public visitor</div></div>
+      <div class="field-row"><div class="field-label">Preconditions</div><div class="field-value">Visitor is on <code>/contact</code> page</div></div>
+      <div class="field-row"><div class="field-label">Main Flow</div><div class="field-value">1. Visitor fills Name and Mobile (required)<br>2. Optionally fills Email, Destination, Travel Date, Adults, Children, Budget, Message<br>3. Clicks "Send Enquiry"<br>4. Client-side Zod validation passes<br>5. POST to <code>/api/leads</code><br>6. Rate limit check passes<br>7. Lead created in DB with source="contact"<br>8. Activity logged; UTM cookies parsed and stored<br>9. Success message replaces form</div></div>
+      <div class="field-row"><div class="field-label">Alternate Flow</div><div class="field-value">Visitor fills only Name and Mobile → lead still created successfully with minimal data</div></div>
+      <div class="field-row"><div class="field-label">Exceptions</div><div class="field-value"><strong>E1:</strong> Validation fails (mobile format wrong, past travel date) → inline error, form not submitted<br><strong>E2:</strong> Rate limit exceeded (&gt;5 in 60s) → HTTP 429, error toast<br><strong>E3:</strong> DB insert fails → HTTP 500, error toast</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">UC-002 — Browse and Filter Packages</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Actor</div><div class="field-value">Public visitor</div></div>
+      <div class="field-row"><div class="field-label">Preconditions</div><div class="field-value">Published packages exist in DB</div></div>
+      <div class="field-row"><div class="field-label">Main Flow</div><div class="field-value">1. Visitor navigates to <code>/packages</code><br>2. All published packages displayed<br>3. Visitor types in search box → list filters in real time<br>4. Visitor clicks a category in sidebar → list filters<br>5. Visitor changes sort dropdown → list reorders</div></div>
+      <div class="field-row"><div class="field-label">Alternate Flow</div><div class="field-value">Visitor navigates with category query param → category pre-selected on load</div></div>
+      <div class="field-row"><div class="field-label">Exceptions</div><div class="field-value"><strong>E1:</strong> No packages match filter → "No packages found" empty state<br><strong>E2:</strong> No published packages at all → empty state on initial load</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">UC-003 — Admin Moves Lead Through Pipeline</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Actor</div><div class="field-value">Admin / Sales Agent</div></div>
+      <div class="field-row"><div class="field-label">Preconditions</div><div class="field-value">Admin authenticated; leads exist in DB</div></div>
+      <div class="field-row"><div class="field-label">Main Flow</div><div class="field-value">1. Admin navigates to <code>/admin/leads</code><br>2. Kanban board displayed with 6 status columns<br>3. Admin drags a lead card from "New" to "Contacted"<br>4. System updates lead status in DB<br>5. Auto-note appended with timestamp<br>6. Column counts update</div></div>
+      <div class="field-row"><div class="field-label">Alternate Flow</div><div class="field-value">Admin switches to List view → opens lead detail drawer → changes status via dropdown</div></div>
+      <div class="field-row"><div class="field-label">Exceptions</div><div class="field-value"><strong>E1:</strong> Drag fails due to network error → optimistic update reverted, error toast</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">UC-004 — Create and Publish a Package</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Actor</div><div class="field-value">Admin</div></div>
+      <div class="field-row"><div class="field-label">Preconditions</div><div class="field-value">Admin authenticated; package categories exist</div></div>
+      <div class="field-row"><div class="field-label">Main Flow</div><div class="field-value">1. Admin navigates to <code>/admin/packages</code> → clicks "New Package"<br>2. Fills required fields: slug, title, duration, overview<br>3. Adds itinerary, pricing, inclusions/exclusions<br>4. Sets <code>is_published = true</code>; optionally <code>is_featured = true</code><br>5. Clicks Save → POST to <code>/api/admin/packages</code><br>6. Package created; admin redirected to package list</div></div>
+      <div class="field-row"><div class="field-label">Alternate Flow</div><div class="field-value">Admin saves with <code>is_published = false</code> → package exists in DB but not visible publicly</div></div>
+      <div class="field-row"><div class="field-label">Exceptions</div><div class="field-value"><strong>E1:</strong> Slug already exists → unique constraint error returned<br><strong>E2:</strong> Required field missing → Zod validation error shown on form field</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">UC-005 — Admin Configures Homepage Layout</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Actor</div><div class="field-value">Admin / Marketing Manager</div></div>
+      <div class="field-row"><div class="field-label">Preconditions</div><div class="field-value">Admin authenticated; <code>homepage_sections</code> rows exist</div></div>
+      <div class="field-row"><div class="field-label">Main Flow</div><div class="field-value">1. Admin navigates to <code>/admin/homepage-builder</code><br>2. Sees 10 sections with enable/disable toggles and order numbers<br>3. Toggles a section off; changes display order of another<br>4. Saves → <code>homepage_sections</code> table updated<br>5. Public homepage reflects changes on next page load</div></div>
+      <div class="field-row"><div class="field-label">Alternate Flow</div><div class="field-value">Admin edits section config JSON (e.g. hero title text) → config JSONB updated, homepage renders with new text</div></div>
+      <div class="field-row"><div class="field-label">Exceptions</div><div class="field-value"><strong>E1:</strong> All sections disabled → homepage renders as empty page (no sections)</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">UC-006 — Admin Login</div>
+  <div class="field-block">
+    <div class="field-block-body">
+      <div class="field-row"><div class="field-label">Actor</div><div class="field-value">Admin</div></div>
+      <div class="field-row"><div class="field-label">Preconditions</div><div class="field-value">Admin account exists in Supabase Auth</div></div>
+      <div class="field-row"><div class="field-label">Main Flow</div><div class="field-value">1. User navigates to <code>/admin/login</code><br>2. Enters email and password → clicks Sign In<br>3. Supabase Auth validates credentials<br>4. Session cookie set; middleware detects session<br>5. Redirected to <code>/admin</code> dashboard</div></div>
+      <div class="field-row"><div class="field-label">Alternate Flow</div><div class="field-value">Already authenticated user navigates to <code>/admin/login</code> → middleware redirects to <code>/admin</code></div></div>
+      <div class="field-row"><div class="field-label">Exceptions</div><div class="field-value"><strong>E1:</strong> Wrong credentials → error message shown, no session created<br><strong>E2:</strong> Unauthenticated user navigates to <code>/admin/*</code> → redirect to <code>/admin/login</code></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── DOC 6: FEATURE INVENTORY ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 06</div>
+  <div class="doc-title">Feature Inventory</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Public Pages</div>
+  <table>
+    <thead><tr><th>Page</th><th>URL</th><th>Key Features</th></tr></thead>
+    <tbody>
+      <tr><td>Homepage</td><td><code>/</code></td><td>Dynamic sections, hero, trust bar, destination grids, featured packages, testimonials, blog, CTA, WhatsApp float</td></tr>
+      <tr><td>Packages Listing</td><td><code>/packages</code></td><td>Search, category filter (hierarchical), sort (4 options), package cards with price/duration</td></tr>
+      <tr><td>Package Detail</td><td><code>/packages/[slug]</code></td><td>Itinerary, pricing, inclusions/exclusions, gallery, FAQs, inquiry form, sticky CTA, related packages, JSON-LD</td></tr>
+      <tr><td>Blog Listing</td><td><code>/blog</code></td><td>Search, category filter, reading time badge, blog cards</td></tr>
+      <tr><td>Blog Detail</td><td><code>/blog/[slug]</code></td><td>Markdown rendering, Table of Contents, author/date, related posts, Article JSON-LD</td></tr>
+      <tr><td>Divine Tours</td><td><code>/divine-tours</code></td><td>Region-filtered destination grid (region=divine)</td></tr>
+      <tr><td>Domestic Tours</td><td><code>/domestic-tours</code></td><td>Region-filtered destination grid (region=domestic)</td></tr>
+      <tr><td>International Tours</td><td><code>/international-tours</code></td><td>Region-filtered destination grid (region=international)</td></tr>
+      <tr><td>Contact</td><td><code>/contact</code></td><td>Multi-field lead form, 5 contact info cards (WhatsApp, Phone, Email, Address, Hours)</td></tr>
+      <tr><td>About</td><td><code>/about</code></td><td>Mission, values, why-choose-us, WhatsApp/phone links</td></tr>
+      <tr><td>FAQ</td><td><code>/faq</code></td><td>Category-grouped accordion, FAQPage JSON-LD</td></tr>
+      <tr><td>Gallery</td><td><code>/gallery</code></td><td>Image grid, lazy loading, empty state</td></tr>
+      <tr><td>Testimonials</td><td><code>/testimonials</code></td><td>Star ratings (1–5), author info, 3-column grid</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Forms Inventory</div>
+  <table>
+    <thead><tr><th>Form</th><th>Location</th><th>Required Fields</th><th>API Endpoint</th></tr></thead>
+    <tbody>
+      <tr><td>Contact Form</td><td><code>/contact</code></td><td>name, mobile</td><td>POST <code>/api/leads</code></td></tr>
+      <tr><td>Quick Quote Form</td><td>Homepage / widgets</td><td>name, mobile</td><td>POST <code>/api/leads</code></td></tr>
+      <tr><td>Package Inquiry Form</td><td><code>/packages/[slug]</code></td><td>name, mobile</td><td>POST <code>/api/leads</code></td></tr>
+      <tr><td>Admin Login Form</td><td><code>/admin/login</code></td><td>email, password</td><td>Supabase Auth</td></tr>
+      <tr><td>Package Form</td><td><code>/admin/packages/new</code> &amp; edit</td><td>slug, title, overview</td><td>POST/PATCH <code>/api/admin/packages</code></td></tr>
+      <tr><td>Blog Form</td><td><code>/admin/blog/new</code> &amp; edit</td><td>slug, title, content</td><td>POST/PATCH <code>/api/admin/blogs</code></td></tr>
+      <tr><td>Testimonial Form</td><td><code>/admin/testimonials/new</code></td><td>author_name, rating, content</td><td>POST <code>/api/admin/testimonials</code></td></tr>
+      <tr><td>Site Settings Form</td><td><code>/admin/site-settings</code></td><td>—</td><td>POST <code>/api/admin/site-settings</code></td></tr>
+      <tr><td>Theme Form</td><td><code>/admin/theme</code></td><td>whatsapp_number</td><td>Theme settings endpoint</td></tr>
+      <tr><td>Destination Form</td><td><code>/admin/destinations</code></td><td>name, slug, region</td><td>POST <code>/api/admin/destinations</code></td></tr>
+      <tr><td>Category Form</td><td><code>/admin/categories</code></td><td>name, slug</td><td>POST <code>/api/admin/categories</code></td></tr>
+      <tr><td>SEO Page Form</td><td><code>/admin/seo-pages</code></td><td>path</td><td>POST <code>/api/admin/seo-pages</code></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Search &amp; Filter Inventory</div>
+  <table>
+    <thead><tr><th>Location</th><th>Search Fields</th><th>Filter Options</th></tr></thead>
+    <tbody>
+      <tr><td>Packages listing</td><td>title, overview</td><td>Category (hierarchical), Sort: updated / price_low / price_high / duration</td></tr>
+      <tr><td>Blog listing</td><td>title, excerpt</td><td>Category</td></tr>
+      <tr><td>Leads manager</td><td>name, mobile, destination</td><td>Status: new / contacted / quoted / negotiation / confirmed / lost</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 7: AC ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 07</div>
+  <div class="doc-title">Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <table>
+    <thead><tr><th>ID</th><th>Feature</th><th>Given</th><th>When</th><th>Then</th></tr></thead>
+    <tbody>
+      <tr><td>AC-001</td><td>Contact Form — Mobile Validation</td><td>A visitor is on <code>/contact</code></td><td>They submit with an invalid Indian mobile (e.g. "12345")</td><td>Inline error appears; form is not submitted</td></tr>
+      <tr><td>AC-002</td><td>Contact Form — Past Date</td><td>A visitor enters a past travel date</td><td>They click Submit</td><td>Validation error "Travel date must be in the future" shown</td></tr>
+      <tr><td>AC-003</td><td>Contact Form — Success</td><td>Valid data is submitted</td><td>API returns 200</td><td>Success message shown; lead record exists in DB</td></tr>
+      <tr><td>AC-004</td><td>Contact Form — Rate Limit</td><td>Same IP submits more than 5 times in 60 seconds</td><td>The 6th request is made</td><td>HTTP 429 returned; error toast displayed</td></tr>
+      <tr><td>AC-005</td><td>Package Listing — Search</td><td>A visitor types a keyword</td><td>The search box has focus and input</td><td>Only packages whose title or overview contains the keyword are displayed</td></tr>
+      <tr><td>AC-006</td><td>Package Listing — Category</td><td>A visitor clicks a category</td><td>Category is selected</td><td>Only packages in that category (or its children) are shown</td></tr>
+      <tr><td>AC-007</td><td>Package Listing — Sort Price</td><td>A visitor selects "Price: Low to High"</td><td>Sort dropdown changes</td><td>Packages ordered by <code>starting_price</code> ascending</td></tr>
+      <tr><td>AC-008</td><td>Package Detail — 404</td><td>A visitor navigates to a non-existent or unpublished slug</td><td>Page loads</td><td>HTTP 404 returned; not-found page rendered</td></tr>
+      <tr><td>AC-009</td><td>Package Inquiry — Attribution</td><td>A visitor submits the inquiry form on a package page</td><td>Form submits</td><td>Lead record in DB includes correct <code>package_id</code> and <code>package_slug</code></td></tr>
+      <tr><td>AC-010</td><td>Blog — Reading Time</td><td>An admin publishes a blog post</td><td>Post is saved</td><td><code>reading_time_minutes</code> = ceil(word_count / 200), minimum 1</td></tr>
+      <tr><td>AC-011</td><td>Blog — Auto Publish Date</td><td>An admin publishes a post for the first time</td><td><code>is_published = true</code> is saved</td><td><code>published_at</code> is set to current timestamp</td></tr>
+      <tr><td>AC-012</td><td>Blog Detail — 404</td><td>A visitor navigates to an unpublished or non-existent blog slug</td><td>Page loads</td><td>HTTP 404 returned</td></tr>
+      <tr><td>AC-013</td><td>Lead Kanban — Drag</td><td>An admin drags a lead to a new status column</td><td>Drop event fires</td><td>Lead <code>status</code> updated in DB; auto-note with timestamp appended to <code>notes</code></td></tr>
+      <tr><td>AC-014</td><td>Lead Search</td><td>An admin types in the search box</td><td>Input changes</td><td>Only leads with matching name, mobile, or destination shown</td></tr>
+      <tr><td>AC-015</td><td>Admin Auth — Protected Routes</td><td>An unauthenticated user navigates to <code>/admin/*</code></td><td>Page loads</td><td>Redirected to <code>/admin/login</code>; admin content not visible</td></tr>
+      <tr><td>AC-016</td><td>Admin Auth — Login Redirect</td><td>An authenticated admin navigates to <code>/admin/login</code></td><td>Page loads</td><td>Redirected to <code>/admin</code></td></tr>
+      <tr><td>AC-017</td><td>Homepage Builder — Toggle</td><td>An admin disables a section</td><td>Changes are saved</td><td>That section not rendered on public homepage</td></tr>
+      <tr><td>AC-018</td><td>Homepage Builder — Order</td><td>An admin changes section display_order</td><td>Changes are saved</td><td>Sections render in the new order on the public homepage</td></tr>
+      <tr><td>AC-019</td><td>Theme — Singleton</td><td>An admin saves theme settings</td><td>Save succeeds</td><td>Brand name, WhatsApp number and colors updated site-wide on next load</td></tr>
+      <tr><td>AC-020</td><td>Package — Unpublished Hidden</td><td>A package has <code>is_published = false</code></td><td>Visitor browses <code>/packages</code> or navigates to slug</td><td>Package not listed; direct slug access returns 404</td></tr>
+      <tr><td>AC-021</td><td>Package — Featured</td><td>A package has <code>is_featured = true</code> and <code>is_published = true</code></td><td>Homepage loads</td><td>Package appears in Featured Packages section</td></tr>
+      <tr><td>AC-022</td><td>UTM Attribution</td><td>Visitor arrives via URL with UTM params</td><td>They submit any lead form</td><td>Lead record contains correct utm_source, utm_medium, utm_campaign values</td></tr>
+      <tr><td>AC-023</td><td>WhatsApp Float</td><td>Any public page is loaded</td><td>Page renders</td><td>WhatsApp float button visible; links to <code>wa.me/{configured_number}</code></td></tr>
+      <tr><td>AC-024</td><td>SEO — JSON-LD</td><td>A visitor loads a package detail page</td><td>Page source inspected</td><td>Contains valid TouristTrip and FAQPage JSON-LD scripts</td></tr>
+      <tr><td>AC-025</td><td>Gallery — Empty State</td><td>No gallery items are published</td><td>Visitor loads <code>/gallery</code></td><td>Appropriate empty state message displayed</td></tr>
+      <tr><td>AC-026</td><td>Destination Region Filter</td><td>A visitor navigates to <code>/divine-tours</code></td><td>Page renders</td><td>Only destinations with <code>region = 'divine'</code> and <code>is_published = true</code> shown</td></tr>
+      <tr><td>AC-027</td><td>Media Upload</td><td>An admin uploads an image</td><td>Upload completes</td><td>Image appears in media grid with filename, URL and metadata</td></tr>
+      <tr><td>AC-028</td><td>Slug Uniqueness</td><td>Admin creates a package/blog with an existing slug</td><td>Form submits</td><td>Error returned; duplicate not created in DB</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 8: RTM ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 08</div>
+  <div class="doc-title">Requirement Traceability Matrix (RTM)</div>
+</div>
+
+<div class="section">
+  <table>
+    <thead><tr><th>Req ID</th><th>Feature</th><th>User Story</th><th>Acceptance Criteria</th><th>Test Scenario</th></tr></thead>
+    <tbody>
+      <tr><td>REQ-001</td><td>Lead Capture — Contact Form</td><td>US-004</td><td>AC-001, AC-002, AC-003, AC-004</td><td>TS-001</td></tr>
+      <tr><td>REQ-002</td><td>Lead Capture — Quick Quote</td><td>US-005</td><td>AC-003, AC-004</td><td>TS-002</td></tr>
+      <tr><td>REQ-003</td><td>Lead Capture — Package Inquiry</td><td>US-006</td><td>AC-003, AC-009</td><td>TS-003</td></tr>
+      <tr><td>REQ-004</td><td>Package Listing — Search &amp; Filter</td><td>US-001, US-002</td><td>AC-005, AC-006, AC-007</td><td>TS-004</td></tr>
+      <tr><td>REQ-005</td><td>Package Detail</td><td>US-003</td><td>AC-008, AC-009, AC-024</td><td>TS-005</td></tr>
+      <tr><td>REQ-006</td><td>Blog System</td><td>US-007, US-008</td><td>AC-010, AC-011, AC-012</td><td>TS-006</td></tr>
+      <tr><td>REQ-007</td><td>Lead Pipeline — Kanban</td><td>US-016, US-017</td><td>AC-013</td><td>TS-007</td></tr>
+      <tr><td>REQ-008</td><td>Lead Pipeline — Search</td><td>US-019</td><td>AC-014</td><td>TS-008</td></tr>
+      <tr><td>REQ-009</td><td>Authentication</td><td>US-015</td><td>AC-015, AC-016</td><td>TS-009</td></tr>
+      <tr><td>REQ-010</td><td>Homepage Builder</td><td>US-023</td><td>AC-017, AC-018</td><td>TS-010</td></tr>
+      <tr><td>REQ-011</td><td>Theme Editor</td><td>US-024</td><td>AC-019</td><td>TS-011</td></tr>
+      <tr><td>REQ-012</td><td>Package Publish States</td><td>US-020, US-021</td><td>AC-020, AC-021</td><td>TS-012</td></tr>
+      <tr><td>REQ-013</td><td>UTM Attribution</td><td>—</td><td>AC-022</td><td>TS-013</td></tr>
+      <tr><td>REQ-014</td><td>SEO — JSON-LD</td><td>—</td><td>AC-024</td><td>TS-014</td></tr>
+      <tr><td>REQ-015</td><td>Destination Region Filter</td><td>US-011</td><td>AC-026</td><td>TS-015</td></tr>
+      <tr><td>REQ-016</td><td>Media Library</td><td>US-028</td><td>AC-027</td><td>TS-016</td></tr>
+      <tr><td>REQ-017</td><td>Slug Uniqueness</td><td>US-020</td><td>AC-028</td><td>TS-017</td></tr>
+      <tr><td>REQ-018</td><td>WhatsApp Integration</td><td>US-014</td><td>AC-023</td><td>TS-018</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 9: TEST SCENARIOS ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 09</div>
+  <div class="doc-title">Test Scenarios</div>
+</div>
+
+<div class="section">
+  <table>
+    <thead><tr><th>ID</th><th>Module</th><th>High-Level Scenario</th></tr></thead>
+    <tbody>
+      <tr><td>TS-001</td><td>Contact Form</td><td>Verify form validation, successful submission, rate limiting, and DB lead creation</td></tr>
+      <tr><td>TS-002</td><td>Quick Quote Form</td><td>Verify pre-fill defaults, source field value, and successful submission</td></tr>
+      <tr><td>TS-003</td><td>Package Inquiry Form</td><td>Verify package_id/slug pre-fill, destination pre-fill, and correct source on lead</td></tr>
+      <tr><td>TS-004</td><td>Package Listing</td><td>Verify search, category filter (including child categories), all 4 sort options, and empty state</td></tr>
+      <tr><td>TS-005</td><td>Package Detail</td><td>Verify all content sections render, JSON-LD in source, inquiry form, 404 for invalid slug</td></tr>
+      <tr><td>TS-006</td><td>Blog</td><td>Verify listing search/filter, detail Markdown rendering, ToC scroll, reading time, 404 for invalid slug</td></tr>
+      <tr><td>TS-007</td><td>Lead Kanban</td><td>Verify 6 columns render, drag-drop updates status, auto-note appended with timestamp</td></tr>
+      <tr><td>TS-008</td><td>Lead Search</td><td>Verify search by name, mobile, destination; status filter; combined search + filter</td></tr>
+      <tr><td>TS-009</td><td>Authentication</td><td>Verify login success/failure, session protection, redirect from login when authenticated</td></tr>
+      <tr><td>TS-010</td><td>Homepage Builder</td><td>Verify section toggle hides/shows on public site; display order changes reflect correctly</td></tr>
+      <tr><td>TS-011</td><td>Theme Editor</td><td>Verify brand name, color, and contact changes persist and appear on public site</td></tr>
+      <tr><td>TS-012</td><td>Package Publish States</td><td>Verify unpublished package hidden publicly; featured package appears on homepage</td></tr>
+      <tr><td>TS-013</td><td>UTM Attribution</td><td>Verify UTM params from URL stored correctly on lead when form submitted</td></tr>
+      <tr><td>TS-014</td><td>SEO &amp; JSON-LD</td><td>Verify package TouristTrip + FAQPage JSON-LD, blog Article JSON-LD, FAQ FAQPage JSON-LD</td></tr>
+      <tr><td>TS-015</td><td>Destination Pages</td><td>Verify each region page shows only correct-region published destinations</td></tr>
+      <tr><td>TS-016</td><td>Media Library</td><td>Verify upload, display in grid, metadata stored correctly</td></tr>
+      <tr><td>TS-017</td><td>Slug Uniqueness</td><td>Verify duplicate package slug and blog slug are rejected with error</td></tr>
+      <tr><td>TS-018</td><td>WhatsApp Integration</td><td>Verify float button, header button, and package CTA all link to correct <code>wa.me</code> URL</td></tr>
+      <tr><td>TS-019</td><td>Responsive Design</td><td>Verify all public pages on mobile (375px), tablet (768px), and desktop (1280px) viewports</td></tr>
+      <tr><td>TS-020</td><td>Header Scroll Behaviour</td><td>Verify transparent header on initial load transitions to solid background after 24px scroll</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 10: DETAILED TEST CASES ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 10</div>
+  <div class="doc-title">Detailed Test Cases</div>
+</div>
+
+<div class="section">
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-001</span><span class="tc-name">Contact Form — Valid Submission</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Application running; <code>/contact</code> page loaded in browser</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Rajesh Kumar", mobile="9876543210", email="rajesh@test.com", destination="Kedarnath", adults=2, travel_date=future date</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Enter Name: "Rajesh Kumar" &nbsp; 2. Enter Mobile: "9876543210" &nbsp; 3. Enter Email: "rajesh@test.com" &nbsp; 4. Enter Destination: "Kedarnath" &nbsp; 5. Select a future travel date &nbsp; 6. Enter Adults: 2 &nbsp; 7. Click "Send Enquiry"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Loading state visible; success message replaces form; lead record created in DB with source="contact" and all submitted values; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-002</span><span class="tc-name">Contact Form — Invalid Mobile Number</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value"><code>/contact</code> page loaded</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Test User", mobile="12345"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Enter Name: "Test User" &nbsp; 2. Enter Mobile: "12345" &nbsp; 3. Click "Send Enquiry"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Inline error on mobile field: "Enter a valid Indian mobile number"; form not submitted; no network request made</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-003</span><span class="tc-name">Contact Form — Past Travel Date</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value"><code>/contact</code> page loaded</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Test User", mobile="9876543210", travel_date="2024-01-01"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Enter valid Name and Mobile &nbsp; 2. Enter Travel Date: 2024-01-01 &nbsp; 3. Click "Send Enquiry"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Inline error on travel_date: "Travel date must be in the future"; form not submitted</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-004</span><span class="tc-name">Contact Form — Rate Limit Enforcement</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">API accessible; rate limit: 5 requests per 60 seconds per IP</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Valid lead data repeated 6 times</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Submit valid form 5 times within 60 seconds &nbsp; 2. Submit a 6th time without waiting</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">First 5 submissions succeed (HTTP 200); 6th submission receives HTTP 429; error toast displayed to user</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-005</span><span class="tc-name">Package Listing — Category Filter</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">At least 2 categories exist with published packages in each</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Category: "Divine Tours"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/packages</code> &nbsp; 2. Note total package count &nbsp; 3. Click "Divine Tours" in category sidebar</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Package list narrows to only "Divine Tours" packages; count updates; packages from other categories hidden</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-006</span><span class="tc-name">Package Listing — Keyword Search</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Published packages exist; at least one contains "Kedarnath" in title or overview</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">search="Kedarnath"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/packages</code> &nbsp; 2. Type "Kedarnath" in the search box</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Only packages whose title or overview contains "Kedarnath" displayed; results update in real time without page reload</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-007</span><span class="tc-name">Package Detail — 404 for Invalid Slug</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Application running</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">slug="non-existent-slug-xyz-404"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/packages/non-existent-slug-xyz-404</code></div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">HTTP 404 response; Next.js not-found page rendered; no package content visible</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-008</span><span class="tc-name">Package Detail — JSON-LD Structured Data</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">A published package with FAQs exists in DB</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><td class="tc-value">Any valid published package slug</td></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to a valid package detail page &nbsp; 2. View page source (Ctrl+U)</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Page source contains <code>&lt;script type="application/ld+json"&gt;</code> blocks with <code>@type: "TouristTrip"</code>, <code>@type: "FAQPage"</code>, and <code>@type: "BreadcrumbList"</code></div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-009</span><span class="tc-name">Admin Auth — Unauthenticated Redirect</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">No active admin session in browser</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">URL: <code>/admin/leads</code></div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Clear all cookies &nbsp; 2. Navigate directly to <code>/admin/leads</code></div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Redirected to <code>/admin/login</code>; admin content not visible at any point</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-010</span><span class="tc-name">Admin Auth — Successful Login</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Valid admin credentials exist in Supabase Auth; no active session</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Valid admin email and password</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/admin/login</code> &nbsp; 2. Enter valid email &nbsp; 3. Enter valid password &nbsp; 4. Click Sign In</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Session created; redirected to <code>/admin</code> dashboard; KPI stats visible; no login form shown</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-011</span><span class="tc-name">Admin Auth — Invalid Credentials</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value"><code>/admin/login</code> page loaded; no active session</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">email="wrong@test.com", password="wrongpassword123"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Enter email: "wrong@test.com" &nbsp; 2. Enter password: "wrongpassword123" &nbsp; 3. Click Sign In</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Error message displayed on login form; no session created; user remains on <code>/admin/login</code></div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-012</span><span class="tc-name">Lead Kanban — Drag-Drop Status Update</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; at least one lead with status="new" exists</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Lead with status="new"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/admin/leads</code> &nbsp; 2. Verify a lead card in the "New" column &nbsp; 3. Drag the card to the "Contacted" column &nbsp; 4. Drop it</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Card appears in "Contacted" column; DB lead.status = "contacted"; notes array has new entry with current timestamp and "Status changed to contacted"</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-013</span><span class="tc-name">Lead Search — By Mobile Number</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; leads exist including one with mobile "9876543210"</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">search="9876543210"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/admin/leads</code> &nbsp; 2. Type "9876543210" in search box</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Only leads matching that mobile number shown; all other leads hidden</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-014</span><span class="tc-name">Homepage Builder — Disable Section</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; "trust_bar" section currently enabled</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">section_key="trust_bar"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/admin/homepage-builder</code> &nbsp; 2. Toggle "trust_bar" to disabled &nbsp; 3. Save changes &nbsp; 4. Navigate to public homepage in new tab</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Trust bar section not rendered on public homepage; DB <code>homepage_sections</code> row has <code>is_enabled = false</code> for trust_bar</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-015</span><span class="tc-name">Blog — Auto Reading Time Calculation</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">content = article with exactly 400 words</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/admin/blog/new</code> &nbsp; 2. Fill required fields; paste 400-word content &nbsp; 3. Set <code>is_published = true</code> &nbsp; 4. Save</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value"><code>reading_time_minutes</code> = 2 (400 / 200); value "2 min read" displayed on blog card and detail page</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-016</span><span class="tc-name">Package — Duplicate Slug Rejected</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Package with slug "kedarnath-yatra" already exists in DB</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">slug="kedarnath-yatra"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/admin/packages/new</code> &nbsp; 2. Enter slug: "kedarnath-yatra" &nbsp; 3. Fill other required fields &nbsp; 4. Click Save</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">API returns error; error message shown on form; no duplicate package created in DB</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-017</span><span class="tc-name">UTM Attribution — Stored on Lead</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Application running; UTM cookie setter active on site</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">URL params: utm_source=google, utm_medium=cpc, utm_campaign=kedarnath</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to <code>/?utm_source=google&utm_medium=cpc&utm_campaign=kedarnath</code> &nbsp; 2. Navigate to <code>/contact</code> &nbsp; 3. Submit valid contact form</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Lead record in DB has utm_source="google", utm_medium="cpc", utm_campaign="kedarnath"</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-018</span><span class="tc-name">WhatsApp Float Button — Correct URL</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">whatsapp_number configured as "+91 98765 43210" in theme_settings</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">whatsapp_number="+919876543210"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Load any public page &nbsp; 2. Inspect the WhatsApp float button's href attribute</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">href = <code>https://wa.me/919876543210</code> (all non-digit characters stripped from number)</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-019</span><span class="tc-name">Package — Unpublished Not Accessible</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Package exists with <code>is_published = false</code></div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">slug of an unpublished package</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Note the slug of an unpublished package from admin &nbsp; 2. Navigate to <code>/packages/{slug}</code> &nbsp; 3. Also check <code>/packages</code> listing</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Package detail page returns 404; package not listed on <code>/packages</code> page</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-020</span><span class="tc-name">Responsive Header — Mobile Navigation</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Browser viewport set to 375px wide (Chrome DevTools mobile emulation)</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">viewport=375px</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Load homepage at 375px viewport &nbsp; 2. Verify hamburger icon visible &nbsp; 3. Click hamburger icon</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Mobile Sheet slides in from right; all navigation links visible; Divine Tours sub-items listed; Get Quote and WhatsApp buttons present in sheet</div></div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+<!-- ────────────────── DOC 11: UAT ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 11</div>
+  <div class="doc-title">UAT Test Cases</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UAT-001 — End-to-End Inquiry Flow</div>
+  <p style="margin-bottom:12px;font-size:12px;color:#555;"><em>Scenario: A prospective customer browses the site and submits a tour inquiry.</em></p>
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Expected Business Outcome</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Customer opens homepage</td><td>All enabled sections visible; hero text shows site tagline</td></tr>
+      <tr><td>2</td><td>Customer browses Featured Packages</td><td>Up to 6 featured packages shown with prices and durations</td></tr>
+      <tr><td>3</td><td>Customer clicks a package</td><td>Full package detail visible with itinerary and pricing options</td></tr>
+      <tr><td>4</td><td>Customer fills inquiry form</td><td>Name and mobile required; destination pre-filled with package name</td></tr>
+      <tr><td>5</td><td>Customer submits form</td><td>Success message with WhatsApp link appears</td></tr>
+      <tr><td>6</td><td>Admin checks <code>/admin/leads</code></td><td>New lead appears in "New" column on Kanban board</td></tr>
+      <tr><td>7</td><td>Admin opens lead detail</td><td>All customer details and source="package-inquiry" visible</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Acceptance:</strong> All 7 steps complete without error; lead record contains all submitted data with correct source attribution.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UAT-002 — Sales Agent Works a Lead Through Full Pipeline</div>
+  <p style="margin-bottom:12px;font-size:12px;color:#555;"><em>Scenario: An admin moves a lead through the complete sales pipeline from new to confirmed.</em></p>
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Expected Business Outcome</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Admin logs into dashboard</td><td>KPI stats visible; high-priority new leads alerted if any</td></tr>
+      <tr><td>2</td><td>Admin opens Kanban board</td><td>6 status columns visible with correct lead counts</td></tr>
+      <tr><td>3</td><td>Agent drags lead to "Contacted"</td><td>Status updates; auto-note with timestamp recorded</td></tr>
+      <tr><td>4</td><td>Agent opens lead detail and adds note</td><td>Note saved; notes timeline shows entry</td></tr>
+      <tr><td>5</td><td>Agent sets follow-up date</td><td>Follow-up date visible on lead card in board</td></tr>
+      <tr><td>6</td><td>Agent drags to "Quoted"</td><td>Status updates again with new timestamp</td></tr>
+      <tr><td>7</td><td>Agent drags to "Confirmed"</td><td>Lead shows as confirmed; dashboard confirmed count increments</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Acceptance:</strong> Full pipeline traversal works; all status changes persisted; notes timeline shows complete history.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UAT-003 — Marketing Manager Configures Homepage</div>
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Expected Business Outcome</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Manager logs in</td><td>Dashboard accessible</td></tr>
+      <tr><td>2</td><td>Opens Homepage Builder</td><td>All 10 sections listed with current enabled state and order</td></tr>
+      <tr><td>3</td><td>Disables "blog_section"</td><td>Toggle saves successfully</td></tr>
+      <tr><td>4</td><td>Views public homepage</td><td>Blog section no longer visible</td></tr>
+      <tr><td>5</td><td>Re-enables blog_section</td><td>Toggle saves</td></tr>
+      <tr><td>6</td><td>Views public homepage</td><td>Blog section reappears in correct position</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Acceptance:</strong> Section toggle changes visible on public site within one page reload.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UAT-004 — Admin Creates and Publishes a Package</div>
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Expected Business Outcome</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Admin navigates to packages admin</td><td>Package list table visible</td></tr>
+      <tr><td>2</td><td>Clicks New Package</td><td>Blank form loads at <code>/admin/packages/new</code></td></tr>
+      <tr><td>3</td><td>Fills title, slug, overview, duration, pricing</td><td>All fields accept input without errors</td></tr>
+      <tr><td>4</td><td>Marks is_published = true, is_featured = true</td><td>Checkboxes toggled successfully</td></tr>
+      <tr><td>5</td><td>Saves</td><td>No errors; redirected to package list; new package visible in table</td></tr>
+      <tr><td>6</td><td>Navigates to public <code>/packages</code></td><td>New package visible in listing with correct title and price</td></tr>
+      <tr><td>7</td><td>Clicks the package</td><td>Detail page renders all content correctly</td></tr>
+      <tr><td>8</td><td>Checks public homepage featured section</td><td>Package appears in Featured Packages section</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Acceptance:</strong> Package visible in listing, detail, and featured section within one page load after publishing.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UAT-005 — Brand Configuration</div>
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Expected Business Outcome</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Admin opens Theme Editor</td><td>Current brand settings (name, logo, WhatsApp, colors) visible</td></tr>
+      <tr><td>2</td><td>Changes brand name to "Travel Demo Co"</td><td>Input accepts new value</td></tr>
+      <tr><td>3</td><td>Updates WhatsApp number to a new value</td><td>New number entered and accepted</td></tr>
+      <tr><td>4</td><td>Saves settings</td><td>Success message shown; no errors</td></tr>
+      <tr><td>5</td><td>Views public site</td><td>Header shows "Travel Demo Co" as brand name</td></tr>
+      <tr><td>6</td><td>Clicks WhatsApp float button</td><td>Link points to new WhatsApp number correctly</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><strong>Acceptance:</strong> Brand name and WhatsApp number changes reflected site-wide on next page load.</div>
+</div>
+
+<!-- ────────────────── DOC 12: API INVENTORY ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 12</div>
+  <div class="doc-title">API Inventory</div>
+</div>
+
+<div class="section">
+  <table>
+    <thead><tr><th>Method</th><th>Endpoint</th><th>Auth</th><th>Purpose</th><th>Key Request Fields</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/leads</code></td><td>No</td><td>Create lead from any inquiry form</td><td>name, mobile, source (required); email, destination, travel_date, adults, children, budget, message, package_id (optional)</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/admin/packages</code></td><td>Yes</td><td>List all packages</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/packages</code></td><td>Yes</td><td>Create new package</td><td>Full packageSchema payload</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/admin/packages/[id]</code></td><td>Yes</td><td>Get single package</td><td>—</td></tr>
+      <tr><td><span class="badge badge-orange">PATCH</span></td><td><code>/api/admin/packages/[id]</code></td><td>Yes</td><td>Update package</td><td>Partial packageSchema payload</td></tr>
+      <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/admin/packages/[id]</code></td><td>Yes</td><td>Delete package</td><td>—</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/admin/blogs</code></td><td>Yes</td><td>List all blogs</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/blogs</code></td><td>Yes</td><td>Create blog post; auto-calcs reading_time</td><td>Full blogSchema payload</td></tr>
+      <tr><td><span class="badge badge-orange">PATCH</span></td><td><code>/api/admin/blogs/[id]</code></td><td>Yes</td><td>Update blog post</td><td>Partial blogSchema payload</td></tr>
+      <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/admin/blogs/[id]</code></td><td>Yes</td><td>Delete blog post</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/testimonials</code></td><td>Yes</td><td>Create testimonial</td><td>author_name, rating, content, is_published</td></tr>
+      <tr><td><span class="badge badge-orange">PATCH</span></td><td><code>/api/admin/testimonials/[id]</code></td><td>Yes</td><td>Update testimonial</td><td>Partial payload</td></tr>
+      <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/admin/testimonials/[id]</code></td><td>Yes</td><td>Delete testimonial</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/destinations</code></td><td>Yes</td><td>Create destination</td><td>slug, name, region (divine/domestic/international)</td></tr>
+      <tr><td><span class="badge badge-orange">PATCH</span></td><td><code>/api/admin/destinations/[id]</code></td><td>Yes</td><td>Update destination</td><td>Partial payload</td></tr>
+      <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/admin/destinations/[id]</code></td><td>Yes</td><td>Delete destination</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/categories</code></td><td>Yes</td><td>Create package category</td><td>slug, name, parent_id (optional)</td></tr>
+      <tr><td><span class="badge badge-orange">PATCH</span></td><td><code>/api/admin/categories/[id]</code></td><td>Yes</td><td>Update category</td><td>Partial payload</td></tr>
+      <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/admin/categories/[id]</code></td><td>Yes</td><td>Delete category</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/media</code></td><td>Yes</td><td>Create media asset record</td><td>filename, url, mime_type, size_bytes, alt_text</td></tr>
+      <tr><td><span class="badge badge-red">DELETE</span></td><td><code>/api/admin/media/[id]</code></td><td>Yes</td><td>Delete media asset</td><td>—</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/site-settings</code></td><td>Yes</td><td>Update global site settings</td><td>site_url, analytics IDs, notifications_email</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/admin/seo-pages</code></td><td>Yes</td><td>Create SEO page override</td><td>path (unique), seo_title, seo_description, robots_index</td></tr>
+      <tr><td><span class="badge badge-orange">PATCH</span></td><td><code>/api/admin/seo-pages/[id]</code></td><td>Yes</td><td>Update SEO page override</td><td>Partial payload</td></tr>
+      <tr><td><span class="badge badge-green">POST</span></td><td><code>/api/activity-log</code></td><td>Yes</td><td>Write admin activity log entry</td><td>action, entity, entity_id, metadata</td></tr>
+      <tr><td><span class="badge badge-blue">GET</span></td><td><code>/api/callback</code></td><td>No</td><td>Supabase Auth PKCE callback handler</td><td>— (query params: code, next)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 13: DB ENTITIES ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 13</div>
+  <div class="doc-title">Database Entity Map</div>
+</div>
+
+<div class="section">
+  <table>
+    <thead><tr><th>Entity</th><th>Table</th><th>Key Fields</th><th>Relationships / Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Lead</strong></td><td><code>leads</code></td><td>id, name, mobile, email, status (enum 6), priority (enum 4), source (enum 4), notes (JSONB array), utm_* (6 fields), landing_page</td><td>References <code>packages</code> via package_id (nullable)</td></tr>
+      <tr><td><strong>Package</strong></td><td><code>packages</code></td><td>id, slug (unique), title, is_published, is_featured, category_id, destination_id, itinerary (JSONB), pricing (JSONB), starting_price, cover_image</td><td>Belongs to <code>package_categories</code>, <code>destinations</code></td></tr>
+      <tr><td><strong>Package Category</strong></td><td><code>package_categories</code></td><td>id, slug (unique), name, parent_id, is_published, display_order</td><td>Self-referencing parent/child hierarchy; has many packages</td></tr>
+      <tr><td><strong>Destination</strong></td><td><code>destinations</code></td><td>id, slug (unique), name, region (enum: divine/domestic/international), parent_id, cover_image, is_published, display_order</td><td>Self-referencing; linked to packages via destination_id</td></tr>
+      <tr><td><strong>Blog</strong></td><td><code>blogs</code></td><td>id, slug (unique), title, content, is_published, published_at, reading_time_minutes (auto), category, tags[], author</td><td>Standalone; reading_time auto-calculated on save</td></tr>
+      <tr><td><strong>Testimonial</strong></td><td><code>testimonials</code></td><td>id, author_name, author_location, rating (1–5), content, avatar_url, tour_taken, is_published</td><td>Standalone</td></tr>
+      <tr><td><strong>Theme Settings</strong></td><td><code>theme_settings</code></td><td>id=1 (singleton), brand_name, logo_url, whatsapp_number, contact_phone, contact_email, address, primary/secondary/accent/dark/success colors</td><td>Singleton row</td></tr>
+      <tr><td><strong>Site Settings</strong></td><td><code>site_settings</code></td><td>id=1 (singleton), site_url, gtm_id, ga4_id, meta_pixel_id, google_sc_verification, default_og_image, notifications_email</td><td>Singleton row</td></tr>
+      <tr><td><strong>Theme Preset</strong></td><td><code>theme_presets</code></td><td>id, key (unique: default/festival/temple/corporate/dark), is_active, color values</td><td>Only one preset has is_active=true at a time</td></tr>
+      <tr><td><strong>Homepage Section</strong></td><td><code>homepage_sections</code></td><td>id, section_key (unique, 10 fixed keys), is_enabled, display_order, config (JSONB)</td><td>10 fixed section keys; config stores text overrides</td></tr>
+      <tr><td><strong>FAQ Category</strong></td><td><code>faq_categories</code></td><td>id, name, is_published, display_order</td><td>Has many <code>faqs</code></td></tr>
+      <tr><td><strong>FAQ</strong></td><td><code>faqs</code></td><td>id, question, answer, category_id, is_published, display_order</td><td>Belongs to <code>faq_categories</code></td></tr>
+      <tr><td><strong>Gallery Item</strong></td><td><code>gallery_items</code></td><td>id, title, image_url, category, tour_slug, is_published</td><td>Standalone</td></tr>
+      <tr><td><strong>Media Asset</strong></td><td><code>media_assets</code></td><td>id, filename, url, mime_type, size_bytes, width, height, alt_text, tags[], is_published</td><td>Standalone; URLs reusable across package/blog forms</td></tr>
+      <tr><td><strong>SEO Page</strong></td><td><code>seo_pages</code></td><td>id, path (unique), seo_title, seo_description, og_image, canonical_path, robots_index (bool), json_ld (JSONB)</td><td>Keyed by URL path; overrides global site_settings</td></tr>
+      <tr><td><strong>Activity Log</strong></td><td><code>activity_logs</code></td><td>id, user_email, action, entity, entity_id, metadata (JSONB), created_at</td><td>Append-only audit trail for all admin CRUD actions</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ────────────────── DOC 14: COVERAGE REPORT ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 14</div>
+  <div class="doc-title">QA Coverage Report</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Summary Metrics</div>
+  <table>
+    <thead><tr><th>Metric</th><th>Count</th></tr></thead>
+    <tbody>
+      <tr><td>Public pages documented</td><td>14</td></tr>
+      <tr><td>Admin pages documented</td><td>13</td></tr>
+      <tr><td>Forms inventoried</td><td>12</td></tr>
+      <tr><td>API endpoints inventoried</td><td>26</td></tr>
+      <tr><td>Database entities mapped</td><td>16</td></tr>
+      <tr><td>User stories generated</td><td>30</td></tr>
+      <tr><td>Use cases documented</td><td>6</td></tr>
+      <tr><td>Acceptance criteria defined</td><td>28</td></tr>
+      <tr><td>Detailed test cases written</td><td>20</td></tr>
+      <tr><td>UAT test cases written</td><td>5</td></tr>
+      <tr><td>Requirements in RTM</td><td>18</td></tr>
+      <tr><td>Test scenarios</td><td>20</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Coverage by Module</div>
+  <div class="coverage-row"><div class="coverage-label">Lead Capture Forms</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="coverage-pct">100%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Package Catalog</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="coverage-pct">100%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Authentication</div><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><div class="coverage-pct">100%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Lead Pipeline (Admin)</div><div class="bar-track"><div class="bar-fill" style="width:95%"></div></div><div class="coverage-pct">95%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Homepage Builder</div><div class="bar-track"><div class="bar-fill" style="width:95%"></div></div><div class="coverage-pct">95%</div></div>
+  <div class="coverage-row"><div class="coverage-label">WhatsApp Integration</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="coverage-pct">90%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Blog System</div><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><div class="coverage-pct">85%</div></div>
+  <div class="coverage-row"><div class="coverage-label">UTM Attribution</div><div class="bar-track"><div class="bar-fill" style="width:80%"></div></div><div class="coverage-pct">80%</div></div>
+  <div class="coverage-row"><div class="coverage-label">SEO / JSON-LD</div><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><div class="coverage-pct">75%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Theme Editor</div><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><div class="coverage-pct">75%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Responsive Design</div><div class="bar-track"><div class="bar-fill" style="width:65%"></div></div><div class="coverage-pct">65%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Gallery / FAQ / Testimonials</div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><div class="coverage-pct">50%</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Overall Estimated Coverage</div>
+  <table>
+    <thead><tr><th>Category</th><th>Estimated Coverage</th></tr></thead>
+    <tbody>
+      <tr><td>Functional requirements</td><td>92%</td></tr>
+      <tr><td>API contract coverage</td><td>88%</td></tr>
+      <tr><td>Validation / boundary testing</td><td>85%</td></tr>
+      <tr><td>UI / UX behaviour</td><td>75%</td></tr>
+      <tr><td>SEO / structured data</td><td>70%</td></tr>
+      <tr><td>Security (auth, rate limiting)</td><td>80%</td></tr>
+      <tr><td>Responsive / cross-device</td><td>65%</td></tr>
+      <tr><td><strong>Overall Estimated Coverage</strong></td><td><strong>~82%</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">Recommended Additional Coverage Areas</div>
+  <div class="callout"><strong>Gaps identified — recommended actions for QA team:</strong></div>
+  <table>
+    <thead><tr><th>Area</th><th>Gap</th><th>Recommended Action</th></tr></thead>
+    <tbody>
+      <tr><td>Gallery lightbox / modal</td><td>Not tested</td><td>Add TC for image enlarge / lightbox behaviour</td></tr>
+      <tr><td>Testimonials admin CRUD</td><td>Low coverage</td><td>Add full create / edit / delete cycle TC</td></tr>
+      <tr><td>FAQ admin management</td><td>Not tested</td><td>Add CRUD test cases for FAQ categories and items</td></tr>
+      <tr><td>Destination detail pages</td><td>Not tested</td><td>Add TC for <code>/{region}/[slug]</code> rendering</td></tr>
+      <tr><td>Admin activity log</td><td>Not tested</td><td>Verify entries created on all admin CRUD actions</td></tr>
+      <tr><td>Cross-browser matrix</td><td>Not addressed</td><td>Add test matrix: Chrome, Firefox, Safari, Edge</td></tr>
+      <tr><td>Core Web Vitals / Lighthouse</td><td>Not addressed</td><td>Add Lighthouse threshold checks (LCP, CLS, FID)</td></tr>
+      <tr><td>Email notifications</td><td>Not tested</td><td>Verify notifications_email receives lead alert emails</td></tr>
+      <tr><td>Admin activity log page</td><td>Not tested</td><td>Verify <code>/admin/activity</code> renders correct log entries</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="page-footer">
+  Divine Travel — QA Documentation Pack v1.0 &nbsp;|&nbsp; Prepared 2026-06-24 &nbsp;|&nbsp; 14 Documents &nbsp;|&nbsp; Confidential — Internal Use Only
+</div>
+
+</div><!-- /content -->
+</body>
+</html>
