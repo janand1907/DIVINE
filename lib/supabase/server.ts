@@ -5,6 +5,7 @@ import type { Database } from '@/types/database';
 
 const URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const SERVICE_ROLE = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 type AnyClient = SupabaseClient<any>;
 
@@ -15,6 +16,21 @@ type AnyClient = SupabaseClient<any>;
  */
 export function createPublicClient(): AnyClient {
   return createSupabaseClient<Database>(URL, ANON, {
+    auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    global: {
+      fetch: (url, options) =>
+        fetch(url, { ...options, cache: 'no-store' }),
+    },
+  }) as unknown as AnyClient;
+}
+
+/**
+ * Server-side admin client using the service role key — bypasses RLS.
+ * ONLY use in trusted server-side API routes. Never expose to the browser.
+ * Falls back to anon key if SUPABASE_SERVICE_ROLE_KEY is not set.
+ */
+export function createAdminClient(): AnyClient {
+  return createSupabaseClient<Database>(URL, SERVICE_ROLE ?? ANON, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
     global: {
       fetch: (url, options) =>

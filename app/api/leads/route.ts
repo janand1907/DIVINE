@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createPublicClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { leadSchema } from '@/lib/validation/schemas';
 
 const WINDOW_MS = 60_000;
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
   const utm = parseUtmCookies(req.headers.get('cookie'));
   const landingPage = req.headers.get('referer') ?? null;
 
-  const supabase = createPublicClient();
+  const supabase = createAdminClient();
 
   const insertPayload = {
     name: parsed.data.name,
