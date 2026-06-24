@@ -16,6 +16,10 @@ type AnyClient = SupabaseClient<any>;
 export function createPublicClient(): AnyClient {
   return createSupabaseClient<Database>(URL, ANON, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    global: {
+      fetch: (url, options) =>
+        fetch(url, { ...options, cache: 'no-store' }),
+    },
   }) as unknown as AnyClient;
 }
 

@@ -2,6 +2,8 @@ import { fetchHomepageData } from '@/lib/homepage/fetch';
 import { renderEnabledSections, type HomepageRenderData } from '@/lib/homepage/registry';
 import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata() {
   const { theme, site, seoPage } = await fetchSeoContext('/');
   return buildMetadata({ path: '/', theme, site, seoPage });
