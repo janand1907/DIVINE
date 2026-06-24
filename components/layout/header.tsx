@@ -95,7 +95,10 @@ export function Header() {
         <Link
           href="/"
           prefetch
-          className="group flex items-center gap-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+          className={cn(
+            'group flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
+            scrolled ? 'text-white' : 'text-gray-900',
+          )}
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-gradient text-white shadow-brand transition-transform duration-300 group-hover:scale-105">
             <Sparkles className="h-5 w-5" aria-hidden="true" />
@@ -120,8 +123,11 @@ export function Header() {
               href="/divine-tours"
               prefetch
               className={cn(
-                'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
-                isActive(pathname, '/divine-tours') && 'text-white',
+                'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
+                scrolled
+                  ? 'text-white/90 hover:text-white'
+                  : 'text-gray-800 hover:text-gray-900',
+                isActive(pathname, '/divine-tours') && (scrolled ? 'text-white' : 'text-gray-900'),
               )}
             >
               Divine Tours
@@ -183,8 +189,11 @@ export function Header() {
               prefetch
               aria-current={isActive(pathname, link.href) ? 'page' : undefined}
               className={cn(
-                'rounded-md px-3 py-2 text-sm font-medium text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
-                isActive(pathname, link.href) && 'text-white',
+                'rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
+                scrolled
+                  ? 'text-white/90 hover:text-white'
+                  : 'text-gray-800 hover:text-gray-900',
+                isActive(pathname, link.href) && (scrolled ? 'text-white' : 'text-gray-900'),
               )}
             >
               {link.label}
@@ -227,7 +236,12 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="text-white hover:bg-white/10 hover:text-white lg:hidden"
+                className={cn(
+                  'lg:hidden',
+                  scrolled
+                    ? 'text-white hover:bg-white/10 hover:text-white'
+                    : 'text-gray-900 hover:bg-black/10 hover:text-gray-900',
+                )}
                 aria-label="Open navigation menu"
               >
                 <Menu className="h-6 w-6" aria-hidden="true" />
