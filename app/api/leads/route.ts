@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createPublicClient } from '@/lib/supabase/server';
 import { leadSchema } from '@/lib/validation/schemas';
-import { logActivity } from '@/lib/activity/log';
 
 const WINDOW_MS = 60_000;
 const MAX_PER_IP = 5;
@@ -63,7 +62,7 @@ export async function POST(req: NextRequest) {
   const utm = parseUtmCookies(req.headers.get('cookie'));
   const landingPage = req.headers.get('referer') ?? null;
 
-  const supabase = await createServerClient();
+  const supabase = createPublicClient();
   const { data, error } = await supabase
     .from('leads')
     .insert({
@@ -89,14 +88,6 @@ export async function POST(req: NextRequest) {
       { status: 500 },
     );
   }
-
-  await logActivity({
-    action: 'create',
-    entity: 'lead',
-    entityId: data.id,
-    metadata: { source: parsed.data.source, name: data.name, mobile: data.mobile },
-    userEmail: null,
-  });
 
   return NextResponse.json(
     { ok: true, id: data.id, message: 'Lead submitted successfully' },
