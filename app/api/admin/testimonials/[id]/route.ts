@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { testimonialSchema } from '@/lib/validation/schemas';
 import { logActivity } from '@/lib/activity/log';
@@ -36,7 +36,7 @@ export async function PUT(
     rating: Number(parsed.data.rating),
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('testimonials')
     .update(row)
@@ -67,7 +67,7 @@ export async function DELETE(
   if (session instanceof NextResponse) return session;
   const { email } = session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from('testimonials').delete().eq('id', params.id);
 
   if (error) {

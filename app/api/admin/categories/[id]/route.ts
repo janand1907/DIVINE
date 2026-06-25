@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
 import type { PackageCategoryRow } from '@/types/database';
@@ -43,7 +43,7 @@ export async function PUT(
     parent_id: parsed.data.parent_id || null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('package_categories')
     .update(row)
@@ -74,7 +74,7 @@ export async function DELETE(
   if (session instanceof NextResponse) return session;
   const { email } = session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { error } = await supabase
     .from('package_categories')
     .delete()

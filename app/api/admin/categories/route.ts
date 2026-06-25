@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
 import type { PackageCategoryRow } from '@/types/database';
@@ -18,7 +18,7 @@ export async function GET() {
   const session = await requireAdminApi();
   if (session instanceof NextResponse) return session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('package_categories')
     .select()
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     parent_id: parsed.data.parent_id || null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('package_categories')
     .insert(row)

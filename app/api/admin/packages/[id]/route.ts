@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { packageSchema } from '@/lib/validation/schemas';
 import { logActivity } from '@/lib/activity/log';
@@ -41,7 +41,7 @@ export async function PUT(
     canonical_path: parsed.data.canonical_path || null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('packages')
     .update(row)
@@ -72,7 +72,7 @@ export async function DELETE(
   if (session instanceof NextResponse) return session;
   const { email } = session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from('packages').delete().eq('id', params.id);
 
   if (error) {

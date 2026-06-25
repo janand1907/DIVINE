@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
 
@@ -11,7 +11,7 @@ export async function DELETE(
   if (session instanceof NextResponse) return session;
   const { email } = session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from('media_assets').delete().eq('id', params.id);
 
   if (error) {

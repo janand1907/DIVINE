@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
 import type { DestinationRow } from '@/types/database';
@@ -19,7 +19,7 @@ export async function GET() {
   const session = await requireAdminApi();
   if (session instanceof NextResponse) return session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('destinations')
     .select()
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     cover_image: parsed.data.cover_image || null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('destinations')
     .insert(row)

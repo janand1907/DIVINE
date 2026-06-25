@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { blogSchema } from '@/lib/validation/schemas';
 import { logActivity } from '@/lib/activity/log';
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     canonical_path: parsed.data.canonical_path || null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('blogs')
     .insert(row)

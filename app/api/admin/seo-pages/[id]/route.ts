@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { seoPageSchema } from '@/lib/validation/schemas';
 import { logActivity } from '@/lib/activity/log';
@@ -38,7 +38,7 @@ export async function PUT(
     json_ld: parsed.data.json_ld ?? null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('seo_pages')
     .update(row)
@@ -69,7 +69,7 @@ export async function DELETE(
   if (session instanceof NextResponse) return session;
   const { email } = session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { error } = await supabase.from('seo_pages').delete().eq('id', params.id);
 
   if (error) {

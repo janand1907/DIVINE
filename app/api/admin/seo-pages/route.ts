@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { seoPageSchema } from '@/lib/validation/schemas';
 import { logActivity } from '@/lib/activity/log';
@@ -9,7 +9,7 @@ export async function GET() {
   const session = await requireAdminApi();
   if (session instanceof NextResponse) return session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('seo_pages')
     .select()
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     json_ld: parsed.data.json_ld ?? null,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('seo_pages')
     .insert(row)

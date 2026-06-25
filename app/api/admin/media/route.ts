@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
 import type { MediaAssetRow } from '@/types/database';
@@ -8,7 +8,7 @@ export async function GET() {
   const session = await requireAdminApi();
   if (session instanceof NextResponse) return session;
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('media_assets')
     .select()
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     uploaded_by: email,
   };
 
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('media_assets')
     .insert(row)
