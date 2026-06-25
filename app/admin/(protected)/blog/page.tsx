@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { Plus, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -20,7 +20,7 @@ type BlogListItem = Pick<
 >;
 
 export default async function AdminBlogPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('blogs')
     .select('id,slug,title,category,is_published,published_at,updated_at')

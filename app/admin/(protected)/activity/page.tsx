@@ -1,4 +1,4 @@
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -32,7 +32,7 @@ function summarizeMetadata(meta: Record<string, unknown> | null): string {
 }
 
 export default async function AdminActivityPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('activity_logs')
     .select()

@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { BlogForm } from '@/components/admin/blog-form';
 import { Button } from '@/components/ui/button';
 import type { BlogRow } from '@/types/database';
 
 export default async function EditBlogPage({ params }: { params: { id: string } }) {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('blogs')
     .select()

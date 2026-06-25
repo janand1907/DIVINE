@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { Users, TrendingUp, Clock, AlertCircle, Package, FileText } from 'lucide-react';
 import { StatCard } from '@/components/admin/stat-card';
 import type { LeadRow } from '@/types/database';
 
 export default async function AdminDashboard() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
 
   // Lead stats by status
   const { data: leadsByStatus } = await supabase

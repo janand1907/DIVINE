@@ -1,10 +1,10 @@
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { MediaUploader } from '@/components/admin/media-uploader';
 import { MediaGrid } from '@/components/admin/media-grid';
 import type { MediaAssetRow } from '@/types/database';
 
 export default async function AdminMediaPage() {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('media_assets')
     .select()

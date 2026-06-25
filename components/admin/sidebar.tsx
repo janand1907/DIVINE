@@ -7,6 +7,7 @@ import { signOut } from '@/lib/admin/auth-client';
 import {
   LayoutDashboard, Users, Package, FileText, Star, Image as ImageIcon,
   Palette, Home as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut,
+  Navigation, FileCode, Car, PlaneTakeoff, Hotel,
 } from 'lucide-react';
 
 const navGroups = [
@@ -28,8 +29,17 @@ const navGroups = [
     ],
   },
   {
+    label: 'Verticals',
+    items: [
+      { href: '/admin/vehicles', label: 'Vehicle Rentals', icon: Car },
+      { href: '/admin/airport-routes', label: 'Airport Transfers', icon: PlaneTakeoff },
+    ],
+  },
+  {
     label: 'Site',
     items: [
+      { href: '/admin/menus', label: 'Navigation Menus', icon: Navigation },
+      { href: '/admin/cms-pages', label: 'CMS Pages', icon: FileCode },
       { href: '/admin/homepage-builder', label: 'Homepage Builder', icon: HomeIcon },
       { href: '/admin/theme', label: 'Theme & Branding', icon: Palette },
       { href: '/admin/seo-pages', label: 'SEO Pages', icon: Globe },

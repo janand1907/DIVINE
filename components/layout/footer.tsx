@@ -39,6 +39,12 @@ const TOUR_CATEGORY_LINKS: QuickLink[] = [
   { label: 'FAQ', href: '/faq' },
 ];
 
+const SERVICES_LINKS: QuickLink[] = [
+  { label: 'Vehicle Rentals', href: '/vehicle-rentals' },
+  { label: 'Airport Transfers', href: '/airport-transfers' },
+  { label: 'Hotel Assistance', href: '/hotel-assistance' },
+];
+
 const SOCIAL_LINKS: {
   label: string;
   href: string;
@@ -72,7 +78,7 @@ export function Footer({ branding, className }: FooterProps) {
       className={cn('bg-brand-dark text-brand-darkForeground', className)}
     >
       <div className="container-brand py-12 lg:py-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand column */}
           <div className="space-y-4">
             <Link
@@ -131,6 +137,26 @@ export function Footer({ branding, className }: FooterProps) {
             </h2>
             <ul className="space-y-2.5">
               {TOUR_CATEGORY_LINKS.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    prefetch
+                    className="text-sm text-brand-darkForeground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Services */}
+          <nav aria-label="Footer services" className="space-y-4">
+            <h2 className="font-heading text-sm font-semibold uppercase tracking-wider text-white">
+              Services
+            </h2>
+            <ul className="space-y-2.5">
+              {SERVICES_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}

@@ -1,13 +1,13 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { createServerClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import { PackageForm } from '@/components/admin/package-form';
 import { Button } from '@/components/ui/button';
 import type { PackageRow } from '@/types/database';
 
 export default async function EditPackagePage({ params }: { params: { id: string } }) {
-  const supabase = await createServerClient();
+  const supabase = createAdminClient();
   const { data } = await supabase
     .from('packages')
     .select()

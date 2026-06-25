@@ -1,4 +1,5 @@
 import { fetchSeoContext } from '@/lib/seo/metadata';
+import { fetchNavMenus } from '@/lib/nav/fetch';
 import type { Branding } from '@/lib/theme/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -8,18 +9,11 @@ export interface PublicLayoutProps {
   children: React.ReactNode;
 }
 
-/**
- * Layout shell for public-facing route groups. Composes the sticky header,
- * main content region (with top padding to offset the fixed header), footer,
- * and the floating WhatsApp button.
- *
- * Branding is sourced from Supabase `theme_settings` via `fetchSeoContext`
- * (the same typed helper the root layout uses — internally calls
- * `createServerClient`). The inline `?? '#...'` fallbacks mirror the root
- * layout so the `Branding` literal-typed fields stay satisfied.
- */
 export async function PublicLayout({ children }: PublicLayoutProps) {
-  const { theme } = await fetchSeoContext('/');
+  const [{ theme }, navMenus] = await Promise.all([
+    fetchSeoContext('/'),
+    fetchNavMenus(),
+  ]);
 
   const branding: Branding = {
     primaryColor: theme?.primary_color ?? '#C48A2D',
@@ -35,14 +29,12 @@ export async function PublicLayout({ children }: PublicLayoutProps) {
     address: theme?.address ?? null,
   };
 
-  const whatsappNumber = branding.whatsappNumber;
-
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header />
+      <Header navMenus={navMenus} />
       <main className="flex-1 pt-16 lg:pt-20">{children}</main>
       <Footer branding={branding} />
-      <WhatsAppFloat phoneNumber={whatsappNumber} />
+      <WhatsAppFloat phoneNumber={branding.whatsappNumber} />
     </div>
   );
 }

@@ -3,13 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  ChevronDown,
-  Menu,
-  MessageCircle,
-  Sparkles,
-} from 'lucide-react';
-
+import { ChevronDown, Menu, MessageCircle, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useBranding } from '@/lib/theme/theme-provider';
 import { Button } from '@/components/ui/button';
@@ -20,51 +14,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import type { NavMenuWithItems } from '@/types/database';
 
-/** The nine divine-tour categories surfaced in the mega-menu. */
-const DIVINE_TOUR_CATEGORIES: { name: string; slug: string; blurb: string }[] = [
-  { name: 'Tirupati', slug: 'tirupati', blurb: 'Lord Venkateswara darshan' },
-  { name: 'Varanasi', slug: 'varanasi', blurb: 'Sacred Ganga aarti & temples' },
-  { name: 'Rameswaram', slug: 'rameswaram', blurb: 'Ramanathaswamy & Dhanushkodi' },
-  { name: 'Vaishno Devi', slug: 'vaishno-devi', blurb: 'Maa Vaishnavi shrine trek' },
-  { name: 'Kedarnath', slug: 'kedarnath', blurb: 'Jyotirlinga in the Himalayas' },
-  { name: 'Amarnath', slug: 'amarnath', blurb: 'Ice Shivlinga pilgrimage' },
-  { name: 'Shirdi', slug: 'shirdi', blurb: 'Sai Baba samadhi mandir' },
-  { name: 'Puri Jagannath', slug: 'puri', blurb: 'Lord Jagannath & Konark' },
-  { name: 'Haridwar‑Rishikesh', slug: 'haridwar-rishikesh', blurb: 'Yoga capital & Ganga pooja' },
-];
-
-interface NavLink {
-  label: string;
-  href: string;
+interface HeaderProps {
+  navMenus?: NavMenuWithItems[];
 }
-
-const PRIMARY_LINKS: NavLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'Packages', href: '/packages' },
-  { label: 'Domestic Tours', href: '/domestic-tours' },
-  { label: 'International Tours', href: '/international-tours' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'About', href: '/about' },
-  { label: 'Contact', href: '/contact' },
-];
 
 function isActive(pathname: string, href: string): boolean {
   if (href === '/') return pathname === '/';
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-/**
- * Public site header. Transparent while at the top of the page, switching to a
- * solid brand-dark surface after scrolling 24px. Includes a Divine Tours
- * mega-menu on desktop and a Slide-in Sheet for mobile navigation.
- */
-export function Header() {
+export function Header({ navMenus = [] }: HeaderProps) {
   const { brandName, whatsappNumber } = useBranding();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
-  const [divineOpen, setDivineOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -73,10 +40,9 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close the mobile sheet on route change.
   useEffect(() => {
     setMobileOpen(false);
-    setDivineOpen(false);
+    setOpenMenu(null);
   }, [pathname]);
 
   const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}`;
@@ -96,7 +62,7 @@ export function Header() {
           href="/"
           prefetch
           className={cn(
-            'group flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
+            'group flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
             scrolled ? 'text-white' : 'text-gray-900',
           )}
         >
@@ -111,94 +77,78 @@ export function Header() {
         {/* Desktop nav */}
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-1 lg:flex"
-          onMouseLeave={() => setDivineOpen(false)}
+          className="hidden items-center gap-0.5 lg:flex"
+          onMouseLeave={() => setOpenMenu(null)}
         >
-          <div
-            className="relative"
-            onMouseEnter={() => setDivineOpen(true)}
-            onFocus={() => setDivineOpen(true)}
-          >
-            <Link
-              href="/divine-tours"
-              prefetch
-              className={cn(
-                'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
-                scrolled
-                  ? 'text-white/90 hover:text-white'
-                  : 'text-gray-800 hover:text-gray-900',
-                isActive(pathname, '/divine-tours') && (scrolled ? 'text-white' : 'text-gray-900'),
-              )}
-            >
-              Divine Tours
-              <ChevronDown
-                className={cn(
-                  'h-4 w-4 transition-transform duration-200',
-                  divineOpen && 'rotate-180',
-                )}
-                aria-hidden="true"
-              />
-            </Link>
+          {navMenus.map((menu) => {
+            const hasItems = menu.nav_items.length > 0;
+            const active = isActive(pathname, menu.url);
 
-            {/* Mega-menu */}
-            {divineOpen && (
-              <div
-                className="absolute left-1/2 top-full z-50 mt-2 w-[28rem] -translate-x-1/2 rounded-xl border border-border bg-popover p-4 shadow-brand animate-fade-in"
-                role="menu"
-                aria-label="Divine tour categories"
-              >
-                <div className="mb-3 flex items-center gap-2 border-b border-border pb-2">
-                  <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
-                  <span className="text-sm font-semibold text-foreground">
-                    Divine Tour Categories
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 gap-1 sm:grid-cols-2">
-                  {DIVINE_TOUR_CATEGORIES.map((cat) => (
-                    <Link
-                      key={cat.slug}
-                      href={`/divine-tours/${cat.slug}`}
-                      prefetch
-                      role="menuitem"
-                      className="rounded-md p-2 transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    >
-                      <span className="block text-sm font-medium text-foreground">
-                        {cat.name}
-                      </span>
-                      <span className="block text-xs text-muted-foreground">
-                        {cat.blurb}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
+            if (!hasItems) {
+              return (
                 <Link
-                  href="/divine-tours"
+                  key={menu.id}
+                  href={menu.url}
                   prefetch
-                  className="mt-3 block rounded-md bg-accent px-3 py-2 text-center text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    scrolled ? 'text-white/90 hover:text-white' : 'text-gray-800 hover:text-gray-900',
+                    active && (scrolled ? 'text-white' : 'text-gray-900'),
+                  )}
                 >
-                  View all Divine Tours
+                  {menu.title}
                 </Link>
-              </div>
-            )}
-          </div>
+              );
+            }
 
-          {PRIMARY_LINKS.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              prefetch
-              aria-current={isActive(pathname, link.href) ? 'page' : undefined}
-              className={cn(
-                'rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark',
-                scrolled
-                  ? 'text-white/90 hover:text-white'
-                  : 'text-gray-800 hover:text-gray-900',
-                isActive(pathname, link.href) && (scrolled ? 'text-white' : 'text-gray-900'),
-              )}
-            >
-              {link.label}
-            </Link>
-          ))}
+            return (
+              <div
+                key={menu.id}
+                className="relative"
+                onMouseEnter={() => setOpenMenu(menu.id)}
+                onFocus={() => setOpenMenu(menu.id)}
+              >
+                <Link
+                  href={menu.url}
+                  prefetch
+                  className={cn(
+                    'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    scrolled ? 'text-white/90 hover:text-white' : 'text-gray-800 hover:text-gray-900',
+                    active && (scrolled ? 'text-white' : 'text-gray-900'),
+                  )}
+                >
+                  {menu.title}
+                  <ChevronDown
+                    className={cn('h-4 w-4 transition-transform duration-200', openMenu === menu.id && 'rotate-180')}
+                    aria-hidden="true"
+                  />
+                </Link>
+
+                {openMenu === menu.id && (
+                  <div
+                    className="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-xl border border-border bg-popover p-2 shadow-brand animate-fade-in"
+                    role="menu"
+                  >
+                    {menu.nav_items.map((item) => (
+                      <Link
+                        key={item.id}
+                        href={item.url}
+                        prefetch
+                        role="menuitem"
+                        className="block rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      >
+                        <span className="font-medium text-foreground">{item.title}</span>
+                        {item.description && (
+                          <span className="mt-0.5 block text-xs text-muted-foreground">{item.description}</span>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
 
         {/* Right actions */}
@@ -209,28 +159,17 @@ export function Header() {
             size="sm"
             className="hidden bg-brand-whatsapp text-brand-whatsappForeground hover:bg-brand-whatsapp/90 hover:text-brand-whatsappForeground sm:inline-flex"
           >
-            <Link
-              href={waHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Chat with ${brandName} on WhatsApp`}
-            >
+            <Link href={waHref} target="_blank" rel="noopener noreferrer">
               <MessageCircle className="h-4 w-4" aria-hidden="true" />
               WhatsApp
             </Link>
           </Button>
 
-          <Button
-            asChild
-            size="sm"
-            className="hidden sm:inline-flex"
-          >
-            <Link href="/contact" prefetch>
-              Get Quote
-            </Link>
+          <Button asChild size="sm" className="hidden sm:inline-flex">
+            <Link href="/contact" prefetch>Get Quote</Link>
           </Button>
 
-          {/* Mobile hamburger → Sheet */}
+          {/* Mobile sheet */}
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button
@@ -252,56 +191,62 @@ export function Header() {
                 <SheetTitle className="font-heading text-xl">{brandName}</SheetTitle>
               </SheetHeader>
 
-              <nav aria-label="Mobile primary" className="flex flex-col gap-1">
-                {/* Divine tours with stacked categories */}
-                <div className="py-1">
-                  <Link
-                    href="/divine-tours"
-                    prefetch
-                    className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
-                  >
-                    Divine Tours
-                    <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                  <div className="ml-3 border-l border-border pl-2">
-                    {DIVINE_TOUR_CATEGORIES.map((cat) => (
+              <nav aria-label="Mobile primary" className="flex flex-col gap-0.5">
+                {navMenus.map((menu) => {
+                  const hasItems = menu.nav_items.length > 0;
+                  const expanded = mobileExpanded === menu.id;
+
+                  if (!hasItems) {
+                    return (
                       <Link
-                        key={cat.slug}
-                        href={`/divine-tours/${cat.slug}`}
+                        key={menu.id}
+                        href={menu.url}
                         prefetch
                         className={cn(
-                          'block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
-                          isActive(pathname, `/divine-tours/${cat.slug}`) &&
-                            'font-medium text-foreground',
+                          'rounded-md px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent',
+                          isActive(pathname, menu.url) && 'bg-accent text-accent-foreground',
                         )}
                       >
-                        {cat.name}
+                        {menu.title}
                       </Link>
-                    ))}
-                  </div>
-                </div>
+                    );
+                  }
 
-                {PRIMARY_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    prefetch
-                    aria-current={isActive(pathname, link.href) ? 'page' : undefined}
-                    className={cn(
-                      'rounded-md px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent',
-                      isActive(pathname, link.href) && 'bg-accent text-accent-foreground',
-                    )}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                  return (
+                    <div key={menu.id} className="py-0.5">
+                      <button
+                        type="button"
+                        onClick={() => setMobileExpanded(expanded ? null : menu.id)}
+                        className="flex w-full items-center justify-between rounded-md px-3 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+                      >
+                        {menu.title}
+                        <ChevronDown
+                          className={cn('h-4 w-4 transition-transform', expanded && 'rotate-180')}
+                          aria-hidden="true"
+                        />
+                      </button>
+                      {expanded && (
+                        <div className="ml-3 mt-1 border-l border-border pl-2">
+                          {menu.nav_items.map((item) => (
+                            <Link
+                              key={item.id}
+                              href={item.url}
+                              prefetch
+                              className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                            >
+                              {item.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </nav>
 
               <div className="mt-6 flex flex-col gap-2 border-t border-border pt-4">
                 <Button asChild className="w-full" size="sm">
-                  <Link href="/contact" prefetch>
-                    Get Quote
-                  </Link>
+                  <Link href="/contact" prefetch>Get Quote</Link>
                 </Button>
                 <Button
                   asChild
@@ -309,11 +254,7 @@ export function Header() {
                   size="sm"
                   className="w-full bg-brand-whatsapp text-brand-whatsappForeground hover:bg-brand-whatsapp/90 hover:text-brand-whatsappForeground"
                 >
-                  <Link
-                    href={waHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <Link href={waHref} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="h-4 w-4" aria-hidden="true" />
                     WhatsApp Us
                   </Link>

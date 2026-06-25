@@ -283,6 +283,13 @@
   <div class="section-label">Taxonomies</div>
   <a href="#destinations">Destinations</a>
   <a href="#categories">Categories</a>
+  <div class="section-label">Content</div>
+  <a href="#navigation-menus">Navigation Menus</a>
+  <a href="#cms-pages">CMS Pages</a>
+  <div class="section-label">Rentals</div>
+  <a href="#vehicles">Vehicle Rentals</a>
+  <a href="#airport-transfers">Airport Transfers</a>
+  <a href="#hotel-assistance">Hotel Assistance</a>
   <div class="section-label">System</div>
   <a href="#activity">Activity Log</a>
   <a href="#tips">Tips &amp; Shortcuts</a>
@@ -389,7 +396,8 @@
     <thead><tr><th>Section</th><th>Items</th></tr></thead>
     <tbody>
       <tr><td><strong>Overview</strong></td><td>Dashboard, Activity Log</td></tr>
-      <tr><td><strong>Content</strong></td><td>Leads, Packages, Blogs, Testimonials, Media Library</td></tr>
+      <tr><td><strong>Content</strong></td><td>Leads, Packages, Blogs, Testimonials, Media Library, Navigation Menus, CMS Pages</td></tr>
+      <tr><td><strong>Rentals</strong></td><td>Vehicle Rentals, Airport Transfers</td></tr>
       <tr><td><strong>Site</strong></td><td>Homepage Builder, Theme &amp; Branding, SEO Pages, Site Settings</td></tr>
       <tr><td><strong>Taxonomies</strong></td><td>Destinations, Categories</td></tr>
     </tbody>
@@ -808,6 +816,196 @@
       <tr><td>Published</td><td>Unpublished categories are hidden from filters</td></tr>
     </tbody>
   </table>
+
+  <!-- ════════════════════════════════════════ NAVIGATION MENUS -->
+  <h2 class="section-title" id="navigation-menus"><span class="icon">☰</span> Navigation Menus</h2>
+  <p>Manage dynamic navigation menus that appear in the site header. Go to <strong>Content → Navigation Menus</strong>.</p>
+
+  <h3>Creating a Menu</h3>
+  <p>Click <strong>New Menu</strong> to create a navigation menu with the following fields:</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Label <span class="req">*</span></td><td>Display name of the menu, e.g. "Main Navigation"</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>Unique identifier, e.g. <code>main-nav</code></td></tr>
+      <tr><td>Display Order</td><td>Lower numbers appear first. Controls menu priority in the header.</td></tr>
+      <tr><td>Active</td><td>Toggle on to enable the menu on the website</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Adding Navigation Items</h3>
+  <p>After creating a menu, add items with:</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Label <span class="req">*</span></td><td>Text displayed in the menu, e.g. "About Us"</td></tr>
+      <tr><td>URL / Path <span class="req">*</span></td><td>Full URL (e.g. <code>/about</code>, <code>https://external.com</code>) or relative path</td></tr>
+      <tr><td>Display Order</td><td>Controls the order of items within the menu</td></tr>
+      <tr><td>Open in New Tab</td><td>Toggle on to open external links in a new browser tab</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Frontend Behavior</h3>
+  <ul style="margin:8px 0 12px 20px;">
+    <li>Menus with multiple items render as <strong>dropdowns in the desktop header</strong>.</li>
+    <li>Single-item menus render as a direct link.</li>
+    <li>Changes take effect immediately — no redeployment required.</li>
+    <li>Toggle <strong>Active</strong> to show/hide an entire menu without deleting it.</li>
+  </ul>
+
+  <div class="callout tip"><span class="ci">💡</span><div>Use multiple menus for different header sections, e.g. "Main Nav" for primary links, "Support Nav" for help resources.</div></div>
+
+  <!-- ════════════════════════════════════════ CMS PAGES -->
+  <h2 class="section-title" id="cms-pages"><span class="icon">📄</span> CMS Pages</h2>
+  <p>Create freeform content pages accessible at <code>/<slug></code>. Go to <strong>Content → CMS Pages</strong>.</p>
+
+  <h3>Creating / Editing a Page</h3>
+  <p>Use the form at <code>/admin/cms-pages/new</code> for new pages, or <code>/admin/cms-pages/[id]/edit</code> to edit existing ones.</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Title <span class="req">*</span></td><td>Page heading displayed at the top</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>URL path, e.g. <code>custom-page</code> → page lives at <code>/custom-page</code></td></tr>
+      <tr><td>Page Type</td><td>Classification: tour, vehicle, transfer, general, or seo. Helps organize content.</td></tr>
+      <tr><td>Hero Heading</td><td>Large banner text at the top of the page</td></tr>
+      <tr><td>Hero Subheading</td><td>Smaller text under the hero heading</td></tr>
+      <tr><td>Hero Image URL</td><td>Background image for the hero section</td></tr>
+      <tr><td>Content <span class="req">*</span></td><td>Main page body — supports HTML formatting</td></tr>
+      <tr><td>Gallery</td><td>Image URLs, one per line. Renders as an image grid below content.</td></tr>
+      <tr><td>FAQs</td><td>JSON array format: <code>[{"question":"Q1","answer":"A1"}]</code></td></tr>
+      <tr><td>CTA Text</td><td>Call-to-action button label, e.g. "Book Now"</td></tr>
+      <tr><td>CTA URL</td><td>Where the CTA button links to</td></tr>
+      <tr><td>SEO Title</td><td>Browser tab title (50–60 characters)</td></tr>
+      <tr><td>SEO Description</td><td>Google snippet (150–160 characters)</td></tr>
+      <tr><td>OG Image</td><td>Shared image for social media and WhatsApp</td></tr>
+      <tr><td>Canonical Path</td><td>Set only if this page duplicates content elsewhere</td></tr>
+      <tr><td>Published</td><td>Toggle on to make the page live</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info"><span class="ci">ℹ️</span><div>CMS Pages are flexible — use them for terms, privacy policies, custom landing pages, or any content that doesn't fit categories.</div></div>
+
+  <!-- ════════════════════════════════════════ VEHICLE RENTALS -->
+  <h2 class="section-title" id="vehicles"><span class="icon">🚗</span> Vehicle Rentals</h2>
+  <p>Manage vehicle categories and individual vehicles for rental offerings. Go to <strong>Rentals → Vehicle Rentals</strong>.</p>
+
+  <h3>Vehicle Categories</h3>
+  <p>First, create vehicle categories (e.g. "Economy Cars", "SUVs", "Luxury"). Each category has:</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Name <span class="req">*</span></td><td>Category title, e.g. "Economy Cars"</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>URL-safe, e.g. <code>economy-cars</code></td></tr>
+      <tr><td>Description</td><td>Short text describing the category</td></tr>
+      <tr><td>Display Order</td><td>Controls category order in listings</td></tr>
+      <tr><td>Published</td><td>Toggle on to show the category on the website</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Vehicles</h3>
+  <p>After creating categories, add individual vehicles:</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Name <span class="req">*</span></td><td>Vehicle name, e.g. "Maruti Swift"</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>Unique identifier, e.g. <code>maruti-swift</code></td></tr>
+      <tr><td>Category <span class="req">*</span></td><td>Assign to a vehicle category</td></tr>
+      <tr><td>Seats</td><td>Number of passenger seats</td></tr>
+      <tr><td>Luggage Capacity</td><td>Trunk/cargo space description or capacity in litres</td></tr>
+      <tr><td>AC</td><td>Toggle on if the vehicle has air conditioning</td></tr>
+      <tr><td>Featured</td><td>Toggle on to highlight this vehicle on rental pages</td></tr>
+      <tr><td>Cover Image URL</td><td>Primary vehicle photo</td></tr>
+      <tr><td>Description</td><td>Details about the vehicle (comfort, features, etc.)</td></tr>
+      <tr><td>Features</td><td>Comma-separated list, e.g. "Power steering, ABS, Parking sensors"</td></tr>
+      <tr><td>Starting Price</td><td>Base rental price (displayed on cards)</td></tr>
+      <tr><td>Price per KM</td><td>Cost per kilometer for distance-based pricing</td></tr>
+      <tr><td>Price per Day</td><td>Daily rental rate</td></tr>
+      <tr><td>SEO Title</td><td>Meta title for the vehicle detail page</td></tr>
+      <tr><td>SEO Description</td><td>Meta description for the vehicle detail page</td></tr>
+      <tr><td>Published</td><td>Toggle on to show the vehicle on the website</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Frontend</h3>
+  <ul style="margin:8px 0 12px 20px;">
+    <li>All published vehicles appear on <code>/vehicle-rentals</code> grouped by category.</li>
+    <li>Each vehicle has a detail page at <code>/vehicle-rentals/[slug]</code>.</li>
+  </ul>
+
+  <!-- ════════════════════════════════════════ AIRPORT TRANSFERS -->
+  <h2 class="section-title" id="airport-transfers"><span class="icon">✈️</span> Airport Transfers</h2>
+  <p>Manage city-to-city transfer routes and pricing. Go to <strong>Rentals → Airport Transfers</strong>.</p>
+
+  <h3>Route Details</h3>
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>From City <span class="req">*</span></td><td>Starting location, e.g. "Mumbai Airport"</td></tr>
+      <tr><td>To City <span class="req">*</span></td><td>Destination, e.g. "Mumbai City Center"</td></tr>
+      <tr><td>Slug <span class="req">*</span></td><td>Unique identifier, e.g. <code>mumbai-airport-to-city</code></td></tr>
+      <tr><td>Distance (km)</td><td>Route distance in kilometers</td></tr>
+      <tr><td>Duration (hours)</td><td>Estimated travel time</td></tr>
+      <tr><td>Description</td><td>Route overview and highlights</td></tr>
+      <tr><td>SEO Title</td><td>Meta title for the route detail page</td></tr>
+      <tr><td>SEO Description</td><td>Meta description for the route detail page</td></tr>
+      <tr><td>Active</td><td>Toggle on to show the route on the website</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Dynamic Vehicle Pricing</h3>
+  <p>For each route, set up a pricing table showing different vehicle types and their prices:</p>
+
+  <ul style="margin:8px 0 12px 20px;">
+    <li><strong>Vehicle Type:</strong> e.g. "Economy", "Comfort", "Luxury"</li>
+    <li><strong>Seats:</strong> Number of passengers the vehicle accommodates</li>
+    <li><strong>Price:</strong> Transfer price for this vehicle type on this route</li>
+  </ul>
+
+  <p>Add or remove pricing rows as needed. The table updates immediately on the frontend.</p>
+
+  <h3>Frontend</h3>
+  <ul style="margin:8px 0 12px 20px;">
+    <li>All active routes appear on <code>/airport-transfers</code>.</li>
+    <li>Each route has a detail page at <code>/airport-transfers/[slug]</code> with pricing and booking info.</li>
+  </ul>
+
+  <div class="callout tip"><span class="ci">💡</span><div>Use consistent vehicle type names across routes (e.g. always "Economy", "Comfort", "Luxury") so customers understand pricing tiers.</div></div>
+
+  <!-- ════════════════════════════════════════ HOTEL ASSISTANCE -->
+  <h2 class="section-title" id="hotel-assistance"><span class="icon">🏨</span> Hotel Assistance</h2>
+  <p>Hotel assistance requests are freeform inquiries submitted through the website. No dedicated admin panel is needed.</p>
+
+  <h3>How it works</h3>
+  <ul style="margin:8px 0 12px 20px;">
+    <li>Hotel assistance form submissions automatically flow into the <strong>Leads</strong> section.</li>
+    <li>Each submission has a <strong>source = "hotel-assistance"</strong> tag.</li>
+  </ul>
+
+  <h3>Viewing Hotel Requests</h3>
+  <p>Go to <strong>Content → Leads</strong> and filter by source to see hotel assistance inquiries.</p>
+
+  <h3>Hotel Lead Data</h3>
+  <p>Each hotel assistance lead includes these custom fields:</p>
+
+  <table class="field-table">
+    <thead><tr><th>Field</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>City</td><td>Location of the desired hotel</td></tr>
+      <tr><td>Check-in Date</td><td>Arrival date</td></tr>
+      <tr><td>Check-out Date</td><td>Departure date</td></tr>
+      <tr><td>Rooms</td><td>Number of rooms needed</td></tr>
+      <tr><td>Budget</td><td>Desired price range or total budget</td></tr>
+    </tbody>
+  </table>
+
+  <p>All standard lead fields (status, priority, assigned to, follow-up date, notes) are also available for hotel requests.</p>
+
+  <div class="callout info"><span class="ci">ℹ️</span><div>Hotel requests share the same pipeline as other leads — manage them using the standard Leads view with all status and assignment tools.</div></div>
 
   <!-- ════════════════════════════════════════ ACTIVITY -->
   <h2 class="section-title" id="activity"><span class="icon">📜</span> Activity Log</h2>

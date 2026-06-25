@@ -410,10 +410,10 @@
   </div>
 
   <div class="cover-stats">
-    <div class="cover-stat"><span class="num">14</span><span class="lbl">Documents</span></div>
+    <div class="cover-stat"><span class="num">22</span><span class="lbl">Documents</span></div>
     <div class="cover-stat"><span class="num">30</span><span class="lbl">User Stories</span></div>
     <div class="cover-stat"><span class="num">28</span><span class="lbl">Acceptance Criteria</span></div>
-    <div class="cover-stat"><span class="num">20</span><span class="lbl">Test Cases</span></div>
+    <div class="cover-stat"><span class="num">70</span><span class="lbl">Test Cases</span></div>
     <div class="cover-stat"><span class="num">5</span><span class="lbl">UAT Scenarios</span></div>
     <div class="cover-stat"><span class="num">26</span><span class="lbl">API Endpoints</span></div>
   </div>
@@ -1365,18 +1365,18 @@
   <table>
     <thead><tr><th>Metric</th><th>Count</th></tr></thead>
     <tbody>
-      <tr><td>Public pages documented</td><td>14</td></tr>
-      <tr><td>Admin pages documented</td><td>13</td></tr>
+      <tr><td>Public pages documented</td><td>20</td></tr>
+      <tr><td>Admin pages documented</td><td>17</td></tr>
       <tr><td>Forms inventoried</td><td>12</td></tr>
       <tr><td>API endpoints inventoried</td><td>26</td></tr>
       <tr><td>Database entities mapped</td><td>16</td></tr>
       <tr><td>User stories generated</td><td>30</td></tr>
       <tr><td>Use cases documented</td><td>6</td></tr>
       <tr><td>Acceptance criteria defined</td><td>28</td></tr>
-      <tr><td>Detailed test cases written</td><td>20</td></tr>
+      <tr><td>Detailed test cases written</td><td>70</td></tr>
       <tr><td>UAT test cases written</td><td>5</td></tr>
       <tr><td>Requirements in RTM</td><td>18</td></tr>
-      <tr><td>Test scenarios</td><td>20</td></tr>
+      <tr><td>Test scenarios</td><td>28</td></tr>
     </tbody>
   </table>
 </div>
@@ -1394,7 +1394,13 @@
   <div class="coverage-row"><div class="coverage-label">SEO / JSON-LD</div><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><div class="coverage-pct">75%</div></div>
   <div class="coverage-row"><div class="coverage-label">Theme Editor</div><div class="bar-track"><div class="bar-fill" style="width:75%"></div></div><div class="coverage-pct">75%</div></div>
   <div class="coverage-row"><div class="coverage-label">Responsive Design</div><div class="bar-track"><div class="bar-fill" style="width:65%"></div></div><div class="coverage-pct">65%</div></div>
-  <div class="coverage-row"><div class="coverage-label">Gallery / FAQ / Testimonials</div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><div class="coverage-pct">50%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Gallery / FAQ / Testimonials</div><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><div class="coverage-row"><div class="coverage-label">Vehicle Rentals</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="coverage-pct">90%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Airport Transfers</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="coverage-pct">90%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Hotel Assistance</div><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><div class="coverage-pct">85%</div></div>
+  <div class="coverage-row"><div class="coverage-label">CMS Pages</div><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><div class="coverage-pct">85%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Navigation Menus Admin</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="coverage-pct">90%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Vehicles Admin</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="coverage-pct">90%</div></div>
+  <div class="coverage-row"><div class="coverage-label">Airport Routes Admin</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><div class="coverage-pct">90%</div></div><div class="coverage-pct">50%</div></div>
 </div>
 
 <div class="section">
@@ -1409,7 +1415,7 @@
       <tr><td>SEO / structured data</td><td>70%</td></tr>
       <tr><td>Security (auth, rate limiting)</td><td>80%</td></tr>
       <tr><td>Responsive / cross-device</td><td>65%</td></tr>
-      <tr><td><strong>Overall Estimated Coverage</strong></td><td><strong>~82%</strong></td></tr>
+      <tr><td><strong>Overall Estimated Coverage</strong></td><td><strong>~86%</strong></td></tr>
     </tbody>
   </table>
 </div>
@@ -1433,8 +1439,684 @@
   </table>
 </div>
 
+<!-- ────────────────── NEW DOC 15: VEHICLE RENTALS ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 15</div>
+  <div class="doc-title">Vehicle Rentals Module — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Overview</div>
+  <div class="callout">Vehicle Rentals feature enables customers to browse and book rental vehicles grouped by category, with detailed specs, pricing, and WhatsApp integration.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Vehicle Listing Page (/vehicle-rentals)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Hero section renders with background image, headline, and subheading</li>
+    <li>Trust bar displays logo/badge content below hero</li>
+    <li>If vehicles exist: vehicles display grouped by category with category headers</li>
+    <li>If no vehicles: "Coming Soon" message displays with contact link</li>
+    <li>Each vehicle card shows: image, name, seats, luggage, AC status, and featured badge (if applicable)</li>
+    <li>Featured vehicles display prominent "Featured" badge</li>
+    <li>Each vehicle card links to /vehicle-rentals/[slug]</li>
+    <li>Page responsive on mobile (375px), tablet (768px), desktop (1280px)</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-001</span><span class="tc-name">Vehicle Listing — Load Page with Vehicles</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">At least 3 vehicles exist in DB with different categories; at least one marked featured=true</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Vehicle: "Toyota Innova" (category=SUV, seats=8, featured=true), "Honda City" (category=Sedan, seats=5), "Tata Nexon" (category=SUV, seats=5)</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /vehicle-rentals &nbsp; 2. Observe page layout &nbsp; 3. Verify hero section &nbsp; 4. Scroll to vehicle cards</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Hero section visible; trust bar rendered; vehicles grouped by category (SUV, Sedan); Toyota Innova shows "Featured" badge; each card displays name, seats, luggage, AC; cards clickable</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-002</span><span class="tc-name">Vehicle Listing — Empty State</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">No vehicles exist in DB or all vehicles marked published=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /vehicle-rentals &nbsp; 2. Observe main content area</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">"Coming Soon" message displays; contact link visible and functional</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-003</span><span class="tc-name">Vehicle Listing — Card Click Navigation</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle "Toyota Innova" with slug="toyota-innova" exists</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /vehicle-rentals &nbsp; 2. Click on "Toyota Innova" card</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">User navigated to /vehicle-rentals/toyota-innova</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Vehicle Detail Page (/vehicle-rentals/[slug])</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Page displays vehicle name, category, and main image</li>
+    <li>Specs section shows: seats, luggage capacity, AC status, transmission (if available)</li>
+    <li>Features list displays all features if populated (e.g., "Power Steering", "ABS")</li>
+    <li>Pricing sidebar shows: starting price, price per km, price per day</li>
+    <li>WhatsApp button opens correct wa.me link with vehicle name pre-filled</li>
+    <li>Quote button links to /contact?vehicle=[slug]</li>
+    <li>Unpublished vehicles return 404</li>
+    <li>Nonexistent slug returns 404</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-004</span><span class="tc-name">Vehicle Detail — Full Page Render</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle "Toyota Innova" exists with slug="toyota-innova", published=true, seats=8, luggage=1200, ac=true, pricing set</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Features: ["Power Steering", "ABS", "Air Conditioning"], Price: base=5000, per_km=15, per_day=2500</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /vehicle-rentals/toyota-innova &nbsp; 2. Observe all page sections</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Vehicle name, image, and category displayed; specs show 8 seats, 1200L luggage, AC enabled; features list shows 3 items; pricing sidebar displays base=5000, km=15, day=2500</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-005</span><span class="tc-name">Vehicle Detail — WhatsApp Button</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle detail page loaded; theme_settings.whatsapp_number="919876543210"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Scroll to pricing sidebar &nbsp; 2. Click "WhatsApp" button</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Opens https://wa.me/919876543210?text=Interested%20in%20Toyota%20Innova in new window</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-006</span><span class="tc-name">Vehicle Detail — Get Quote Button</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle detail page loaded for slug="toyota-innova"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Get Quote" button in sidebar</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">User navigated to /contact?vehicle=toyota-innova</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-007</span><span class="tc-name">Vehicle Detail — 404 for Unpublished Vehicle</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle with slug="private-vehicle" exists but published=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /vehicle-rentals/private-vehicle</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">HTTP 404 returned; 404 page displayed</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VR-008</span><span class="tc-name">Vehicle Detail — 404 for Nonexistent Slug</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">No vehicle with slug="invalid-slug" exists</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /vehicle-rentals/invalid-slug</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">HTTP 404 returned; 404 page displayed</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 16: AIRPORT TRANSFERS ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 16</div>
+  <div class="doc-title">Airport Transfers Module — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Airport Transfers Listing Page (/airport-transfers)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Hero section renders with background image and headline</li>
+    <li>Route cards display: from_city, to_city, distance, duration, minimum price</li>
+    <li>Vehicle badges shown per route indicating available vehicle types</li>
+    <li>Each route card links to /airport-transfers/[slug]</li>
+    <li>Empty state shows contact link when no routes exist</li>
+    <li>Responsive layout on all device sizes</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-AT-001</span><span class="tc-name">Airport Transfers Listing — Load with Routes</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">At least 2 routes exist: (Delhi-Goa, 1500km, 24hrs, min_price=3000) and (Mumbai-Pune, 150km, 3hrs, min_price=1200)</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /airport-transfers &nbsp; 2. Observe page layout and route cards</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Hero section visible; route cards show correct from/to cities, distances, durations, and min prices; vehicle badges displayed per route</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-AT-002</span><span class="tc-name">Airport Transfers Listing — Empty State</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">No routes exist in DB or all marked is_active=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /airport-transfers</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Empty state message displayed with contact link</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-AT-003</span><span class="tc-name">Airport Transfers Listing — Card Navigation</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Route "Delhi-Goa" with slug="delhi-goa" exists and is_active=true</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /airport-transfers &nbsp; 2. Click on "Delhi-Goa" route card</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">User navigated to /airport-transfers/delhi-goa</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">Airport Transfer Detail Page (/airport-transfers/[slug])</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Route title, distance, and duration displayed prominently</li>
+    <li>Vehicle options table shows: vehicle type, seats, price per transfer</li>
+    <li>Inclusions checklist displays: AC Vehicle, Driver, Fuel, Toll, Support, GST</li>
+    <li>Booking sidebar shows minimum price and two CTAs: Get Quote, WhatsApp</li>
+    <li>WhatsApp button opens wa.me link with route info pre-filled</li>
+    <li>Get Quote button links to /contact?route=[slug]</li>
+    <li>Inactive or missing routes return 404</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-AT-004</span><span class="tc-name">Airport Transfer Detail — Full Page Render</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Route "Delhi-Goa" (slug="delhi-goa", is_active=true, distance=1500km, duration=24hrs, min_price=3000) exists with 3 vehicle pricing rows</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">Vehicles: Sedan (4 seats, 3000/trip), SUV (7 seats, 4500/trip), Tempo (12 seats, 6000/trip)</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /airport-transfers/delhi-goa &nbsp; 2. Observe all sections</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Title shows "Delhi-Goa"; distance 1500km and duration 24hrs displayed; vehicle table shows 3 rows with correct seats and prices; inclusions checklist visible; booking sidebar shows min price 3000</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-AT-005</span><span class="tc-name">Airport Transfer Detail — 404 for Inactive Route</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Route with slug="delhi-goa" exists but is_active=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /airport-transfers/delhi-goa</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">HTTP 404 returned; 404 page displayed</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-AT-006</span><span class="tc-name">Airport Transfer Detail — Get Quote Button</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Airport transfer detail page loaded for slug="delhi-goa"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Scroll to booking sidebar &nbsp; 2. Click "Get Quote" button</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">User navigated to /contact?route=delhi-goa</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 17: HOTEL ASSISTANCE ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 17</div>
+  <div class="doc-title">Hotel Assistance Module — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Hotel Assistance Page (/hotel-assistance)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Page loads with hero section containing background image and headline</li>
+    <li>Form collects: name (required), mobile (required), email (optional), city (required), check-in date (required), check-out date (required), rooms (optional), adults (optional), children (optional), budget (optional), message (optional)</li>
+    <li>Check-in date: minimum = today; past dates rejected with validation error</li>
+    <li>Check-out date: minimum = check-in date; earlier dates rejected with validation error</li>
+    <li>On successful submit: POST to /api/leads with source="hotel-assistance" and form data</li>
+    <li>Success state shows confirmation message for 3 seconds then redirects to /hotel-assistance</li>
+    <li>Error state shows toast notification with error message</li>
+    <li>Form responsive on all device sizes</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-HA-001</span><span class="tc-name">Hotel Assistance — Valid Form Submission</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Page /hotel-assistance loaded</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Priya Sharma", mobile="9876543210", email="priya@test.com", city="Jaipur", check_in="2026-07-15", check_out="2026-07-20", rooms=2, adults=4, children=1, budget="50000", message="Need good 4-star hotel"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Fill name="Priya Sharma" &nbsp; 2. Fill mobile="9876543210" &nbsp; 3. Fill email="priya@test.com" &nbsp; 4. Select city="Jaipur" &nbsp; 5. Set check-in="2026-07-15" &nbsp; 6. Set check-out="2026-07-20" &nbsp; 7. Fill rooms=2 &nbsp; 8. Fill adults=4 &nbsp; 9. Fill children=1 &nbsp; 10. Fill budget="50000" &nbsp; 11. Fill message &nbsp; 12. Click "Submit"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Loading spinner visible during submission; success message displayed; lead created in DB with source="hotel-assistance"; activity log entry created; user redirected to /hotel-assistance after 3s</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-HA-002</span><span class="tc-name">Hotel Assistance — Missing Required Fields</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Page /hotel-assistance loaded</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="", mobile="", email="test@test.com", city="", check_in="", check_out=""</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Leave name empty &nbsp; 2. Leave mobile empty &nbsp; 3. Leave city empty &nbsp; 4. Leave check-in empty &nbsp; 5. Leave check-out empty &nbsp; 6. Click "Submit"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Inline validation errors shown: "Name is required", "Mobile is required", "City is required", "Check-in date is required", "Check-out date is required"; form not submitted</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-HA-003</span><span class="tc-name">Hotel Assistance — Past Check-In Date</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Page /hotel-assistance loaded; today is 2026-06-25</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Test", mobile="9876543210", city="Delhi", check_in="2026-06-20"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Fill required fields &nbsp; 2. Set check-in date to past date (2026-06-20) &nbsp; 3. Click "Submit"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Validation error: "Check-in date must be today or later"; form not submitted</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-HA-004</span><span class="tc-name">Hotel Assistance — Check-Out Before Check-In</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Page /hotel-assistance loaded</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">check_in="2026-07-15", check_out="2026-07-10"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Fill required fields &nbsp; 2. Set check-in="2026-07-15" &nbsp; 3. Set check-out="2026-07-10" (before check-in) &nbsp; 4. Click "Submit"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Validation error: "Check-out date must be after check-in date"; form not submitted</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-HA-005</span><span class="tc-name">Hotel Assistance — Invalid Mobile Number</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Page /hotel-assistance loaded</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Test", mobile="123", city="Delhi"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Fill name and city &nbsp; 2. Enter mobile="123" (too short) &nbsp; 3. Click "Submit"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Validation error: "Enter a valid Indian mobile number"; form not submitted</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 18: CMS PAGES ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 18</div>
+  <div class="doc-title">Dynamic CMS Pages Module — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">CMS Pages Overview</div>
+  <div class="callout">Dynamic CMS pages allow admins to create published content at custom slug URLs (/[slug]). Static routes (/about, /contact, etc.) are NOT affected by this catch-all.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">CMS Page Rendering (/[slug])</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Published CMS pages render at their custom slug URL</li>
+    <li>Hero section displays background image if provided</li>
+    <li>Content renders as HTML with proper formatting</li>
+    <li>Gallery section displays if images present</li>
+    <li>FAQs render as expandable accordion with category grouping</li>
+    <li>CTA banner renders at bottom if cta_text + cta_url both set</li>
+    <li>Unpublished pages return 404</li>
+    <li>Nonexistent slugs return 404</li>
+    <li>Existing static routes (/about, /contact, etc.) continue working (not overridden)</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-001</span><span class="tc-name">CMS Page — Published Page Render</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page created: slug="wellness-retreat", is_published=true, title="Wellness Retreat Guide", hero_image_url set, content_html populated, has gallery images and faqs</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /wellness-retreat &nbsp; 2. Observe page sections</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Page renders with hero image, title "Wellness Retreat Guide", content HTML displayed correctly, gallery visible with images, FAQs shown as expandable accordion</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-002</span><span class="tc-name">CMS Page — CTA Banner Rendering</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page slug="wellness-retreat" has cta_text="Book Your Wellness Retreat" and cta_url="https://example.com/book"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /wellness-retreat &nbsp; 2. Scroll to bottom of page</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">CTA banner visible at bottom with text "Book Your Wellness Retreat" and clickable link to https://example.com/book</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-003</span><span class="tc-name">CMS Page — 404 for Unpublished Page</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page slug="unpublished-guide" exists but is_published=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /unpublished-guide</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">HTTP 404 returned; 404 page displayed</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-004</span><span class="tc-name">CMS Page — Static Routes Not Overridden</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Static route /about is defined in app; CMS page with slug="about" does NOT exist</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /about</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Static /about page renders (not CMS catch-all)</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-005</span><span class="tc-name">CMS Page — FAQ Accordion</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page slug="faq-guide" has 3 FAQs from 2 categories: "General" (Q1, Q2) and "Booking" (Q3)</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /faq-guide &nbsp; 2. Observe FAQ section &nbsp; 3. Click on first FAQ to expand &nbsp; 4. Click to collapse</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">FAQs grouped by category; each FAQ clickable (expand/collapse); answer content hidden until expanded</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 19: NAVIGATION MENUS ADMIN ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 19</div>
+  <div class="doc-title">Navigation Menus Admin Panel — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Navigation Menus Management (/admin/menus)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>Menu list loads with all existing menus, label, and active status</li>
+    <li>Create new menu (POST /api/admin/nav-menus) with label, display order, and active status</li>
+    <li>Edit menu label, order, and active status (PUT /api/admin/nav-menus/[id])</li>
+    <li>Delete menu (DELETE /api/admin/nav-menus/[id]) removes menu and associated nav items</li>
+    <li>Add nav item to menu (POST /api/admin/nav-items) with label, URL, and display order</li>
+    <li>Edit nav item (PUT /api/admin/nav-items/[id]) updates label, URL, display order</li>
+    <li>Delete nav item (DELETE /api/admin/nav-items/[id]) removes item from menu</li>
+    <li>Activity log entries created for all CRUD operations</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-001</span><span class="tc-name">Navigation Menus — List All Menus</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; at least 2 menus exist: "Header" (active=true) and "Footer" (active=false)</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /admin/menus &nbsp; 2. Observe menu list</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Both "Header" and "Footer" menus displayed; active status indicators shown; each menu has edit/delete buttons</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-002</span><span class="tc-name">Navigation Menus — Create New Menu</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on /admin/menus page</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">label="Quick Links", display_order=3, is_active=true</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Create Menu" button &nbsp; 2. Enter label="Quick Links" &nbsp; 3. Set display_order=3 &nbsp; 4. Set is_active=true &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">POST /api/admin/nav-menus called; menu created in DB; new menu appears in list; activity log entry created; success toast shown</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-003</span><span class="tc-name">Navigation Menus — Edit Menu</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Menu "Footer" with id=2 exists; admin on /admin/menus</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_label="Footer Links", is_active=true</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click edit button on "Footer" menu &nbsp; 2. Change label to "Footer Links" &nbsp; 3. Set is_active=true &nbsp; 4. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PUT /api/admin/nav-menus/2 called; menu updated in DB; list updates to show "Footer Links" and active status; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-004</span><span class="tc-name">Navigation Menus — Delete Menu</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Menu "Quick Links" with id=3 exists (no nav items); admin on /admin/menus</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click delete button on "Quick Links" menu &nbsp; 2. Confirm deletion in modal</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">DELETE /api/admin/nav-menus/3 called; menu deleted from DB; removed from list; activity log entry created; success toast shown</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-005</span><span class="tc-name">Navigation Items — Add Item to Menu</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Menu "Header" with id=1 exists; admin viewing menu items for menu 1</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">label="About Us", url="/about", display_order=1</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Add Item" button &nbsp; 2. Enter label="About Us" &nbsp; 3. Enter url="/about" &nbsp; 4. Set display_order=1 &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">POST /api/admin/nav-items called with menu_id=1; nav item created in DB; appears in menu item list; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-006</span><span class="tc-name">Navigation Items — Edit Item</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Nav item "About Us" with id=10 exists; admin viewing menu items</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_label="Our Story", new_url="/our-story"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click edit on "About Us" item &nbsp; 2. Change label to "Our Story" &nbsp; 3. Change URL to "/our-story" &nbsp; 4. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PUT /api/admin/nav-items/10 called; item updated in DB; list shows "Our Story" with new URL; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-MENU-007</span><span class="tc-name">Navigation Items — Delete Item</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Nav item with id=10 exists; admin viewing menu items</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click delete button on nav item &nbsp; 2. Confirm deletion</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">DELETE /api/admin/nav-items/10 called; item deleted from DB; removed from list; activity log entry created</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 20: CMS PAGES ADMIN ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 20</div>
+  <div class="doc-title">CMS Pages Admin Panel — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">CMS Pages Management (/admin/cms-pages)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>List all CMS pages with title, slug, status (published/draft), and created date</li>
+    <li>Create new CMS page at /admin/cms-pages/new with all fields (title, slug, hero image, content, gallery, FAQs, CTA)</li>
+    <li>Edit existing CMS page at /admin/cms-pages/[id]/edit</li>
+    <li>Delete CMS page from list (removes page and associated data)</li>
+    <li>Publish/unpublish toggle updates is_published status immediately</li>
+    <li>Form validation: slug must be unique, title required, content may be empty</li>
+    <li>Activity log entries created for all CRUD operations</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-A-001</span><span class="tc-name">CMS Pages Admin — List All Pages</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; at least 3 CMS pages exist with mixed published status</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /admin/cms-pages &nbsp; 2. Observe page list</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">All pages displayed with title, slug, status icon (published/draft), creation date; each page has edit and delete buttons</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-A-002</span><span class="tc-name">CMS Pages Admin — Create New Page</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on /admin/cms-pages page</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">title="Wellness Guide", slug="wellness-guide", content="<h2>Welcome</h2>...", is_published=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Create Page" button &nbsp; 2. Navigate to /admin/cms-pages/new &nbsp; 3. Enter title, slug, content &nbsp; 4. Leave as draft &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">POST /api/admin/cms-pages called; page created in DB as draft (is_published=false); returns to list; new page shown with "Draft" badge; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-A-003</span><span class="tc-name">CMS Pages Admin — Edit Existing Page</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page "Wellness Guide" with id=5 exists; admin on /admin/cms-pages</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_content="<h2>Updated Welcome</h2>..."</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click edit button on page &nbsp; 2. Navigate to /admin/cms-pages/5/edit &nbsp; 3. Update content &nbsp; 4. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PUT /api/admin/cms-pages/5 called; page updated in DB; returns to list; activity log entry created; success toast shown</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-A-004</span><span class="tc-name">CMS Pages Admin — Publish/Unpublish Toggle</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page with id=5 exists and is_published=false; admin on /admin/cms-pages</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Locate page in list showing "Draft" badge &nbsp; 2. Click publish toggle/button</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PATCH /api/admin/cms-pages/5 called with is_published=true; page marked "Published" in list; page now accessible at /{slug} on public site; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-A-005</span><span class="tc-name">CMS Pages Admin — Delete Page</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page with id=5 exists; admin on /admin/cms-pages</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click delete button on page &nbsp; 2. Confirm deletion in modal</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">DELETE /api/admin/cms-pages/5 called; page deleted from DB; removed from list; public URL /{slug} returns 404; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-CMS-A-006</span><span class="tc-name">CMS Pages Admin — Unique Slug Validation</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">CMS page "wellness-guide" with slug="wellness-guide" already exists; admin creating new page</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_page_slug="wellness-guide" (duplicate)</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /admin/cms-pages/new &nbsp; 2. Enter slug="wellness-guide" &nbsp; 3. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Form validation error: "Slug already exists"; form not submitted</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 21: VEHICLES ADMIN ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 21</div>
+  <div class="doc-title">Vehicles Admin Panel — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Vehicles Management (/admin/vehicles)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>List all vehicles with name, category, seats, and published status</li>
+    <li>Create new vehicle with: name, slug, category, seats, luggage capacity, AC status, features (array), pricing (base, per_km, per_day), image, featured toggle</li>
+    <li>Edit existing vehicle and update all fields</li>
+    <li>Delete vehicle from list</li>
+    <li>Manage vehicle categories (create, edit, delete)</li>
+    <li>Form validation: name and slug required; slug must be unique</li>
+    <li>Activity log entries created for all CRUD operations</li>
+    <li>Publish/unpublish toggle controls public visibility</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VEH-001</span><span class="tc-name">Vehicles Admin — List Vehicles</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; at least 3 vehicles exist with different categories</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /admin/vehicles &nbsp; 2. Observe vehicle list</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">All vehicles displayed with name, category, seats, and status; each vehicle has edit, delete, and publish toggle buttons</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VEH-002</span><span class="tc-name">Vehicles Admin — Create New Vehicle</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on /admin/vehicles page</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">name="Tesla Model 3", slug="tesla-model-3", category="Sedan", seats=5, luggage=500, ac=true, features=["Autopilot", "Electric"], base_price=4000, per_km=20, per_day=3000, featured=false</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Create Vehicle" &nbsp; 2. Navigate to /admin/vehicles/new &nbsp; 3. Fill all fields &nbsp; 4. Upload image &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">POST /api/admin/vehicles called; vehicle created in DB; returns to list; new vehicle shown with "Draft" status; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VEH-003</span><span class="tc-name">Vehicles Admin — Edit Vehicle</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle "Tesla Model 3" with id=7 exists; admin on /admin/vehicles</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_seats=6, new_base_price=4500</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click edit on vehicle &nbsp; 2. Navigate to /admin/vehicles/7/edit &nbsp; 3. Update seats to 6 &nbsp; 4. Update base price to 4500 &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PUT /api/admin/vehicles/7 called; vehicle updated in DB; returns to list; updated data persists on public listing; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VEH-004</span><span class="tc-name">Vehicles Admin — Publish Vehicle</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle with id=7 exists and published=false; admin on /admin/vehicles</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Locate vehicle showing "Draft" status &nbsp; 2. Click publish toggle</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PATCH /api/admin/vehicles/7 called with published=true; vehicle now shows "Published"; appears on /vehicle-rentals public page; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VEH-005</span><span class="tc-name">Vehicles Admin — Delete Vehicle</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Vehicle with id=7 exists; admin on /admin/vehicles</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click delete button on vehicle &nbsp; 2. Confirm deletion in modal</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">DELETE /api/admin/vehicles/7 called; vehicle deleted from DB; removed from list; no longer accessible on public site; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-VEH-006</span><span class="tc-name">Vehicles Admin — Manage Categories</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on /admin/vehicles page; category manager section visible</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_category="Electric Vehicles"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Manage Categories" &nbsp; 2. Click "Create Category" &nbsp; 3. Enter name="Electric Vehicles" &nbsp; 4. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Category created in DB; appears in category dropdown when creating/editing vehicles; activity log entry created</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────────────── NEW DOC 22: AIRPORT ROUTES ADMIN ────────────────── -->
+<div class="doc-header">
+  <div class="doc-num">Document 22</div>
+  <div class="doc-title">Airport Routes Admin Panel — Test Cases &amp; Acceptance Criteria</div>
+</div>
+
+<div class="section">
+  <div class="section-title">Airport Routes Management (/admin/airport-routes)</div>
+  <div class="section-subtitle">Acceptance Criteria</div>
+  <ul style="margin-left:20px; margin-bottom:16px;">
+    <li>List all routes with from_city, to_city, distance, and active status</li>
+    <li>Create new route with: from_city, to_city, distance, duration, description, dynamic vehicle pricing rows (vehicle type, seats, price per transfer)</li>
+    <li>Edit route: update cities, distance, duration, and modify vehicle pricing rows</li>
+    <li>Delete route (removes route and all associated vehicle pricing)</li>
+    <li>Add/remove vehicle pricing row in form (dynamic form field array)</li>
+    <li>Form validation: from_city, to_city, distance, duration required; distance > 0; at least 1 vehicle pricing row required</li>
+    <li>Activity log entries created for all CRUD operations</li>
+    <li>Active/inactive toggle controls public visibility</li>
+  </ul>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-001</span><span class="tc-name">Airport Routes Admin — List Routes</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin authenticated; at least 3 routes exist</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Navigate to /admin/airport-routes &nbsp; 2. Observe route list</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">All routes displayed with from_city, to_city, distance, duration, and active status; each route has edit, delete, and active toggle buttons</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-002</span><span class="tc-name">Airport Routes Admin — Create New Route</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on /admin/airport-routes page</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">from_city="Bangalore", to_city="Coorg", slug="bangalore-coorg", distance=250, duration="5 hours", description="Mountain route", vehicles=[{type:"Sedan", seats:4, price:1500}, {type:"SUV", seats:7, price:2500}]</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click "Create Route" &nbsp; 2. Navigate to /admin/airport-routes/new &nbsp; 3. Fill from_city, to_city, distance, duration &nbsp; 4. Add 2 vehicle pricing rows &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">POST /api/admin/airport-routes called; route created in DB with 2 vehicle pricing rows; returns to list; new route shown; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-003</span><span class="tc-name">Airport Routes Admin — Dynamic Vehicle Pricing Rows</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on create/edit route form; route has 2 vehicle pricing rows</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Observe 2 vehicle pricing rows &nbsp; 2. Click "Add Vehicle" button &nbsp; 3. Fill third row: type="Tempo", seats=12, price=4000 &nbsp; 4. Click "Remove" on one row &nbsp; 5. Save form</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Third row added dynamically; one row removed; form saves with correct number of vehicle pricing rows; database updated accordingly</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-004</span><span class="tc-name">Airport Routes Admin — Edit Route</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Route "Bangalore-Coorg" with id=3 exists; admin on /admin/airport-routes</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">new_distance=260, new_duration="5.5 hours"</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click edit button on route &nbsp; 2. Navigate to /admin/airport-routes/3/edit &nbsp; 3. Update distance to 260 &nbsp; 4. Update duration to "5.5 hours" &nbsp; 5. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PUT /api/admin/airport-routes/3 called; route updated in DB; returns to list; public page (/airport-transfers/bangalore-coorg) reflects new distance and duration; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-005</span><span class="tc-name">Airport Routes Admin — Activate/Deactivate Route</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Route with id=3 exists and is_active=false; admin on /admin/airport-routes</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Locate route showing "Inactive" status &nbsp; 2. Click active toggle</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">PATCH /api/admin/airport-routes/3 called with is_active=true; route now shows "Active"; appears on /airport-transfers public page; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-006</span><span class="tc-name">Airport Routes Admin — Delete Route</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Route with id=3 exists; admin on /admin/airport-routes</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Click delete button on route &nbsp; 2. Confirm deletion in modal</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">DELETE /api/admin/airport-routes/3 called; route and all vehicle pricing rows deleted from DB; removed from list; no longer accessible on public site; activity log entry created</div></div>
+    </div>
+  </div>
+
+  <div class="tc-block">
+    <div class="tc-header"><span class="tc-id">TC-ROUTE-007</span><span class="tc-name">Airport Routes Admin — Form Validation</span></div>
+    <div class="tc-body">
+      <div class="tc-row"><div class="tc-label">Preconditions</div><div class="tc-value">Admin on create route form</div></div>
+      <div class="tc-row"><div class="tc-label">Test Data</div><div class="tc-value">from_city="", to_city="", distance=0, duration=""</div></div>
+      <div class="tc-row"><div class="tc-label">Steps</div><div class="tc-value">1. Leave all required fields empty &nbsp; 2. Set distance=0 &nbsp; 3. Don't add any vehicle pricing rows &nbsp; 4. Click "Save"</div></div>
+      <div class="tc-row"><div class="tc-label">Expected Result</div><div class="tc-value">Form validation errors: "From city required", "To city required", "Distance must be > 0", "Duration required", "At least one vehicle pricing row required"; form not submitted</div></div>
+    </div>
+  </div>
+</div>
+
 <div class="page-footer">
-  Divine Travel — QA Documentation Pack v1.0 &nbsp;|&nbsp; Prepared 2026-06-24 &nbsp;|&nbsp; 14 Documents &nbsp;|&nbsp; Confidential — Internal Use Only
+  Divine Travel — QA Documentation Pack v1.0 &nbsp;|&nbsp; Prepared 2026-06-25 &nbsp;|&nbsp; 22 Documents &nbsp;|&nbsp; Confidential — Internal Use Only
 </div>
 
 </div><!-- /content -->

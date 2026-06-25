@@ -1,4 +1,4 @@
-/** Strongly-typed row shapes mirroring the Supabase schema in lib/db/migrations. */
+/** Strongly-typed row shapes mirroring the Supabase schema. */
 
 export interface ThemePresetRow {
   id: string;
@@ -139,13 +139,28 @@ export interface BlogRow {
 
 export type LeadStatus = 'new' | 'contacted' | 'quoted' | 'negotiation' | 'confirmed' | 'lost';
 export type LeadPriority = 'low' | 'medium' | 'high' | 'urgent';
-export type LeadSource = 'contact' | 'package-inquiry' | 'quick-quote' | 'callback';
+export type LeadSource =
+  | 'contact'
+  | 'package-inquiry'
+  | 'quick-quote'
+  | 'callback'
+  | 'vehicle-inquiry'
+  | 'transfer-inquiry'
+  | 'hotel-assistance';
 
 export interface LeadNote {
   at: string;
   by: string | null;
   note: string;
   status_change: LeadStatus | null;
+}
+
+export interface HotelLeadData {
+  city?: string;
+  check_in?: string;
+  check_out?: string;
+  rooms?: number;
+  budget?: string;
 }
 
 export interface LeadRow {
@@ -173,6 +188,7 @@ export interface LeadRow {
   utm_content: string | null;
   landing_page: string | null;
   notes: LeadNote[];
+  hotel_data: HotelLeadData | null;
   created_at: string;
   updated_at: string;
 }
@@ -275,6 +291,115 @@ export interface ActivityLogRow {
   created_at: string;
 }
 
+// ── Navigation ────────────────────────────────────────────────
+export interface NavMenuRow {
+  id: string;
+  title: string;
+  url: string;
+  icon: string | null;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface NavItemRow {
+  id: string;
+  menu_id: string;
+  parent_id: string | null;
+  title: string;
+  url: string;
+  description: string | null;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface NavMenuWithItems extends NavMenuRow {
+  nav_items: NavItemRow[];
+}
+
+// ── CMS Pages ─────────────────────────────────────────────────
+export interface CmsPageRow {
+  id: string;
+  slug: string;
+  title: string;
+  page_type: 'tour' | 'vehicle' | 'transfer' | 'general' | 'seo';
+  hero_heading: string | null;
+  hero_subheading: string | null;
+  hero_image: string | null;
+  content: string;
+  gallery: string[];
+  faqs: FaqItem[];
+  cta_text: string | null;
+  cta_url: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image: string | null;
+  canonical_path: string | null;
+  is_published: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ── Vehicle Rentals ───────────────────────────────────────────
+export interface VehicleCategoryRow {
+  id: string;
+  slug: string;
+  name: string;
+  description: string | null;
+  display_order: number;
+  is_published: boolean;
+  created_at: string;
+}
+
+export interface VehicleRow {
+  id: string;
+  slug: string;
+  name: string;
+  category_id: string | null;
+  seats: number;
+  luggage_capacity: number;
+  price_per_km: number | null;
+  price_per_day: number | null;
+  starting_price: number | null;
+  images: string[];
+  cover_image: string | null;
+  description: string;
+  features: string[];
+  is_ac: boolean;
+  is_featured: boolean;
+  is_published: boolean;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// ── Airport Transfers ─────────────────────────────────────────
+export interface AirportRouteVehicle {
+  vehicle_type: string;
+  seats: number;
+  price: number;
+}
+
+export interface AirportRouteRow {
+  id: string;
+  slug: string;
+  from_city: string;
+  to_city: string;
+  distance_km: number | null;
+  duration_hours: number | null;
+  vehicles: AirportRouteVehicle[];
+  description: string | null;
+  is_active: boolean;
+  seo_title: string | null;
+  seo_description: string | null;
+  og_image: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -294,6 +419,12 @@ export interface Database {
       seo_pages: { Row: SeoPageRow; Insert: Partial<SeoPageRow>; Update: Partial<SeoPageRow> };
       homepage_sections: { Row: HomepageSection; Insert: Partial<HomepageSection>; Update: Partial<HomepageSection> };
       activity_logs: { Row: ActivityLogRow; Insert: Partial<ActivityLogRow>; Update: Partial<ActivityLogRow> };
+      nav_menus: { Row: NavMenuRow; Insert: Partial<NavMenuRow>; Update: Partial<NavMenuRow> };
+      nav_items: { Row: NavItemRow; Insert: Partial<NavItemRow>; Update: Partial<NavItemRow> };
+      cms_pages: { Row: CmsPageRow; Insert: Partial<CmsPageRow>; Update: Partial<CmsPageRow> };
+      vehicle_categories: { Row: VehicleCategoryRow; Insert: Partial<VehicleCategoryRow>; Update: Partial<VehicleCategoryRow> };
+      vehicles: { Row: VehicleRow; Insert: Partial<VehicleRow>; Update: Partial<VehicleRow> };
+      airport_routes: { Row: AirportRouteRow; Insert: Partial<AirportRouteRow>; Update: Partial<AirportRouteRow> };
     };
   };
 }
