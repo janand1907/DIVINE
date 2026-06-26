@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
+import { upsertNavPool, destinationToNavPool } from '@/lib/nav/pool';
 import type { DestinationRow } from '@/types/database';
 
 const destinationSchema = z.object({
@@ -76,6 +77,8 @@ export async function POST(req: NextRequest) {
     metadata: { name: data.name, slug: data.slug },
     userEmail: email,
   });
+
+  await upsertNavPool(destinationToNavPool(data));
 
   return NextResponse.json(data, { status: 201 });
 }

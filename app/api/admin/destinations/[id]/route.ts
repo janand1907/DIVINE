@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
+import { upsertNavPool, removeNavPool, destinationToNavPool } from '@/lib/nav/pool';
 import type { DestinationRow } from '@/types/database';
 
 const destinationSchema = z.object({
@@ -64,6 +65,8 @@ export async function PUT(
     userEmail: email,
   });
 
+  await upsertNavPool(destinationToNavPool(data));
+
   return NextResponse.json(data, { status: 200 });
 }
 
@@ -81,6 +84,8 @@ export async function DELETE(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  await removeNavPool('destination', params.id);
 
   await logActivity({
     action: 'delete',

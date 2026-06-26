@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
+import { upsertNavPool, removeNavPool, routeToNavPool } from '@/lib/nav/pool';
 import type { AirportRouteRow } from '@/types/database';
 
 const vehicleSchema = z.object({
@@ -54,6 +55,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   await logActivity({ action: 'update', entity: 'airport_route', entityId: data.id, metadata: { slug: data.slug }, userEmail: session.email });
+  await upsertNavPool(routeToNavPool(data));
   return NextResponse.json(data);
 }
 
@@ -65,6 +67,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   const { error } = await supabase.from('airport_routes').delete().eq('id', params.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  await removeNavPool('transfer_route', params.id);
   await logActivity({ action: 'delete', entity: 'airport_route', entityId: params.id, metadata: null, userEmail: session.email });
   return NextResponse.json({ ok: true });
 }

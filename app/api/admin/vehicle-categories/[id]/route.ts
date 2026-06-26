@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
+import { upsertNavPool, removeNavPool, vehicleCategoryToNavPool } from '@/lib/nav/pool';
 import type { VehicleCategoryRow } from '@/types/database';
 
 const schema = z.object({
@@ -27,6 +28,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   const supabase = createAdminClient();
   const { data, error } = await supabase.from('vehicle_categories').update({ ...parsed.data, description: parsed.data.description || null }).eq('id', params.id).select().single<VehicleCategoryRow>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await upsertNavPool(vehicleCategoryToNavPool(data));
   return NextResponse.json(data);
 }
 
@@ -37,5 +39,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: { id: stri
   const supabase = createAdminClient();
   const { error } = await supabase.from('vehicle_categories').delete().eq('id', params.id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await removeNavPool('vehicle_category', params.id);
   return NextResponse.json({ ok: true });
 }

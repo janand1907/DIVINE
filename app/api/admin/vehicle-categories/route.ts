@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
+import { upsertNavPool, vehicleCategoryToNavPool } from '@/lib/nav/pool';
 import type { VehicleCategoryRow } from '@/types/database';
 
 const schema = z.object({
@@ -37,5 +38,6 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
   const { data, error } = await supabase.from('vehicle_categories').insert({ ...parsed.data, description: parsed.data.description || null }).select().single<VehicleCategoryRow>();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await upsertNavPool(vehicleCategoryToNavPool(data));
   return NextResponse.json(data, { status: 201 });
 }

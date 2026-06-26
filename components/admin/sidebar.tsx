@@ -4,11 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { signOut } from '@/lib/admin/auth-client';
-import {
-  LayoutDashboard, Users, Package, FileText, Star, Image as ImageIcon,
-  Palette, Home as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut,
-  Navigation, FileCode, Car, PlaneTakeoff, Hotel,
-} from 'lucide-react';
+import { LayoutDashboard, Users, Package, FileText, Star, Image as ImageIcon, Palette, Chrome as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut, Navigation, FileCode, Car, PlaneTakeoff, Hotel } from 'lucide-react';
 
 const navGroups = [
   {
@@ -39,7 +35,8 @@ const navGroups = [
     label: 'Site',
     items: [
       { href: '/admin/menus', label: 'Navigation Menus', icon: Navigation },
-      { href: '/admin/cms-pages', label: 'CMS Pages', icon: FileCode },
+      { href: '/admin/content-pages', label: 'Content Pages', icon: FileCode },
+      { href: '/admin/cms-pages', label: 'CMS Pages (Legacy)', icon: FileCode },
       { href: '/admin/homepage-builder', label: 'Homepage Builder', icon: HomeIcon },
       { href: '/admin/theme', label: 'Theme & Branding', icon: Palette },
       { href: '/admin/seo-pages', label: 'SEO Pages', icon: Globe },

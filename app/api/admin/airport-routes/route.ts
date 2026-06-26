@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
 import { logActivity } from '@/lib/activity/log';
+import { upsertNavPool, routeToNavPool } from '@/lib/nav/pool';
 import type { AirportRouteRow } from '@/types/database';
 
 const vehicleSchema = z.object({
@@ -54,5 +55,6 @@ export async function POST(req: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   await logActivity({ action: 'create', entity: 'airport_route', entityId: data.id, metadata: { slug: data.slug }, userEmail: session.email });
+  await upsertNavPool(routeToNavPool(data));
   return NextResponse.json(data, { status: 201 });
 }
