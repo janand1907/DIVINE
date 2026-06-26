@@ -3,12 +3,12 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { Users, TrendingUp, Clock, CircleAlert as AlertCircle, Package, FileText } from 'lucide-react';
 import { StatCard } from '@/components/admin/stat-card';
 import {
-  DateRangeFilter,
   ConversionFunnel,
   PriorityDistribution,
   DailyLeadsChart,
   LeadSourceChart,
 } from '@/components/admin/analytics-charts';
+import { DateRangeFilterWrapper } from '@/components/admin/date-range-filter-wrapper';
 import type { LeadRow } from '@/types/database';
 
 interface AdminDashboardProps {
@@ -183,20 +183,3 @@ export default async function AdminDashboard({ searchParams }: AdminDashboardPro
   );
 }
 
-/**
- * Client wrapper for date range filter
- * Handles search param navigation
- */
-function DateRangeFilterWrapper({ currentRange }: { currentRange: '7' | '30' | '90' | 'all' }) {
-  'use client';
-
-  const handleRangeChange = (newRange: '7' | '30' | '90' | 'all') => {
-    if (typeof window !== 'undefined') {
-      const url = new URL(window.location.href);
-      url.searchParams.set('range', newRange);
-      window.location.href = url.toString();
-    }
-  };
-
-  return <DateRangeFilter selectedRange={currentRange} onRangeChange={handleRangeChange} />;
-}
