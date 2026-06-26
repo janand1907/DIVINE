@@ -208,7 +208,7 @@ export function SiteSettingsForm({ initialValues }: SiteSettingsFormProps) {
         <div className="mb-4 flex items-center justify-between">
           <div>
             <h3 className="font-heading text-base font-semibold text-foreground">Footer Quick Links</h3>
-            <p className="mt-0.5 text-sm text-muted-foreground">These links appear in the "Quick Links" column of the footer.</p>
+            <p className="mt-0.5 text-sm text-muted-foreground">These links appear in the &ldquo;Quick Links&rdquo; column of the footer.</p>
           </div>
           <Button type="button" variant="outline" size="sm" onClick={addFooterLink}>
             <Plus className="mr-1 h-3.5 w-3.5" /> Add Link
