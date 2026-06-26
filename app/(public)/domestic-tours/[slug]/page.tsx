@@ -5,6 +5,7 @@ import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { Breadcrumb } from '@/components/layout/breadcrumb';
 import { SectionHeading } from '@/components/layout/section-heading';
 import { PackageCard } from '@/components/packages/package-card';
+import { PageRenderer } from '@/components/sections/page-renderer';
 import type { DestinationRow, PackageRow } from '@/types/database';
 export const dynamic = "force-dynamic";
 
@@ -78,68 +79,74 @@ export default async function DomesticTourDetailPage({ params }: Props) {
   const whatsappHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}?text=${encodeURIComponent(`Hi, I want to know more about ${dest.name} tours`)}`;
 
   return (
-    <>
-      {/* Hero */}
-      <section className="relative isolate overflow-hidden bg-brand-dark text-brand-darkForeground">
-        <div
-          className="absolute inset-0 -z-10 bg-cover bg-center opacity-50"
-          style={{ backgroundImage: `url(${cover})` }}
-          aria-hidden
-        />
-        <div className="container-brand py-16 md:py-24">
-          <div className="max-w-3xl">
-            <Breadcrumb
-              items={[
-                { name: 'Home', href: '/' },
-                { name: 'Domestic Tours', href: '/domestic-tours' },
-                { name: dest.name, href: `/domestic-tours/${dest.slug}` },
-              ]}
-              siteUrl={siteUrl}
-              className="text-brand-darkForeground/80 [&_*]:text-brand-darkForeground/80"
+    <PageRenderer
+      entityType="destination"
+      entityId={dest.id}
+      fallback={
+        <>
+          {/* Hero */}
+          <section className="relative isolate overflow-hidden bg-brand-dark text-brand-darkForeground">
+            <div
+              className="absolute inset-0 -z-10 bg-cover bg-center opacity-50"
+              style={{ backgroundImage: `url(${cover})` }}
+              aria-hidden
             />
-            <h1 className="mt-4 font-heading text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl text-balance">
-              {dest.name}
-            </h1>
-            {dest.description && (
-              <p className="mt-3 max-w-2xl text-lg text-brand-darkForeground/85 text-balance">
-                {dest.description}
-              </p>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Packages */}
-      <section className="bg-background py-12">
-        <div className="container-brand">
-          <SectionHeading
-            title={`Tours to ${dest.name}`}
-            subtitle="Curated travel packages for this destination"
-          />
-
-          {finalPackages.length === 0 ? (
-            <div className="mt-10 rounded-lg border border-border bg-card p-12 text-center shadow-brand">
-              <p className="text-foreground">
-                New tours to {dest.name} are being planned. Reach out for a custom itinerary.
-              </p>
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-brand-whatsapp px-6 py-2.5 font-medium text-brand-whatsappForeground"
-              >
-                Enquire on WhatsApp
-              </a>
+            <div className="container-brand py-16 md:py-24">
+              <div className="max-w-3xl">
+                <Breadcrumb
+                  items={[
+                    { name: 'Home', href: '/' },
+                    { name: 'Domestic Tours', href: '/domestic-tours' },
+                    { name: dest.name, href: `/domestic-tours/${dest.slug}` },
+                  ]}
+                  siteUrl={siteUrl}
+                  className="text-brand-darkForeground/80 [&_*]:text-brand-darkForeground/80"
+                />
+                <h1 className="mt-4 font-heading text-3xl font-semibold leading-tight sm:text-4xl lg:text-5xl text-balance">
+                  {dest.name}
+                </h1>
+                {dest.description && (
+                  <p className="mt-3 max-w-2xl text-lg text-brand-darkForeground/85 text-balance">
+                    {dest.description}
+                  </p>
+                )}
+              </div>
             </div>
-          ) : (
-            <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {finalPackages.map((pkg) => (
-                <PackageCard key={pkg.id} pkg={pkg} />
-              ))}
+          </section>
+
+          {/* Packages */}
+          <section className="bg-background py-12">
+            <div className="container-brand">
+              <SectionHeading
+                title={`Tours to ${dest.name}`}
+                subtitle="Curated travel packages for this destination"
+              />
+
+              {finalPackages.length === 0 ? (
+                <div className="mt-10 rounded-lg border border-border bg-card p-12 text-center shadow-brand">
+                  <p className="text-foreground">
+                    New tours to {dest.name} are being planned. Reach out for a custom itinerary.
+                  </p>
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-brand-whatsapp px-6 py-2.5 font-medium text-brand-whatsappForeground"
+                  >
+                    Enquire on WhatsApp
+                  </a>
+                </div>
+              ) : (
+                <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {finalPackages.map((pkg) => (
+                    <PackageCard key={pkg.id} pkg={pkg} />
+                  ))}
+                </div>
+              )}
             </div>
-          )}
-        </div>
-      </section>
-    </>
+          </section>
+        </>
+      }
+    />
   );
 }
