@@ -125,7 +125,7 @@ export function AirportRouteForm({ initial }: AirportRouteFormProps) {
             </div>
             <div className="space-y-3">
               {form.vehicles.length === 0 && (
-                <p className="text-sm text-muted-foreground">No vehicles added. Click "Add Vehicle" to add pricing options.</p>
+                <p className="text-sm text-muted-foreground">No vehicles added. Click &quot;Add Vehicle&quot; to add pricing options.</p>
               )}
               {form.vehicles.map((v, i) => (
                 <div key={i} className="grid gap-3 rounded-md border border-border p-3 sm:grid-cols-4">

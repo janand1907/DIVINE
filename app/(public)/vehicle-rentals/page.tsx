@@ -101,7 +101,7 @@ export default async function VehicleRentalsPage() {
       <section className="bg-brand-dark py-20 text-white">
         <div className="container-brand text-center">
           <h2 className="font-heading text-3xl font-bold">Ready to Book Your Ride?</h2>
-          <p className="mt-3 text-white/70">Call us or fill in the form and we'll get back to you within minutes.</p>
+          <p className="mt-3 text-white/70">Call us or fill in the form and we&apos;ll get back to you within minutes.</p>
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild><Link href="/contact">Book Now</Link></Button>
             <Button size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10" asChild>

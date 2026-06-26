@@ -43,7 +43,7 @@ export default async function GalleryPage() {
             </h1>
           </div>
           <p className="mt-2 max-w-2xl text-brand-darkForeground/80">
-            Moments captured from our travelers' journeys across temples, hills, beaches, and beyond.
+            Moments captured from our travelers&apos; journeys across temples, hills, beaches, and beyond.
           </p>
         </div>
       </section>

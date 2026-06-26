@@ -94,7 +94,7 @@ export default async function AirportTransferDetailPage({ params }: Props) {
 
               {/* Inclusions */}
               <div className="rounded-xl bg-muted/40 p-6">
-                <h3 className="mb-3 font-heading text-lg font-semibold">What's Included</h3>
+                <h3 className="mb-3 font-heading text-lg font-semibold">What&apos;s Included</h3>
                 <ul className="grid gap-2 sm:grid-cols-2">
                   {['AC Vehicle', 'Experienced Driver', 'Fuel Charges', 'Toll Charges', '24/7 Support', 'GST'].map((item) => (
                     <li key={item} className="flex items-center gap-2 text-sm text-muted-foreground">

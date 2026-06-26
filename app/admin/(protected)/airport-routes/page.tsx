@@ -45,7 +45,7 @@ export default async function AdminAirportRoutesPage() {
             {routes.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
-                  No routes yet. Click "New Route" to add one.
+                  No routes yet. Click &quot;New Route&quot; to add one.
                 </TableCell>
               </TableRow>
             ) : routes.map((route) => (

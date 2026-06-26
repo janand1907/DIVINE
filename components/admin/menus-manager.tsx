@@ -158,7 +158,7 @@ export function MenusManager({ initial }: MenusManagerProps) {
             {menus.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
-                  No menus yet. Click "Add Menu" to create one.
+                  No menus yet. Click &quot;Add Menu&quot; to create one.
                 </TableCell>
               </TableRow>
             ) : menus.map((menu) => (

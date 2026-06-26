@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle } from 'lucide-react';
+import { CircleCheck as CheckCircle } from 'lucide-react';
 
 const BUDGET_OPTIONS = ['Under ₹1,000/night', '₹1,000–₹3,000/night', '₹3,000–₹7,000/night', '₹7,000–₹15,000/night', 'Above ₹15,000/night'];
 
@@ -82,7 +82,7 @@ export function HotelAssistanceForm() {
     <form onSubmit={handleSubmit} className="space-y-6 rounded-2xl border border-border bg-card p-6 shadow-brand lg:p-8">
       <div>
         <h2 className="font-heading text-xl font-semibold text-foreground">Hotel Assistance Request</h2>
-        <p className="mt-1 text-sm text-muted-foreground">Fill in your requirements and we'll find the best hotels for you.</p>
+        <p className="mt-1 text-sm text-muted-foreground">Fill in your requirements and we&apos;ll find the best hotels for you.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

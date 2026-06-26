@@ -43,7 +43,7 @@ export default async function AdminCmsPagesPage() {
             {pages.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
-                  No CMS pages yet. Click "New Page" to create one.
+                  No CMS pages yet. Click &quot;New Page&quot; to create one.
                 </TableCell>
               </TableRow>
             ) : pages.map((page: any) => (

@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { LeadRow, LeadStatus } from '@/types/database';
 import { KanbanBoard } from '@/components/admin/kanban-board';
 import { LeadDetailDrawer } from '@/components/admin/lead-detail-drawer';
-import { Loader2, LayoutGrid, List, Filter } from 'lucide-react';
+import { Loader as Loader2, LayoutGrid, List, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -35,7 +35,7 @@ export function LeadsManager({ whatsappNumber }: LeadsManagerProps) {
   const [selectedLead, setSelectedLead] = useState<LeadRow | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
-  const fetchLeads = async () => {
+  const fetchLeads = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
       .from('leads')
@@ -45,9 +45,12 @@ export function LeadsManager({ whatsappNumber }: LeadsManagerProps) {
     if (error) console.error('Failed to fetch leads:', error);
     setLeads((data ?? []) as LeadRow[]);
     setLoading(false);
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  useEffect(() => { fetchLeads(); }, []);
+  useEffect(() => {
+    fetchLeads();
+  }, [fetchLeads]);
 
   const filtered = leads.filter((l) => {
     if (statusFilter !== 'all' && l.status !== statusFilter) return false;

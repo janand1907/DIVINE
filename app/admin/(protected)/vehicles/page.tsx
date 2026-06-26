@@ -43,7 +43,7 @@ export default async function AdminVehiclesPage() {
             {vehicles.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="py-10 text-center text-sm text-muted-foreground">
-                  No vehicles yet. Click "New Vehicle" to add one.
+                  No vehicles yet. Click &quot;New Vehicle&quot; to add one.
                 </TableCell>
               </TableRow>
             ) : vehicles.map((v: any) => (
