@@ -112,6 +112,7 @@ export function MediaPicker({ open, onClose, onSelect }: MediaPickerProps) {
                   }}
                   className="group relative aspect-square overflow-hidden rounded-lg border border-border bg-accent hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition"
                 >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={asset.url}
                     alt={asset.alt_text || asset.filename}

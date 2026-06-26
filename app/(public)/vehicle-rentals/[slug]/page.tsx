@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
+import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { Users, Briefcase, Wind, Phone, MessageCircle, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,21 +16,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = createPublicClient();
   const { data } = await supabase.from('vehicles').select('name,seo_title,seo_description,og_image').eq('slug', params.slug).eq('is_published', true).single();
   if (!data) return { title: 'Vehicle Not Found' };
-  return {
-    title: data.seo_title ?? `${data.name} Rental | Divine Travel`,
+  const { theme, site, seoPage } = await fetchSeoContext(`/vehicle-rentals/${params.slug}`);
+  return buildMetadata({
+    path: `/vehicle-rentals/${params.slug}`,
+    title: data.seo_title ?? `${data.name} Rental`,
     description: data.seo_description ?? `Hire ${data.name} for pilgrimage, airport transfers, and travel across South India.`,
-    openGraph: { images: data.og_image ? [data.og_image] : [] },
-  };
+    ogImage: data.og_image ?? undefined,
+    theme, site, seoPage,
+  });
 }
 
 export default async function VehicleDetailPage({ params }: Props) {
   const supabase = createPublicClient();
-  const { data } = await supabase.from('vehicles').select().eq('slug', params.slug).eq('is_published', true).single<VehicleRow>();
+  const [{ data }, { theme }] = await Promise.all([
+    supabase.from('vehicles').select().eq('slug', params.slug).eq('is_published', true).single<VehicleRow>(),
+    fetchSeoContext(`/vehicle-rentals/${params.slug}`),
+  ]);
   if (!data) notFound();
 
   const v = data;
+  const whatsappNumber = theme?.whatsapp_number ?? '+919876543210';
   const waMsg = encodeURIComponent(`Hi, I'd like to hire the ${v.name}. Please share availability and pricing.`);
-  const waHref = `https://wa.me/919876543210?text=${waMsg}`;
+  const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}?text=${waMsg}`;
 
   return (
     <PageRenderer
@@ -51,6 +59,7 @@ export default async function VehicleDetailPage({ params }: Props) {
                   {/* Image */}
                   <div className="overflow-hidden rounded-2xl border border-border bg-muted">
                     {v.cover_image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={v.cover_image} alt={v.name} className="h-80 w-full object-cover" />
                     ) : (
                       <div className="flex h-80 items-center justify-center text-6xl">&#128663;</div>

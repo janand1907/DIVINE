@@ -8,7 +8,17 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   const session = await requireAdminApi();
   if (session instanceof NextResponse) return session;
 
-  let body: { title?: string; url?: string; description?: string | null; display_order?: number; is_active?: boolean };
+  let body: {
+    title?: string;
+    url?: string;
+    description?: string | null;
+    icon?: string | null;
+    badge_text?: string | null;
+    pool_entity_id?: string | null;
+    open_in_new_tab?: boolean;
+    display_order?: number;
+    is_active?: boolean;
+  };
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
@@ -16,7 +26,17 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('nav_items')
-    .update({ title: body.title, url: body.url, description: body.description, display_order: body.display_order, is_active: body.is_active })
+    .update({
+      title: body.title,
+      url: body.url,
+      description: body.description,
+      icon: body.icon,
+      badge_text: body.badge_text,
+      pool_entity_id: body.pool_entity_id,
+      open_in_new_tab: body.open_in_new_tab,
+      display_order: body.display_order,
+      is_active: body.is_active,
+    })
     .eq('id', params.id)
     .select()
     .single<NavItemRow>();

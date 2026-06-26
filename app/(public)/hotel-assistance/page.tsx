@@ -2,11 +2,18 @@ import { Metadata } from 'next';
 import { HotelAssistanceForm } from '@/components/forms/hotel-assistance-form';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Phone, Star, Shield } from 'lucide-react';
+import { createPublicClient } from '@/lib/supabase/server';
+import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 
-export const metadata: Metadata = {
-  title: 'Hotel Assistance — Find Best Hotels | Divine Travel',
-  description: 'Let our experts find the perfect hotel for your pilgrimage or vacation. Best rates, handpicked properties, personalized recommendations for Tirupati, Ooty, and South India.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { theme, site, seoPage } = await fetchSeoContext('/hotel-assistance');
+  return buildMetadata({
+    path: '/hotel-assistance',
+    title: 'Hotel Assistance',
+    description: 'Let our experts find the perfect hotel for your pilgrimage or vacation. Best rates, handpicked properties, personalized recommendations for Tirupati, Ooty, and South India.',
+    theme, site, seoPage,
+  });
+}
 
 const WHY_US = [
   { icon: Clock, title: 'Response in 2 Hours', desc: 'Our team calls you back with curated hotel options within 2 hours of your request.' },
@@ -22,7 +29,9 @@ const WHAT_NEXT = [
   { step: '4', text: 'You confirm — we handle the booking end-to-end' },
 ];
 
-export default function HotelAssistancePage() {
+export default async function HotelAssistancePage() {
+  const { theme } = await fetchSeoContext('/hotel-assistance');
+  const contactPhone = theme?.contact_phone ?? '+919876543210';
   return (
     <>
       {/* Hero */}
@@ -90,10 +99,10 @@ export default function HotelAssistancePage() {
               <div className="rounded-2xl border border-border bg-card p-6 shadow-brand">
                 <p className="text-sm font-medium text-foreground">Prefer to call directly?</p>
                 <a
-                  href="tel:+919876543210"
+                  href={`tel:${contactPhone}`}
                   className="mt-2 block font-heading text-2xl font-bold text-primary hover:underline"
                 >
-                  +91 98765 43210
+                  {contactPhone}
                 </a>
                 <p className="mt-1 text-xs text-muted-foreground">Available 8 AM – 10 PM, 7 days a week</p>
               </div>

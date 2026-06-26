@@ -1,26 +1,35 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
+import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { Users, Briefcase, Wind, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/layout/section-heading';
 import type { VehicleRow, VehicleCategoryRow } from '@/types/database';
 
-export const metadata: Metadata = {
-  title: 'Vehicle Rentals — Self-Drive & Chauffeur Cars | Divine Travel',
-  description: 'Hire Sedan, SUV, Urbania, Tempo Traveller or Bus for pilgrimage, corporate, and leisure travel across South India. Best rates, comfortable rides.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { theme, site, seoPage } = await fetchSeoContext('/vehicle-rentals');
+  return buildMetadata({
+    path: '/vehicle-rentals',
+    title: 'Vehicle Rentals',
+    description: 'Hire Sedan, SUV, Urbania, Tempo Traveller or Bus for pilgrimage, corporate, and leisure travel across South India. Best rates, comfortable rides.',
+    theme, site, seoPage,
+  });
+}
 
 export default async function VehicleRentalsPage() {
   const supabase = createPublicClient();
-  const [{ data: vehicles }, { data: categories }] = await Promise.all([
+  const [{ data: vehicles }, { data: categories }, { theme }] = await Promise.all([
     supabase.from('vehicles').select().eq('is_published', true).order('is_featured', { ascending: false }),
     supabase.from('vehicle_categories').select().eq('is_published', true).order('display_order'),
+    fetchSeoContext('/vehicle-rentals'),
   ]);
 
   const allVehicles = (vehicles ?? []) as VehicleRow[];
   const allCategories = (categories ?? []) as VehicleCategoryRow[];
+  const whatsappNumber = theme?.whatsapp_number ?? '+919876543210';
+  const contactPhone = theme?.contact_phone ?? '+919876543210';
 
   return (
     <>
@@ -40,7 +49,7 @@ export default async function VehicleRentalsPage() {
               <Link href="/contact">Get a Quote</Link>
             </Button>
             <Button size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10" asChild>
-              <a href="tel:+919876543210">Call Now</a>
+              <a href={`tel:${contactPhone}`}>Call Now</a>
             </Button>
           </div>
         </div>
@@ -105,7 +114,7 @@ export default async function VehicleRentalsPage() {
           <div className="mt-8 flex flex-wrap justify-center gap-4">
             <Button size="lg" asChild><Link href="/contact">Book Now</Link></Button>
             <Button size="lg" variant="outline" className="border-white/40 text-white hover:bg-white/10" asChild>
-              <a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer">WhatsApp Us</a>
+              <a href={`https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}`} target="_blank" rel="noopener noreferrer">WhatsApp Us</a>
             </Button>
           </div>
         </div>
@@ -122,6 +131,7 @@ function VehicleCard({ vehicle }: { vehicle: VehicleRow }) {
     >
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {vehicle.cover_image ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={vehicle.cover_image}
             alt={vehicle.name}

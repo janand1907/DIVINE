@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -9,9 +9,10 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Plus, GripVertical, Trash2, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, Save, Loader as Loader2, ExternalLink, Image as ImageIcon, ImagePlus, Code, Copy, Check, X, Image as ImageIcon2 } from 'lucide-react';
+import { ArrowLeft, Plus, GripVertical, Trash2, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, Save, Loader as Loader2, ExternalLink, Image as ImageIcon, ImagePlus, Code, Copy, Check, X } from 'lucide-react';
 import { SECTION_TYPE_META, SECTION_GROUPS } from '@/lib/sections/meta';
 import { MediaPicker } from '@/components/admin/media-picker';
+import { cn } from '@/lib/utils';
 import type { ContentPageRow, PageSectionRow, SectionType } from '@/types/database';
 
 interface Props {
@@ -25,6 +26,9 @@ export function PageBuilderClient({ page, initialSections }: Props) {
   const [addPanelOpen, setAddPanelOpen] = useState(false);
   const [editingSection, setEditingSection] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const dragNodeRef = useRef<HTMLDivElement | null>(null);
 
   const refresh = useCallback(async () => {
     const res = await fetch(
@@ -131,6 +135,52 @@ export function PageBuilderClient({ page, initialSections }: Props) {
     }
   };
 
+  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, idx: number) => {
+    setDragIndex(idx);
+    dragNodeRef.current = e.currentTarget;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(idx));
+    setTimeout(() => { if (dragNodeRef.current) dragNodeRef.current.style.opacity = '0.4'; }, 0);
+  };
+
+  const handleDragEnd = () => {
+    if (dragNodeRef.current) dragNodeRef.current.style.opacity = '1';
+    setDragIndex(null);
+    setDragOverIndex(null);
+    dragNodeRef.current = null;
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, idx: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (idx !== dragOverIndex) setDragOverIndex(idx);
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLDivElement>, dropIdx: number) => {
+    e.preventDefault();
+    const fromIdx = dragIndex;
+    if (fromIdx === null || fromIdx === dropIdx) { handleDragEnd(); return; }
+
+    const newSections = [...sections];
+    const [moved] = newSections.splice(fromIdx, 1);
+    newSections.splice(dropIdx, 0, moved);
+
+    const reordered = newSections.map((s, i) => ({ ...s, display_order: i }));
+    setSections(reordered);
+    setDragIndex(null);
+    setDragOverIndex(null);
+
+    await Promise.all(
+      reordered.map((s, i) =>
+        fetch(`/api/admin/page-sections/${s.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ display_order: i }),
+        }),
+      ),
+    );
+  };
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -181,10 +231,18 @@ export function PageBuilderClient({ page, initialSections }: Props) {
         {sections.map((section, idx) => (
           <div
             key={section.id}
-            className="group rounded-lg border border-border bg-card shadow-sm transition hover:shadow-md"
+            draggable
+            onDragStart={(e) => handleDragStart(e, idx)}
+            onDragEnd={handleDragEnd}
+            onDragOver={(e) => handleDragOver(e, idx)}
+            onDrop={(e) => handleDrop(e, idx)}
+            className={cn(
+              'group rounded-lg border border-border bg-card shadow-sm transition hover:shadow-md',
+              dragOverIndex === idx && dragIndex !== idx && 'ring-2 ring-primary ring-offset-1',
+            )}
           >
             <div className="flex items-center gap-2 px-4 py-3">
-              <GripVertical className="h-4 w-4 shrink-0 text-muted-foreground/50" />
+              <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground/50 active:cursor-grabbing" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium text-foreground truncate">
@@ -644,6 +702,7 @@ function SectionConfigEditor({
                           key={idx}
                           className="group relative aspect-square overflow-hidden rounded border border-border"
                         >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={img}
                             alt=""
@@ -715,6 +774,7 @@ function SectionConfigEditor({
                   </label>
                   {imgUrl ? (
                     <div className="relative overflow-hidden rounded border border-border">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={imgUrl}
                         alt=""
@@ -742,7 +802,7 @@ function SectionConfigEditor({
                           className="rounded bg-background/90 p-1.5 text-foreground hover:bg-background shadow-sm"
                           title="Change image"
                         >
-                          <ImageIcon2 className="h-3.5 w-3.5" />
+                          <ImageIcon className="h-3.5 w-3.5" />
                         </button>
                         <button
                           type="button"

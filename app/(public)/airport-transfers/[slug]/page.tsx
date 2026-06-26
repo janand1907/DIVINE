@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
+import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { MapPin, Clock, Car, Users, MessageCircle, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,21 +16,28 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = createPublicClient();
   const { data } = await supabase.from('airport_routes').select('from_city,to_city,seo_title,seo_description,og_image').eq('slug', params.slug).eq('is_active', true).single();
   if (!data) return { title: 'Route Not Found' };
-  return {
-    title: data.seo_title ?? `${data.from_city} to ${data.to_city} Transfer | Divine Travel`,
+  const { theme, site, seoPage } = await fetchSeoContext(`/airport-transfers/${params.slug}`);
+  return buildMetadata({
+    path: `/airport-transfers/${params.slug}`,
+    title: data.seo_title ?? `${data.from_city} to ${data.to_city} Transfer`,
     description: data.seo_description ?? `Book AC cab from ${data.from_city} to ${data.to_city}. Fixed prices, expert drivers. Ideal for Tirupati pilgrimage and travel.`,
-    openGraph: { images: data.og_image ? [data.og_image] : [] },
-  };
+    ogImage: data.og_image ?? undefined,
+    theme, site, seoPage,
+  });
 }
 
 export default async function AirportTransferDetailPage({ params }: Props) {
   const supabase = createPublicClient();
-  const { data } = await supabase.from('airport_routes').select().eq('slug', params.slug).eq('is_active', true).single<AirportRouteRow>();
+  const [{ data }, { theme }] = await Promise.all([
+    supabase.from('airport_routes').select().eq('slug', params.slug).eq('is_active', true).single<AirportRouteRow>(),
+    fetchSeoContext(`/airport-transfers/${params.slug}`),
+  ]);
   if (!data) notFound();
 
   const route = data;
+  const whatsappNumber = theme?.whatsapp_number ?? '+919876543210';
   const waMsg = encodeURIComponent(`Hi, I need a transfer from ${route.from_city} to ${route.to_city}. Please share availability and pricing.`);
-  const waHref = `https://wa.me/919876543210?text=${waMsg}`;
+  const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}?text=${waMsg}`;
 
   return (
     <PageRenderer

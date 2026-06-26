@@ -8,7 +8,19 @@ export async function POST(req: NextRequest) {
   const session = await requireAdminApi();
   if (session instanceof NextResponse) return session;
 
-  let body: { menu_id?: string; parent_id?: string | null; title?: string; url?: string; description?: string | null; display_order?: number; is_active?: boolean };
+  let body: {
+    menu_id?: string;
+    parent_id?: string | null;
+    title?: string;
+    url?: string;
+    description?: string | null;
+    icon?: string | null;
+    badge_text?: string | null;
+    pool_entity_id?: string | null;
+    open_in_new_tab?: boolean;
+    display_order?: number;
+    is_active?: boolean;
+  };
   try { body = await req.json(); } catch {
     return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
   }
@@ -20,7 +32,19 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('nav_items')
-    .insert({ menu_id: body.menu_id, parent_id: body.parent_id || null, title: body.title.trim(), url: body.url.trim(), description: body.description || null, display_order: body.display_order ?? 0, is_active: body.is_active ?? true })
+    .insert({
+      menu_id: body.menu_id,
+      parent_id: body.parent_id ?? null,
+      title: body.title.trim(),
+      url: body.url.trim(),
+      description: body.description ?? null,
+      icon: body.icon ?? null,
+      badge_text: body.badge_text ?? null,
+      pool_entity_id: body.pool_entity_id ?? null,
+      open_in_new_tab: body.open_in_new_tab ?? false,
+      display_order: body.display_order ?? 0,
+      is_active: body.is_active ?? true,
+    })
     .select()
     .single<NavItemRow>();
 
