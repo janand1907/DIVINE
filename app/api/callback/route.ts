@@ -1,31 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import { logActivity } from '@/lib/activity/log';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
-const WINDOW_MS = 60_000;
-const MAX_PER_IP = 5;
-const hits = new Map<string, { count: number; resetAt: number }>();
-
-function rateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = hits.get(ip);
-  if (!entry || entry.resetAt < now) {
-    hits.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return true;
-  }
-  if (entry.count >= MAX_PER_IP) return false;
-  entry.count += 1;
-  return true;
-}
 
 const mobileRegex = /^(\+?91)?[6-9]\d{9}$/;
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-  if (!rateLimit(ip)) {
+  const ip = getClientIp(req);
+  const limiter = rateLimit(`callback:${ip}`, { windowMs: 60_000, max: 3 });
+  if (!limiter.allowed) {
     return NextResponse.json(
-      { error: 'Too many requests. Please try again in a minute.' },
-      { status: 429 },
+      { error: 'Too many requests. Please try again shortly.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((limiter.resetAt - Date.now()) / 1000)) } },
     );
   }
 

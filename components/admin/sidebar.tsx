@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { signOut } from '@/lib/admin/auth-client';
-import { LayoutDashboard, Users, Package, FileText, Star, Image as ImageIcon, Palette, Chrome as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut, Navigation, FileCode, Car, PlaneTakeoff, Hotel, ClipboardList } from 'lucide-react';
+import { LayoutDashboard, Users, UserCog, Package, FileText, Star, Image as ImageIcon, Palette, Chrome as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut, Navigation, FileCode, Car, PlaneTakeoff, Hotel, ClipboardList, Images, CircleHelp as HelpCircle } from 'lucide-react';
 
 const navGroups = [
   {
@@ -22,6 +22,8 @@ const navGroups = [
       { href: '/admin/blog', label: 'Blogs', icon: FileText },
       { href: '/admin/testimonials', label: 'Testimonials', icon: Star },
       { href: '/admin/media', label: 'Media Library', icon: ImageIcon },
+      { href: '/admin/gallery', label: 'Gallery', icon: Images },
+      { href: '/admin/faqs', label: 'FAQs', icon: HelpCircle },
     ],
   },
   {
@@ -42,6 +44,7 @@ const navGroups = [
       { href: '/admin/theme', label: 'Theme & Branding', icon: Palette },
       { href: '/admin/seo-pages', label: 'SEO Pages', icon: Globe },
       { href: '/admin/site-settings', label: 'Site Settings', icon: Settings },
+      { href: '/admin/users', label: 'Admin Users', icon: UserCog },
     ],
   },
   {

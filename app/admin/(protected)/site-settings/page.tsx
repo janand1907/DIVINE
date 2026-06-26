@@ -21,6 +21,12 @@ export default async function AdminSiteSettingsPage() {
     default_social_title: null,
     default_social_description: null,
     notifications_email: null,
+    social_facebook: null,
+    social_instagram: null,
+    social_twitter: null,
+    social_youtube: null,
+    social_linkedin: null,
+    footer_links: [],
     updated_at: new Date().toISOString(),
   };
 

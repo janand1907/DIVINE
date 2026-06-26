@@ -15,6 +15,12 @@ const siteSettingsSchema = z.object({
   default_social_title: z.string().max(200).optional().nullable().or(z.literal('')),
   default_social_description: z.string().max(500).optional().nullable().or(z.literal('')),
   notifications_email: z.string().email().optional().nullable().or(z.literal('')),
+  social_facebook: z.string().url().optional().nullable().or(z.literal('')),
+  social_instagram: z.string().url().optional().nullable().or(z.literal('')),
+  social_twitter: z.string().url().optional().nullable().or(z.literal('')),
+  social_youtube: z.string().url().optional().nullable().or(z.literal('')),
+  social_linkedin: z.string().url().optional().nullable().or(z.literal('')),
+  footer_links: z.array(z.object({ label: z.string(), url: z.string(), open_new_tab: z.boolean().optional() })).optional(),
 });
 
 export async function GET() {
@@ -65,6 +71,12 @@ export async function PUT(req: NextRequest) {
     default_social_title: parsed.data.default_social_title || null,
     default_social_description: parsed.data.default_social_description || null,
     notifications_email: parsed.data.notifications_email || null,
+    social_facebook: parsed.data.social_facebook || null,
+    social_instagram: parsed.data.social_instagram || null,
+    social_twitter: parsed.data.social_twitter || null,
+    social_youtube: parsed.data.social_youtube || null,
+    social_linkedin: parsed.data.social_linkedin || null,
+    footer_links: parsed.data.footer_links ?? [],
   };
 
   const supabase = createAdminClient();

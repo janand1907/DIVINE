@@ -1,22 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { leadSchema } from '@/lib/validation/schemas';
+import { rateLimit, getClientIp } from '@/lib/rate-limit';
 
-const WINDOW_MS = 60_000;
-const MAX_PER_IP = 5;
-const ipHits = new Map<string, { count: number; resetAt: number }>();
-
-function rateLimit(ip: string): boolean {
-  const now = Date.now();
-  const entry = ipHits.get(ip);
-  if (!entry || entry.resetAt < now) {
-    ipHits.set(ip, { count: 1, resetAt: now + WINDOW_MS });
-    return true;
-  }
-  if (entry.count >= MAX_PER_IP) return false;
-  entry.count += 1;
-  return true;
-}
 
 function parseUtmCookies(cookieHeader: string | null) {
   const cookies = Object.fromEntries(
@@ -36,11 +22,12 @@ function parseUtmCookies(cookieHeader: string | null) {
 }
 
 export async function POST(req: NextRequest) {
-  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
-  if (!rateLimit(ip)) {
+  const ip = getClientIp(req);
+  const limiter = rateLimit(`leads:${ip}`, { windowMs: 60_000, max: 5 });
+  if (!limiter.allowed) {
     return NextResponse.json(
-      { error: 'Too many requests. Please try again in a minute.' },
-      { status: 429 },
+      { error: 'Too many requests. Please wait before submitting again.' },
+      { status: 429, headers: { 'Retry-After': String(Math.ceil((limiter.resetAt - Date.now()) / 1000)) } },
     );
   }
 

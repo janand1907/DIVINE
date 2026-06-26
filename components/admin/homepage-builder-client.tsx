@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { createClient } from '@/lib/supabase/client';
 import type { HomepageSection } from '@/types/database';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,8 +28,20 @@ const SECTION_DEFAULTS: Record<string, { title: string; fields: string[] }> = {
   contact_cta: { title: 'Contact CTA', fields: ['heading'] },
 };
 
+async function patchSection(id: string, data: Record<string, unknown>) {
+  const res = await fetch(`/api/admin/homepage-sections/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) {
+    const j = await res.json().catch(() => null);
+    throw new Error(j?.error ?? 'Request failed');
+  }
+  return res.json();
+}
+
 export function HomepageBuilderClient({ sections }: HomepageBuilderClientProps) {
-  const supabase = createClient();
   const [items, setItems] = useState<HomepageSection[]>(sections);
   const [saving, setSaving] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(sections[0]?.id ?? null);
@@ -46,11 +57,7 @@ export function HomepageBuilderClient({ sections }: HomepageBuilderClientProps) 
   const toggleEnabled = async (id: string, enabled: boolean) => {
     setItems((prev) => prev.map((s) => (s.id === id ? { ...s, is_enabled: enabled } : s)));
     try {
-      const { error } = await supabase
-        .from('homepage_sections')
-        .update({ is_enabled: enabled })
-        .eq('id', id);
-      if (error) throw error;
+      await patchSection(id, { is_enabled: enabled });
     } catch {
       setItems((prev) => prev.map((s) => (s.id === id ? { ...s, is_enabled: !enabled } : s)));
       toast.error('Failed to update visibility.');
@@ -78,7 +85,7 @@ export function HomepageBuilderClient({ sections }: HomepageBuilderClientProps) 
       try {
         await Promise.all(
           updates.map(({ id: uid, display_order }) =>
-            supabase.from('homepage_sections').update({ display_order }).eq('id', uid),
+            patchSection(uid, { display_order }),
           ),
         );
       } catch {
@@ -90,15 +97,11 @@ export function HomepageBuilderClient({ sections }: HomepageBuilderClientProps) 
   const saveSection = async (section: HomepageSection) => {
     setSaving(section.id);
     try {
-      const { error } = await supabase
-        .from('homepage_sections')
-        .update({
-          is_enabled: section.is_enabled,
-          display_order: section.display_order,
-          config: section.config,
-        })
-        .eq('id', section.id);
-      if (error) throw error;
+      await patchSection(section.id, {
+        is_enabled: section.is_enabled,
+        display_order: section.display_order,
+        config: section.config,
+      });
       toast.success(`Saved "${SECTION_DEFAULTS[section.section_key]?.title ?? section.section_key}"`);
     } catch (err) {
       toast.error('Failed to save section.');

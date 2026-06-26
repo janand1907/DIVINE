@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import type { EnquiryFieldConfig } from '@/types/database';
+import type { EnquiryFieldConfig, EnquiryFormConfigRow } from '@/types/database';
 
 interface Props {
   config: Record<string, unknown>;
@@ -14,17 +14,33 @@ interface Props {
 }
 
 export function EnquiryForm({ config, entityId, entityType }: Props) {
-  const heading = (config.heading as string) || 'Send an Enquiry';
+  const heading = (config.heading as string) || '';
   const subheading = (config.subheading as string) || '';
   const formKey = (config.form_key as string) || 'contact';
   const layout = (config.layout as string) || 'card';
-  const fields = (config.fields as EnquiryFieldConfig[]) || getDefaultFields(formKey);
-  const submitLabel = (config.submit_label as string) || 'Submit Enquiry';
-  const successMessage = (config.success_message as string) || 'Thank you! We will be in touch shortly.';
+  const configFields = config.fields as EnquiryFieldConfig[] | undefined;
+  const configSubmitLabel = (config.submit_label as string) || '';
+  const configSuccessMessage = (config.success_message as string) || '';
 
+  const [dbConfig, setDbConfig] = useState<EnquiryFormConfigRow | null>(null);
+  const [loadingConfig, setLoadingConfig] = useState(true);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!formKey) { setLoadingConfig(false); return; }
+    fetch(`/api/enquiry-form-configs/${formKey}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setDbConfig(data ?? null))
+      .catch(() => setDbConfig(null))
+      .finally(() => setLoadingConfig(false));
+  }, [formKey]);
+
+  const resolvedHeading = heading || dbConfig?.title || 'Send an Enquiry';
+  const resolvedSubmitLabel = configSubmitLabel || dbConfig?.submit_label || 'Submit Enquiry';
+  const resolvedSuccessMessage = configSuccessMessage || dbConfig?.success_message || 'Thank you! We will be in touch shortly.';
+  const fields: EnquiryFieldConfig[] = configFields ?? dbConfig?.fields ?? getDefaultFields(formKey);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -78,7 +94,7 @@ export function EnquiryForm({ config, entityId, entityType }: Props) {
       <section className="py-12 md:py-16 bg-background">
         <div className="container-brand">
           <div className={`mx-auto max-w-lg text-center ${containerClass}`}>
-            <p className="text-lg font-medium text-foreground">{successMessage}</p>
+            <p className="text-lg font-medium text-foreground">{resolvedSuccessMessage}</p>
           </div>
         </div>
       </section>
@@ -89,13 +105,20 @@ export function EnquiryForm({ config, entityId, entityType }: Props) {
     <section className="py-12 md:py-16 bg-background">
       <div className="container-brand">
         <div className={`mx-auto max-w-lg ${containerClass}`}>
-          {heading && (
-            <h2 className="mb-1 font-heading text-xl font-bold text-foreground">{heading}</h2>
+          {resolvedHeading && (
+            <h2 className="mb-1 font-heading text-xl font-bold text-foreground">{resolvedHeading}</h2>
           )}
           {subheading && (
             <p className="mb-6 text-sm text-muted-foreground">{subheading}</p>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {loadingConfig ? (
+            <div className="space-y-3">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-10 animate-pulse rounded-md bg-muted" />
+              ))}
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
             {fields.map((field) => (
               <div key={field.key}>
                 <Label htmlFor={field.key}>{field.label}{field.required && ' *'}</Label>
@@ -135,9 +158,10 @@ export function EnquiryForm({ config, entityId, entityType }: Props) {
             ))}
             {error && <p className="text-sm text-red-600">{error}</p>}
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Submitting...' : submitLabel}
+              {loading ? 'Submitting...' : resolvedSubmitLabel}
             </Button>
-          </form>
+            </form>
+          )}
         </div>
       </div>
     </section>

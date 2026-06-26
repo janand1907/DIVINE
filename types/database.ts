@@ -29,6 +29,12 @@ export interface ThemeSettingsRow {
   updated_at: string;
 }
 
+export interface FooterLink {
+  label: string;
+  url: string;
+  open_new_tab?: boolean;
+}
+
 export interface SiteSettingsRow {
   id: 1;
   site_url: string | null;
@@ -40,6 +46,12 @@ export interface SiteSettingsRow {
   default_social_title: string | null;
   default_social_description: string | null;
   notifications_email: string | null;
+  social_facebook: string | null;
+  social_instagram: string | null;
+  social_twitter: string | null;
+  social_youtube: string | null;
+  social_linkedin: string | null;
+  footer_links: FooterLink[];
   updated_at: string;
 }
 
@@ -608,6 +620,17 @@ export interface HotelCityRow {
   created_at: string;
 }
 
+// ── Admin Invites ─────────────────────────────────────────────
+export interface AdminInviteRow {
+  id: string;
+  code: string;
+  created_by: string;
+  email_hint: string | null;
+  used_at: string | null;
+  expires_at: string;
+  created_at: string;
+}
+
 // ── Database type map ────────────────────────────────────────
 export interface Database {
   public: {
@@ -642,6 +665,7 @@ export interface Database {
       transfer_pricing: { Row: TransferPricingRow; Insert: Partial<TransferPricingRow>; Update: Partial<TransferPricingRow> };
       enquiry_form_configs: { Row: EnquiryFormConfigRow; Insert: Partial<EnquiryFormConfigRow>; Update: Partial<EnquiryFormConfigRow> };
       hotel_cities: { Row: HotelCityRow; Insert: Partial<HotelCityRow>; Update: Partial<HotelCityRow> };
+      admin_invites: { Row: AdminInviteRow; Insert: Partial<AdminInviteRow>; Update: Partial<AdminInviteRow> };
     };
   };
 }

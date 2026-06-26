@@ -5,6 +5,61 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [2026-06-26] - Sprint 12: Pricing UIs, Admin Users, Rate Limiting
+
+### Added
+- **Vehicle Pricing Admin UI**: Full CRUD editor on vehicle edit page (`/admin/vehicles/[id]/edit`)
+  - API routes: `GET/POST /api/admin/vehicle-pricing`, `PATCH/DELETE /api/admin/vehicle-pricing/[id]`
+  - Supports pricing_type, base_price, included_km/hours, extra_per_km/hour, active toggle
+- **Transfer Pricing Admin UI**: Full CRUD editor on route edit page (`/admin/airport-routes/[id]/edit`)
+  - API routes: `GET/POST /api/admin/transfer-pricing`, `PATCH/DELETE /api/admin/transfer-pricing/[id]`
+  - API route: `GET /api/admin/transfer-vehicle-types` (dropdown population)
+  - Supports one-way/return prices, toll extra, waiting charge, night surcharge
+- **Admin User Management**: `/admin/users` page with invite-link system
+  - Migration 0007: `admin_invites` table (code, expires_at, used_at, email_hint)
+  - API routes: `GET/POST /api/admin/users/invites`, `DELETE /api/admin/users/invites/[id]`
+  - Public invite validation: `GET /api/auth/validate-invite`
+  - Public invite acceptance: `POST /api/auth/accept-invite` (creates Supabase auth user)
+  - Accept invite page: `/auth/accept-invite/[code]`
+- **Rate Limiting**: IP-based rate limiting on public form endpoints
+  - `lib/rate-limit.ts`: reusable in-memory rate limiter utility
+  - `/api/leads`: 5 requests/minute per IP
+  - `/api/callback`: 3 requests/minute per IP
+  - Returns 429 with `Retry-After` header
+- Admin sidebar: Added "Admin Users" link (UserCog icon) under Site group
+
+---
+
+## [2026-06-26] - Sprint 11: Footer Config, EnquiryForm Wiring, Homepage Builder REST, Gallery, FAQs
+
+### Added
+- **Footer DB Configuration**: Social links and footer quick links now stored in `site_settings`
+  - Migration 0006: Added `social_facebook/instagram/twitter/youtube/linkedin` + `footer_links` JSONB columns
+  - Admin UI at `/admin/site-settings`: Social Media Links section + Footer Quick Links manager
+  - Footer renders DB-configured links dynamically; falls back to hardcoded defaults
+- **EnquiryForm auto-fetch**: Section now fetches form config by `form_key` from `enquiry_form_configs`
+  - New public API: `GET /api/enquiry-form-configs/[key]`
+  - Renders DB-configured fields with loading skeleton; falls back to hardcoded defaults
+- **Homepage Builder REST API**: Migrated from direct Supabase client to REST API routes
+  - New routes: `GET /api/admin/homepage-sections`, `PATCH /api/admin/homepage-sections/[id]`
+  - All mutations now guarded + activity-logged
+- **Gallery Admin CRUD**: Full management at `/admin/gallery`
+  - API routes: `GET/POST /api/admin/gallery`, `PATCH/DELETE /api/admin/gallery/[id]`
+  - Grid UI with image preview, publish toggle, category/tour_slug fields
+- **FAQ Admin CRUD**: Tabbed management at `/admin/faqs`
+  - API routes: `GET/POST /api/admin/faqs`, `PATCH/DELETE /api/admin/faqs/[id]`
+  - API routes: `GET/POST /api/admin/faq-categories`, `PATCH/DELETE /api/admin/faq-categories/[id]`
+  - FAQ manager with category filter, search, Sheet-based editor
+- Admin sidebar: Added Gallery (Images icon) and FAQs (HelpCircle icon) under Content group
+
+### Changed
+- `FooterLink` interface added to `types/database.ts`
+- `FooterProps` updated to accept optional `footerLinks` and `socialLinks`
+- `PublicLayout` now fetches site_settings and passes footer config to Footer component
+- `SiteSettingsRow` type extended with 6 new fields
+
+---
+
 ## [2026-06-26] - Sprint 10: Analytics Dashboard (Late)
 
 ### Added

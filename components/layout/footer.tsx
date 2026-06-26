@@ -4,6 +4,7 @@ import {
   Instagram,
   Twitter,
   Youtube,
+  Linkedin,
   MapPin,
   Phone,
   Mail,
@@ -12,71 +13,76 @@ import {
 
 import { cn } from '@/lib/utils';
 import type { Branding } from '@/lib/theme/theme-provider';
+import type { FooterLink } from '@/types/database';
+
+export interface FooterSocialLinks {
+  facebook?: string | null;
+  instagram?: string | null;
+  twitter?: string | null;
+  youtube?: string | null;
+  linkedin?: string | null;
+}
 
 export interface FooterProps {
-  /** Branding data injected from the server (sourced from theme_settings). */
   branding: Branding;
+  footerLinks?: FooterLink[];
+  socialLinks?: FooterSocialLinks;
   className?: string;
 }
 
-interface QuickLink {
-  label: string;
-  href: string;
-}
-
-const QUICK_LINKS: QuickLink[] = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Packages', href: '/packages' },
-  { label: 'Blog', href: '/blog' },
-  { label: 'Contact', href: '/contact' },
+const DEFAULT_QUICK_LINKS: FooterLink[] = [
+  { label: 'Home', url: '/' },
+  { label: 'About', url: '/about' },
+  { label: 'Packages', url: '/packages' },
+  { label: 'Blog', url: '/blog' },
+  { label: 'Contact', url: '/contact' },
 ];
 
-const TOUR_CATEGORY_LINKS: QuickLink[] = [
-  { label: 'Divine Tours', href: '/divine-tours' },
-  { label: 'Domestic Tours', href: '/domestic-tours' },
-  { label: 'International Tours', href: '/international-tours' },
-  { label: 'FAQ', href: '/faq' },
+const TOUR_CATEGORY_LINKS: FooterLink[] = [
+  { label: 'Divine Tours', url: '/divine-tours' },
+  { label: 'Domestic Tours', url: '/domestic-tours' },
+  { label: 'International Tours', url: '/international-tours' },
+  { label: 'FAQ', url: '/faq' },
 ];
 
-const SERVICES_LINKS: QuickLink[] = [
-  { label: 'Vehicle Rentals', href: '/vehicle-rentals' },
-  { label: 'Airport Transfers', href: '/airport-transfers' },
-  { label: 'Hotel Assistance', href: '/hotel-assistance' },
+const SERVICES_LINKS: FooterLink[] = [
+  { label: 'Vehicle Rentals', url: '/vehicle-rentals' },
+  { label: 'Airport Transfers', url: '/airport-transfers' },
+  { label: 'Hotel Assistance', url: '/hotel-assistance' },
 ];
 
-const SOCIAL_LINKS: {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-}[] = [
-  { label: 'Facebook', href: 'https://facebook.com', icon: Facebook },
-  { label: 'Instagram', href: 'https://instagram.com', icon: Instagram },
-  { label: 'YouTube', href: 'https://youtube.com', icon: Youtube },
-  { label: 'Twitter / X', href: 'https://twitter.com', icon: Twitter },
-];
+const SOCIAL_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  facebook: Facebook,
+  instagram: Instagram,
+  twitter: Twitter,
+  youtube: Youtube,
+  linkedin: Linkedin,
+};
 
-/**
- * Multi-column public site footer. Server component — branding data is passed
- * in from the server layout (sourced from Supabase `theme_settings`). Surfaces
- * brand info, quick links, tour categories, and contact details.
- */
-export function Footer({ branding, className }: FooterProps) {
-  const {
-    brandName,
-    address,
-    contactPhone,
-    contactEmail,
-    whatsappNumber,
-  } = branding;
-
+export function Footer({ branding, footerLinks, socialLinks, className }: FooterProps) {
+  const { brandName, address, contactPhone, contactEmail, whatsappNumber } = branding;
   const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}`;
   const year = new Date().getFullYear();
 
+  const quickLinks = footerLinks && footerLinks.length > 0 ? footerLinks : DEFAULT_QUICK_LINKS;
+
+  const activeSocialLinks = socialLinks
+    ? Object.entries(socialLinks)
+        .filter(([, url]) => url)
+        .map(([platform, url]) => ({
+          label: platform.charAt(0).toUpperCase() + platform.slice(1),
+          href: url as string,
+          icon: SOCIAL_ICON_MAP[platform] ?? Facebook,
+        }))
+    : [
+        { label: 'Facebook', href: 'https://facebook.com', icon: Facebook },
+        { label: 'Instagram', href: 'https://instagram.com', icon: Instagram },
+        { label: 'YouTube', href: 'https://youtube.com', icon: Youtube },
+        { label: 'Twitter / X', href: 'https://twitter.com', icon: Twitter },
+      ];
+
   return (
-    <footer
-      className={cn('bg-brand-dark text-brand-darkForeground', className)}
-    >
+    <footer className={cn('bg-brand-dark text-brand-darkForeground', className)}>
       <div className="container-brand py-12 lg:py-16">
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
           {/* Brand column */}
@@ -86,28 +92,28 @@ export function Footer({ branding, className }: FooterProps) {
               prefetch
               className="inline-flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
             >
-              <span className="font-heading text-xl font-semibold text-white">
-                {brandName}
-              </span>
+              <span className="font-heading text-xl font-semibold text-white">{brandName}</span>
             </Link>
             <p className="max-w-xs text-sm leading-relaxed text-brand-darkForeground/70">
               Divine journeys, domestic escapes, and international adventures —
               crafted with devotion and decades of travel expertise.
             </p>
-            <div className="flex items-center gap-3 pt-1">
-              {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-brand-darkForeground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
-                >
-                  <Icon className="h-4 w-4" aria-hidden="true" />
-                </a>
-              ))}
-            </div>
+            {activeSocialLinks.length > 0 && (
+              <div className="flex items-center gap-3 pt-1">
+                {activeSocialLinks.map(({ label, href, icon: Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-brand-darkForeground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
+                  >
+                    <Icon className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Quick links */}
@@ -116,11 +122,13 @@ export function Footer({ branding, className }: FooterProps) {
               Quick Links
             </h2>
             <ul className="space-y-2.5">
-              {QUICK_LINKS.map((link) => (
-                <li key={link.href}>
+              {quickLinks.map((link) => (
+                <li key={link.url}>
                   <Link
-                    href={link.href}
-                    prefetch
+                    href={link.url}
+                    prefetch={!link.open_new_tab}
+                    target={link.open_new_tab ? '_blank' : undefined}
+                    rel={link.open_new_tab ? 'noopener noreferrer' : undefined}
                     className="text-sm text-brand-darkForeground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
                   >
                     {link.label}
@@ -137,9 +145,9 @@ export function Footer({ branding, className }: FooterProps) {
             </h2>
             <ul className="space-y-2.5">
               {TOUR_CATEGORY_LINKS.map((link) => (
-                <li key={link.href}>
+                <li key={link.url}>
                   <Link
-                    href={link.href}
+                    href={link.url}
                     prefetch
                     className="text-sm text-brand-darkForeground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
                   >
@@ -157,9 +165,9 @@ export function Footer({ branding, className }: FooterProps) {
             </h2>
             <ul className="space-y-2.5">
               {SERVICES_LINKS.map((link) => (
-                <li key={link.href}>
+                <li key={link.url}>
                   <Link
-                    href={link.href}
+                    href={link.url}
                     prefetch
                     className="text-sm text-brand-darkForeground/70 transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-brand-dark"
                   >
@@ -227,9 +235,7 @@ export function Footer({ branding, className }: FooterProps) {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="container-brand flex flex-col items-center justify-between gap-2 py-5 text-xs text-brand-darkForeground/60 sm:flex-row">
-          <p>
-            © {year} {brandName}. All rights reserved.
-          </p>
+          <p>© {year} {brandName}. All rights reserved.</p>
           <p>Powered by Next.js</p>
         </div>
       </div>

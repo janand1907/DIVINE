@@ -1,8 +1,58 @@
 # Sprint Progress Report
 
-**Report Period:** Sprints 0-10 (All Complete)  
+**Report Period:** Sprints 0-12 (All Complete)  
 **Date:** 2026-06-26  
 **Final Status:** 100% Delivery (All Sprints Complete)
+
+---
+
+## Sprint 12: Pricing UIs, Admin Users, Rate Limiting
+
+**Status:** Complete (100%)  
+**Focus:** Client-configurable pricing, team management, API protection
+
+### Planned Scope
+- Vehicle pricing tiers admin UI
+- Transfer route pricing admin UI
+- Admin user invite flow (no manual Supabase dashboard required)
+- Rate limiting on public form endpoints
+
+### Actual Implementation
+- `VehiclePricingEditor` component embedded in vehicle edit page with full CRUD
+- `TransferPricingEditor` component embedded in route edit page with full CRUD
+- `/admin/users` page: lists current admins, generates invite links (7-day expiry, single-use)
+- Accept-invite public page at `/auth/accept-invite/[code]`
+- `lib/rate-limit.ts`: IP-based in-memory limiter (5 req/min leads, 3 req/min callback)
+- Migration 0007: `admin_invites` table with RLS
+
+### Remaining Work
+None — all Sprint 12 items complete.
+
+---
+
+## Sprint 11: Footer Config, EnquiryForm Wiring, Homepage Builder REST, Gallery, FAQs
+
+**Status:** Complete (100%)  
+**Focus:** Client-handoff blockers and content management gaps
+
+### Planned Scope
+- Footer social/quick links DB-configurable (was CRITICAL blocker)
+- EnquiryForm section auto-fetch from enquiry_form_configs
+- Homepage builder migrate to REST API
+- Gallery admin CRUD
+- FAQ admin CRUD
+
+### Actual Implementation
+- Migration 0006: 6 new columns on `site_settings` (social links + footer_links JSONB)
+- Footer component accepts dynamic `socialLinks` + `footerLinks` props; falls back to defaults
+- Site Settings admin extended with Social Media Links and Footer Quick Links sections
+- `EnquiryForm` section now fetches config from `/api/enquiry-form-configs/[key]`; loading skeleton during fetch
+- Homepage builder migrated to `PATCH /api/admin/homepage-sections/[id]` — no direct Supabase client
+- Gallery CRUD: grid UI with image preview, category, publish toggle
+- FAQ CRUD: tabbed UI with category management, search, filter
+
+### Remaining Work
+None — all Sprint 11 items complete.
 
 ---
 
