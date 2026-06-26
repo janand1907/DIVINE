@@ -11,10 +11,15 @@ import { CircleCheck as CheckCircle } from 'lucide-react';
 
 const BUDGET_OPTIONS = ['Under ₹1,000/night', '₹1,000–₹3,000/night', '₹3,000–₹7,000/night', '₹7,000–₹15,000/night', 'Above ₹15,000/night'];
 
-export function HotelAssistanceForm() {
+interface HotelAssistanceFormProps {
+  cities?: { id: string; name: string; slug: string }[];
+}
+
+export function HotelAssistanceForm({ cities }: HotelAssistanceFormProps) {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cityMode, setCityMode] = useState<'select' | 'text'>('select');
   const [form, setForm] = useState({
     name: '',
     mobile: '',
@@ -29,7 +34,19 @@ export function HotelAssistanceForm() {
     message: '',
   });
 
+  const hasCities = cities && cities.length > 0;
+
   const set = (key: string, value: string) => setForm((f) => ({ ...f, [key]: value }));
+
+  const handleCityChange = (value: string) => {
+    if (value === 'other') {
+      setCityMode('text');
+      set('city', '');
+    } else {
+      setCityMode('select');
+      set('city', value);
+    }
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -103,7 +120,33 @@ export function HotelAssistanceForm() {
         </div>
         <div className="grid gap-1.5">
           <Label htmlFor="city">City / Destination *</Label>
-          <Input id="city" value={form.city} onChange={(e) => set('city', e.target.value)} required placeholder="e.g. Tirupati, Ooty" />
+          {hasCities ? (
+            <>
+              <Select value={form.city === 'other' || cityMode === 'text' ? 'other' : form.city} onValueChange={handleCityChange}>
+                <SelectTrigger id="city">
+                  <SelectValue placeholder="Select a city" />
+                </SelectTrigger>
+                <SelectContent>
+                  {cities!.map((city) => (
+                    <SelectItem key={city.id} value={city.id}>
+                      {city.name}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="other">Other city...</SelectItem>
+                </SelectContent>
+              </Select>
+              {cityMode === 'text' && (
+                <Input
+                  value={form.city}
+                  onChange={(e) => set('city', e.target.value)}
+                  placeholder="Enter city name"
+                  required
+                />
+              )}
+            </>
+          ) : (
+            <Input id="city" value={form.city} onChange={(e) => set('city', e.target.value)} required placeholder="e.g. Tirupati, Ooty" />
+          )}
         </div>
       </div>
 

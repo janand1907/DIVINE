@@ -7,8 +7,8 @@
 
 ## Current Sprint
 
-**Sprint 6 — Complete**
-Focus: Package detail page V2 — section-based rendering with PageRenderer fallback
+**Sprint 10 — Complete**
+Focus: Analytics dashboard, lead conversion reporting, and hotel assistance module
 
 ---
 
@@ -23,10 +23,10 @@ Focus: Package detail page V2 — section-based rendering with PageRenderer fall
 | 4 | Section components — real data rendering | Done | 2026-06-26 |
 | 5 | Pool-aware mega-menu, section bug fixes | Done | 2026-06-26 |
 | 6 | Package detail V2 (section-based) | Done | 2026-06-26 |
-| 7 | Media library integration, image picker | Not started | — |
-| 8 | Enquiry form configs UI | Not started | — |
-| 9 | Hotel assistance module | Not started | — |
-| 10 | Analytics dashboard, lead reporting | Not started | — |
+| 7 | Media library integration, image picker | Done | 2026-06-26 |
+| 8 | Enquiry form configs UI | Done | 2026-06-26 |
+| 9 | Hotel assistance module — hotel cities admin + DB-driven dropdown | Done | 2026-06-26 |
+| 10 | Analytics dashboard, lead conversion reporting | Done | 2026-06-26 |
 
 ---
 
@@ -35,7 +35,7 @@ Focus: Package detail page V2 — section-based rendering with PageRenderer fall
 ### Admin Panel
 - [x] Admin authentication (email/password via Supabase Auth)
 - [x] Admin layout (sidebar + topbar) with session-aware user display
-- [x] Dashboard with stats
+- [x] Dashboard with stats, conversion funnel, daily chart, source breakdown, date range filter
 - [x] Destination CRUD (with nav pool auto-sync)
 - [x] Package CRUD (full form: itinerary, pricing, inclusions/exclusions, FAQs, SEO)
 - [x] Vehicle CRUD (with category assignment, features, pricing)
@@ -44,30 +44,31 @@ Focus: Package detail page V2 — section-based rendering with PageRenderer fall
 - [x] Blog CRUD (with rich text, tags, SEO)
 - [x] Testimonial CRUD
 - [x] Lead management (kanban + table, lead detail drawer, notes, status pipeline)
-- [x] Navigation menu editor (menus + items)
+- [x] Navigation menu editor — full two-panel CMS editor with drag-and-drop, pool integration, badges
 - [x] SEO pages manager (per-path overrides)
 - [x] Site settings (analytics IDs, OG defaults)
 - [x] Theme editor (brand colours, contact details, WhatsApp number)
 - [x] Media library (upload, browse, tag)
 - [x] Categories manager
 - [x] Content pages manager (list, create with template, publish toggle)
-- [x] Page builder (add/reorder/toggle/edit/delete sections)
+- [x] Page builder (add/reorder/toggle/edit/delete sections, drag-and-drop, image picker)
 - [x] Activity log viewer
-- [x] CMS pages (legacy, being superseded)
+- [x] Hotel cities CRUD (admin table with create/edit/delete, publish toggle)
+- [x] Enquiry form configs CRUD (dynamic field editor, per-form lead config, priority, notify email)
 
 ### Public Website
 - [x] Homepage (section-based via HomepageBuilder)
-- [x] Dynamic CMS content pages (`/[slug]`) — About Us, Contact Us, Corporate, Group Tours
+- [x] Dynamic CMS content pages (`/[slug]`)
 - [x] Divine tours listing + detail with PageRenderer
 - [x] Domestic tours listing + detail with PageRenderer
 - [x] International tours listing + detail with PageRenderer
 - [x] Packages listing + detail (full itinerary, pricing, sticky CTA, inquiry form)
-- [x] Packages detail V2 with PageRenderer (sections replace fallback layout when configured)
+- [x] Packages detail V2 with PageRenderer
 - [x] Vehicle rentals listing + detail with PageRenderer
 - [x] Airport transfers listing + detail with PageRenderer
 - [x] Blog listing + individual post (ToC, reading time, tags)
 - [x] Contact page
-- [x] Hotel assistance form
+- [x] Hotel assistance form — DB-driven city dropdown from hotel_cities table
 - [x] Gallery page
 - [x] FAQ page
 - [x] Testimonials page
@@ -75,38 +76,37 @@ Focus: Package detail page V2 — section-based rendering with PageRenderer fall
 - [x] Robots.txt
 
 ### Platform Features
-- [x] Three-level SEO override system (entity → seo_pages table → computed fallback)
-- [x] Full Open Graph + Twitter card metadata
+- [x] Three-level SEO override system
+- [x] Full Open Graph + Twitter card metadata (all public pages use generateMetadata)
 - [x] JSON-LD structured data support
 - [x] UTM cookie setter + attribution on leads
 - [x] Universal enquiry engine (all forms → /api/leads)
 - [x] Lead source + UTM tracking on all submissions
-- [x] Activity logging on all admin mutations
+- [x] Activity logging on all admin mutations (all routes)
 - [x] 22-component section builder
 - [x] 9 page templates
 - [x] Polymorphic page_sections (works on any entity type)
 - [x] Module nav pool (auto-sync on create/update/delete)
 - [x] Pool-aware navigation fetch functions
-- [x] Pool-aware mega-menu in header (image grid dropdowns for tour/vehicle/transfer menus)
-- [x] All 22 section components wired to real data (package-grid, destination-grid, vehicle-grid, transfer-grid, testimonials, blog-grid fetch from DB; statistics, feature-cards, faq use config data)
-- [x] FAQ section supports `source: 'db'` for database-driven FAQ content
-- [x] RichText section supports both `config.content` and `config.html` field names
-- [x] CTA Banner and WhatsApp CTA use WhatsApp number from `theme_settings` (no hardcoding)
+- [x] Pool-aware mega-menu in header
+- [x] All 22 section components wired to real data
+- [x] Enquiry form configs seeded with 5 default form definitions
+- [x] Hotel cities seeded with 12 South India destinations
+- [x] Analytics dashboard: conversion funnel, daily leads chart, source breakdown, priority distribution
+- [x] Date range filter on analytics dashboard (7/30/90/All days)
+
+### Security & Quality
+- [x] All admin API GET endpoints protected with requireAdminApi()
+- [x] All admin API mutations validated (Zod or explicit allowlists)
+- [x] All admin mutations log to activity_logs
+- [x] Homepage builder persist via Supabase (toggleEnabled + move now save to DB)
+- [x] Build: PASS, TypeScript: PASS (0 errors), ESLint: PASS (0 warnings)
 
 ---
 
 ## Features in Development
 
-None. Sprints 4 and 5 are complete.
-
----
-
-## Pending Work (Sprint 6+)
-
-- Package detail page V2 using section-based rendering (Sprint 6)
-- Image picker in page builder using media library (Sprint 7)
-- Admin-configurable enquiry form fields UI (Sprint 8)
-- Hotel assistance module full build (Sprint 9)
+None. All sprints 0–10 are complete.
 
 ---
 
@@ -124,9 +124,9 @@ None. Sprints 4 and 5 are complete.
 |---|---|
 | `npm run build` | Passing |
 | `npm run typecheck` | Passing (0 errors) |
-| `npm run lint` | Passing |
+| `npm run lint` | Passing (0 warnings) |
 
-Last verified: 2026-06-26 (Sprint 6)
+Last verified: 2026-06-26 (Sprint 10)
 
 ---
 
@@ -138,18 +138,21 @@ Last verified: 2026-06-26 (Sprint 6)
 | 0002 | `fix_page_sections_polymorphic.sql` | Yes |
 | 0003 | `seed_content_pages.sql` | Yes |
 | 0004 | `seed_demo_data.sql` | Yes |
+| 0005 | `seed_enquiry_form_configs_and_hotel_cities` | Yes |
 
 ### Seeded Record Counts
-- Destinations: 8 (5 domestic, 3 international) + prior records = 9 total
-- Packages: 6 (Sprint 3) + prior = 11 total
+- Destinations: 8+ (divine, domestic, international)
+- Packages: 6+
 - Vehicles: 4
 - Vehicle categories: 3
 - Airport routes: 3
-- Testimonials: 6 (Sprint 3) + prior = 18 total
-- Blogs: 3 (Sprint 3) + prior = 6 total
+- Testimonials: 6+
+- Blogs: 3+
 - Content pages: 4
 - Page sections: 24
 - Module nav pool: 11
+- Enquiry form configs: 5 (contact, package-inquiry, vehicle-inquiry, transfer-inquiry, quick-quote)
+- Hotel cities: 12 (South India pilgrimage + leisure destinations)
 
 ---
 
@@ -170,25 +173,10 @@ Last verified: 2026-06-26 (Sprint 6)
 |---|---|
 | Build passes | Yes |
 | TypeScript clean | Yes |
+| ESLint clean | Yes |
 | Seed data applied | Yes |
+| All admin routes auth-guarded | Yes |
+| All mutations validated + logged | Yes |
 | Admin user created | Requires manual setup (see README) |
 | Custom domain | Not configured |
 | Analytics IDs | Optional (via admin Site Settings) |
-
----
-
-## Next Recommended Task
-
-**Sprint 4 — Section Components Data Layer**
-
-Wire the 22 section components to fetch real data:
-1. `package_grid` — fetch from `packages` table using `config.source` and `config.limit`
-2. `destination_grid` — fetch from `destinations` with region filter
-3. `vehicle_grid` — fetch from `vehicles` with optional category filter
-4. `transfer_grid` — fetch from `airport_routes`
-5. `testimonials` — fetch from `testimonials` with `is_published = true`
-6. `blog_grid` — fetch from `blogs` with `is_published = true`
-7. `statistics` — use `config.stats` array (already configured in seed data)
-8. `feature_cards` — use `config.cards` array (already configured)
-9. `faq` — support `config.source = 'manual'` (use `config.faqs`) and `config.source = 'all'` (fetch from faqs table)
-10. `enquiry_form` — look up `enquiry_form_configs` by `config.form_key` or use hardcoded field set

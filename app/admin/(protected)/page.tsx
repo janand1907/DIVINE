@@ -1,19 +1,49 @@
 import Link from 'next/link';
 import { createAdminClient } from '@/lib/supabase/server';
-import { Users, TrendingUp, Clock, AlertCircle, Package, FileText } from 'lucide-react';
+import { Users, TrendingUp, Clock, CircleAlert as AlertCircle, Package, FileText } from 'lucide-react';
 import { StatCard } from '@/components/admin/stat-card';
+import {
+  DateRangeFilter,
+  ConversionFunnel,
+  PriorityDistribution,
+  DailyLeadsChart,
+  LeadSourceChart,
+} from '@/components/admin/analytics-charts';
 import type { LeadRow } from '@/types/database';
 
-export default async function AdminDashboard() {
+interface AdminDashboardProps {
+  searchParams?: Record<string, string | string[] | undefined>;
+}
+
+export default async function AdminDashboard({ searchParams }: AdminDashboardProps) {
   const supabase = createAdminClient();
 
-  // Lead stats by status
-  const { data: leadsByStatus } = await supabase
+  // Get date range from search params (default: 30 days)
+  const range = (searchParams?.range as '7' | '30' | '90' | 'all' | undefined) ?? '30';
+
+  // Calculate cutoff date based on range
+  let cutoffDate: string | null = null;
+  const now = new Date();
+
+  if (range !== 'all') {
+    const daysBack = parseInt(range, 10);
+    const cutoff = new Date(now);
+    cutoff.setDate(cutoff.getDate() - daysBack);
+    cutoffDate = cutoff.toISOString().slice(0, 10);
+  }
+
+  // Fetch all leads (with optional date filtering)
+  let query = supabase
     .from('leads')
-    .select('id, status, priority, followup_date, created_at, name, mobile, destination')
+    .select('id, status, priority, source, followup_date, created_at, name, mobile, destination')
     .order('created_at', { ascending: false })
-    .limit(500)
-    .returns<Partial<LeadRow>[]>();
+    .limit(500);
+
+  if (cutoffDate) {
+    query = query.gte('created_at', cutoffDate);
+  }
+
+  const { data: leadsByStatus } = await query.returns<Partial<LeadRow>[]>();
 
   const allLeads = leadsByStatus ?? [];
   const totalLeads = allLeads.length;
@@ -76,6 +106,56 @@ export default async function AdminDashboard() {
         <StatCard title="Media Assets" value={media.count ?? 0} icon={<FileText className="h-5 w-5" />} />
       </div>
 
+      {/* Date Range Filter - Client Component */}
+      <DateRangeFilterWrapper currentRange={range} />
+
+      {/* Conversion Funnel and Priority Distribution */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <ConversionFunnel leads={allLeads} />
+        <div className="space-y-3">
+          <h3 className="font-heading text-lg font-semibold text-foreground px-2">Priority Distribution</h3>
+          <PriorityDistribution leads={allLeads} />
+        </div>
+      </div>
+
+      {/* Daily Leads Chart */}
+      <DailyLeadsChart leads={allLeads} />
+
+      {/* Lead Source Chart and Recent Leads */}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <LeadSourceChart leads={allLeads} />
+
+        {/* Recent leads */}
+        <div className="rounded-lg border border-border bg-card shadow-brand">
+          <div className="flex items-center justify-between border-b border-border p-5">
+            <h2 className="font-heading text-lg font-semibold text-foreground">Recent Leads</h2>
+            <Link href="/admin/leads" className="text-sm font-medium text-primary hover:underline">All leads →</Link>
+          </div>
+          <div className="divide-y divide-border">
+            {recentLeads.length === 0 ? (
+              <p className="p-6 text-sm text-muted-foreground">No leads yet.</p>
+            ) : (
+              recentLeads.map((lead) => (
+                <Link
+                  key={lead.id}
+                  href="/admin/leads"
+                  className="flex items-center justify-between gap-3 p-5 transition hover:bg-accent"
+                >
+                  <div>
+                    <p className="font-medium text-foreground">{lead.name}</p>
+                    <p className="text-sm text-muted-foreground">{lead.mobile}{lead.destination ? ` · ${lead.destination}` : ''}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-xs capitalize text-primary">{lead.status}</span>
+                    <p className="mt-1 text-xs text-muted-foreground">{new Date(lead.created_at ?? '').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
+                  </div>
+                </Link>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
       {/* Lead pipeline by status */}
       <div className="rounded-lg border border-border bg-card p-6 shadow-brand">
         <div className="flex items-center justify-between">
@@ -92,36 +172,6 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Recent leads */}
-      <div className="rounded-lg border border-border bg-card shadow-brand">
-        <div className="flex items-center justify-between border-b border-border p-5">
-          <h2 className="font-heading text-lg font-semibold text-foreground">Recent Leads</h2>
-          <Link href="/admin/leads" className="text-sm font-medium text-primary hover:underline">All leads →</Link>
-        </div>
-        <div className="divide-y divide-border">
-          {recentLeads.length === 0 ? (
-            <p className="p-6 text-sm text-muted-foreground">No leads yet.</p>
-          ) : (
-            recentLeads.map((lead) => (
-              <Link
-                key={lead.id}
-                href="/admin/leads"
-                className="flex items-center justify-between gap-3 p-5 transition hover:bg-accent"
-              >
-                <div>
-                  <p className="font-medium text-foreground">{lead.name}</p>
-                  <p className="text-sm text-muted-foreground">{lead.mobile}{lead.destination ? ` · ${lead.destination}` : ''}</p>
-                </div>
-                <div className="text-right">
-                  <span className="inline-block rounded-full bg-primary/10 px-2.5 py-0.5 text-xs capitalize text-primary">{lead.status}</span>
-                  <p className="mt-1 text-xs text-muted-foreground">{new Date(lead.created_at ?? '').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}</p>
-                </div>
-              </Link>
-            ))
-          )}
-        </div>
-      </div>
-
       {highPriorityNew > 0 && (
         <div className="rounded-lg border border-secondary/30 bg-secondary/10 p-5">
           <p className="font-medium text-secondary">
@@ -131,4 +181,22 @@ export default async function AdminDashboard() {
       )}
     </div>
   );
+}
+
+/**
+ * Client wrapper for date range filter
+ * Handles search param navigation
+ */
+function DateRangeFilterWrapper({ currentRange }: { currentRange: '7' | '30' | '90' | 'all' }) {
+  'use client';
+
+  const handleRangeChange = (newRange: '7' | '30' | '90' | 'all') => {
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('range', newRange);
+      window.location.href = url.toString();
+    }
+  };
+
+  return <DateRangeFilter selectedRange={currentRange} onRangeChange={handleRangeChange} />;
 }

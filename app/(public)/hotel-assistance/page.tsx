@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Clock, Phone, Star, Shield } from 'lucide-react';
 import { createPublicClient } from '@/lib/supabase/server';
 import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
+import type { HotelCityRow } from '@/types/database';
 
 export async function generateMetadata(): Promise<Metadata> {
   const { theme, site, seoPage } = await fetchSeoContext('/hotel-assistance');
@@ -32,6 +33,15 @@ const WHAT_NEXT = [
 export default async function HotelAssistancePage() {
   const { theme } = await fetchSeoContext('/hotel-assistance');
   const contactPhone = theme?.contact_phone ?? '+919876543210';
+
+  const supabase = createPublicClient();
+  const { data: hotelCities } = await supabase
+    .from('hotel_cities')
+    .select('id, name, slug')
+    .eq('is_published', true)
+    .order('display_order', { ascending: true })
+    .returns<Pick<HotelCityRow, 'id' | 'name' | 'slug'>[]>();
+
   return (
     <>
       {/* Hero */}
@@ -57,7 +67,7 @@ export default async function HotelAssistancePage() {
           <div className="grid gap-12 lg:grid-cols-5">
             {/* Form */}
             <div className="lg:col-span-3">
-              <HotelAssistanceForm />
+              <HotelAssistanceForm cities={hotelCities ?? []} />
             </div>
 
             {/* Sidebar */}
