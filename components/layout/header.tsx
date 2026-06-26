@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { ChevronDown, Menu, MessageCircle, Sparkles } from 'lucide-react';
@@ -17,7 +17,6 @@ import {
 import type { NavMenuWithItems } from '@/types/database';
 import type { PoolItem } from '@/lib/nav/fetch';
 
-// Maps nav menu URLs to their module key in the nav pool
 const URL_TO_MODULE: Record<string, string> = {
   '/divine-tours': 'tours_divine',
   '/domestic-tours': 'tours_domestic',
@@ -43,6 +42,7 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -55,6 +55,38 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
     setMobileOpen(false);
     setOpenMenu(null);
   }, [pathname]);
+
+  // Close on Escape key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        cancelClose();
+        setOpenMenu(null);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, []);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  }, []);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(() => {
+      setOpenMenu(null);
+      closeTimerRef.current = null;
+    }, 200);
+  }, [cancelClose]);
+
+  const handleMenuEnter = useCallback((id: string) => {
+    cancelClose();
+    setOpenMenu(id);
+  }, [cancelClose]);
 
   const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}`;
 
@@ -89,7 +121,6 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
         <nav
           aria-label="Primary"
           className="hidden items-center gap-0.5 lg:flex"
-          onMouseLeave={() => setOpenMenu(null)}
         >
           {navMenus.map((menu) => {
             const hasItems = menu.nav_items.length > 0;
@@ -120,12 +151,21 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
               <div
                 key={menu.id}
                 className="relative"
-                onMouseEnter={() => setOpenMenu(menu.id)}
-                onFocus={() => setOpenMenu(menu.id)}
+                onMouseEnter={() => handleMenuEnter(menu.id)}
+                onMouseLeave={scheduleClose}
+                onFocus={() => handleMenuEnter(menu.id)}
+                onBlur={(e) => {
+                  // Only schedule close if focus moves outside this entire subtree
+                  if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+                    scheduleClose();
+                  }
+                }}
               >
                 <Link
                   href={menu.url}
                   prefetch
+                  aria-expanded={openMenu === menu.id}
+                  aria-haspopup="menu"
                   className={cn(
                     'inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
                     scrolled ? 'text-white/90 hover:text-white' : 'text-gray-800 hover:text-gray-900',
@@ -141,11 +181,15 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
 
                 {openMenu === menu.id && (
                   hasMega ? (
-                    // Pool-aware mega dropdown with image cards
+                    // Pool-aware mega dropdown
                     <div
-                      className="absolute left-1/2 top-full z-50 mt-2 w-[480px] -translate-x-1/2 rounded-xl border border-border bg-popover p-4 shadow-brand animate-fade-in"
+                      className="absolute left-1/2 top-full z-50 w-[480px] -translate-x-1/2 rounded-xl border border-border bg-popover p-4 shadow-brand animate-fade-in"
                       role="menu"
+                      onMouseEnter={cancelClose}
+                      onMouseLeave={scheduleClose}
                     >
+                      {/* Zero-height invisible bridge fills any sub-pixel gap */}
+                      <div className="absolute inset-x-0 -top-1 h-1" aria-hidden="true" />
                       {hasItems && (
                         <div className="mb-3 flex flex-wrap gap-1 border-b border-border pb-3">
                           {menu.nav_items.map((item) => (
@@ -204,9 +248,13 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
                   ) : (
                     // Standard dropdown
                     <div
-                      className="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-xl border border-border bg-popover p-2 shadow-brand animate-fade-in"
+                      className="absolute left-1/2 top-full z-50 w-56 -translate-x-1/2 rounded-xl border border-border bg-popover p-2 shadow-brand animate-fade-in"
                       role="menu"
+                      onMouseEnter={cancelClose}
+                      onMouseLeave={scheduleClose}
                     >
+                      {/* Zero-height invisible bridge fills any sub-pixel gap */}
+                      <div className="absolute inset-x-0 -top-1 h-1" aria-hidden="true" />
                       {menu.nav_items.map((item) => (
                         <Link
                           key={item.id}
