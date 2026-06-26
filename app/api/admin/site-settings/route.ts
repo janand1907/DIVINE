@@ -21,6 +21,8 @@ const siteSettingsSchema = z.object({
   social_youtube: z.string().url().optional().nullable().or(z.literal('')),
   social_linkedin: z.string().url().optional().nullable().or(z.literal('')),
   footer_links: z.array(z.object({ label: z.string(), url: z.string(), open_new_tab: z.boolean().optional() })).optional(),
+  footer_keywords: z.array(z.string().max(100)).max(50).optional(),
+  footer_tagline: z.string().max(300).optional().nullable().or(z.literal('')),
 });
 
 export async function GET() {
@@ -77,6 +79,8 @@ export async function PUT(req: NextRequest) {
     social_youtube: parsed.data.social_youtube || null,
     social_linkedin: parsed.data.social_linkedin || null,
     footer_links: parsed.data.footer_links ?? [],
+    footer_keywords: parsed.data.footer_keywords ?? [],
+    footer_tagline: parsed.data.footer_tagline || null,
   };
 
   const supabase = createAdminClient();

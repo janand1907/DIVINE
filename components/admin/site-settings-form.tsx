@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Loader as Loader2, Save, Plus, Trash2 } from 'lucide-react';
+import { Loader as Loader2, Save, Plus, Trash2, X, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Textarea } from '@/components/ui/textarea';
 import type { SiteSettingsRow, FooterLink } from '@/types/database';
 
 interface SiteSettingsFormProps {
@@ -30,6 +31,7 @@ interface FormValues {
   social_twitter: string;
   social_youtube: string;
   social_linkedin: string;
+  footer_tagline: string;
 }
 
 export function SiteSettingsForm({ initialValues }: SiteSettingsFormProps) {
@@ -38,6 +40,11 @@ export function SiteSettingsForm({ initialValues }: SiteSettingsFormProps) {
   const [footerLinks, setFooterLinks] = useState<FooterLink[]>(
     (initialValues.footer_links as FooterLink[]) ?? [],
   );
+  const [footerKeywords, setFooterKeywords] = useState<string[]>(
+    (initialValues.footer_keywords as string[]) ?? [],
+  );
+  const [keywordInput, setKeywordInput] = useState('');
+  const keywordInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit } = useForm<FormValues>({
     defaultValues: {
@@ -55,8 +62,33 @@ export function SiteSettingsForm({ initialValues }: SiteSettingsFormProps) {
       social_twitter: initialValues.social_twitter ?? '',
       social_youtube: initialValues.social_youtube ?? '',
       social_linkedin: initialValues.social_linkedin ?? '',
+      footer_tagline: initialValues.footer_tagline ?? '',
     },
   });
+
+  const addKeyword = (value: string) => {
+    const trimmed = value.trim().replace(/,+$/, '').trim();
+    if (!trimmed) return;
+    setFooterKeywords((prev) => {
+      const next = trimmed.split(/[,\n]+/).map((k) => k.trim()).filter(Boolean);
+      const unique = next.filter((k) => !prev.includes(k));
+      return [...prev, ...unique];
+    });
+    setKeywordInput('');
+  };
+
+  const handleKeywordKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addKeyword(keywordInput);
+    }
+    if (e.key === 'Backspace' && keywordInput === '' && footerKeywords.length > 0) {
+      setFooterKeywords((prev) => prev.slice(0, -1));
+    }
+  };
+
+  const removeKeyword = (idx: number) =>
+    setFooterKeywords((prev) => prev.filter((_, i) => i !== idx));
 
   const addFooterLink = () =>
     setFooterLinks((prev) => [...prev, { label: '', url: '', open_new_tab: false }]);
@@ -75,7 +107,7 @@ export function SiteSettingsForm({ initialValues }: SiteSettingsFormProps) {
       const res = await fetch('/api/admin/site-settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, footer_links: footerLinks }),
+        body: JSON.stringify({ ...values, footer_links: footerLinks, footer_keywords: footerKeywords }),
       });
       const j = await res.json().catch(() => null);
       if (!res.ok) {
@@ -225,6 +257,61 @@ export function SiteSettingsForm({ initialValues }: SiteSettingsFormProps) {
             ))}
           </div>
         )}
+      </section>
+
+      <section className="rounded-lg border border-border bg-card p-6 shadow-brand">
+        <div className="mb-4">
+          <h3 className="font-heading text-base font-semibold text-foreground">Footer Keywords</h3>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            Keywords displayed in the footer for SEO. Press <kbd className="rounded border border-border bg-muted px-1 py-0.5 text-xs">Enter</kbd> or <kbd className="rounded border border-border bg-muted px-1 py-0.5 text-xs">,</kbd> to add each keyword.
+          </p>
+        </div>
+        <div className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="footer_tagline">Footer tagline / keyword intro</Label>
+            <Input
+              id="footer_tagline"
+              placeholder="e.g. Popular tours & destinations"
+              {...register('footer_tagline')}
+            />
+            <p className="text-xs text-muted-foreground">Short heading shown above the keyword cloud in the footer.</p>
+          </div>
+          <div className="space-y-1.5">
+            <Label>Keywords</Label>
+            <div
+              className="flex min-h-[44px] flex-wrap items-start gap-1.5 rounded-md border border-input bg-background p-2 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-0 cursor-text"
+              onClick={() => keywordInputRef.current?.focus()}
+            >
+              {footerKeywords.map((kw, idx) => (
+                <span
+                  key={idx}
+                  className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary"
+                >
+                  <Tag className="h-3 w-3" />
+                  {kw}
+                  <button
+                    type="button"
+                    onClick={(e) => { e.stopPropagation(); removeKeyword(idx); }}
+                    className="ml-0.5 rounded-full p-0.5 hover:bg-primary/20"
+                    aria-label={`Remove ${kw}`}
+                  >
+                    <X className="h-2.5 w-2.5" />
+                  </button>
+                </span>
+              ))}
+              <input
+                ref={keywordInputRef}
+                value={keywordInput}
+                onChange={(e) => setKeywordInput(e.target.value)}
+                onKeyDown={handleKeywordKeyDown}
+                onBlur={() => addKeyword(keywordInput)}
+                placeholder={footerKeywords.length === 0 ? 'e.g. Tirupati tour, Char Dham packages...' : ''}
+                className="min-w-[160px] flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground">{footerKeywords.length} keyword{footerKeywords.length !== 1 ? 's' : ''} added. You can also paste comma-separated keywords.</p>
+          </div>
+        </div>
       </section>
 
       <section className="rounded-lg border border-border bg-card p-6 shadow-brand">

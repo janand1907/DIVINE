@@ -27,6 +27,8 @@ export default async function AdminSiteSettingsPage() {
     social_youtube: null,
     social_linkedin: null,
     footer_links: [],
+    footer_keywords: [],
+    footer_tagline: null,
     updated_at: new Date().toISOString(),
   };
 

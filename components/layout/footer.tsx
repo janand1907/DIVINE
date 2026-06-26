@@ -27,6 +27,8 @@ export interface FooterProps {
   branding: Branding;
   footerLinks?: FooterLink[];
   socialLinks?: FooterSocialLinks;
+  footerKeywords?: string[];
+  footerTagline?: string | null;
   className?: string;
 }
 
@@ -59,7 +61,7 @@ const SOCIAL_ICON_MAP: Record<string, React.ComponentType<{ className?: string }
   linkedin: Linkedin,
 };
 
-export function Footer({ branding, footerLinks, socialLinks, className }: FooterProps) {
+export function Footer({ branding, footerLinks, socialLinks, footerKeywords, footerTagline, className }: FooterProps) {
   const { brandName, address, contactPhone, contactEmail, whatsappNumber } = branding;
   const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}`;
   const year = new Date().getFullYear();
@@ -231,6 +233,29 @@ export function Footer({ branding, footerLinks, socialLinks, className }: Footer
           </div>
         </div>
       </div>
+
+      {/* SEO Keyword Cloud */}
+      {footerKeywords && footerKeywords.length > 0 && (
+        <div className="border-t border-white/10">
+          <div className="container-brand py-6">
+            {footerTagline && (
+              <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-brand-darkForeground/40">
+                {footerTagline}
+              </p>
+            )}
+            <div className="flex flex-wrap gap-2" aria-label="Related topics">
+              {footerKeywords.map((kw) => (
+                <span
+                  key={kw}
+                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-brand-darkForeground/50 transition-colors hover:border-primary/40 hover:text-brand-darkForeground/80"
+                >
+                  {kw}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bottom bar */}
       <div className="border-t border-white/10">

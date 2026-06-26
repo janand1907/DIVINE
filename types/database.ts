@@ -52,6 +52,8 @@ export interface SiteSettingsRow {
   social_youtube: string | null;
   social_linkedin: string | null;
   footer_links: FooterLink[];
+  footer_keywords: string[];
+  footer_tagline: string | null;
   updated_at: string;
 }
 

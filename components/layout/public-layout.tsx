@@ -45,12 +45,20 @@ export async function PublicLayout({ children }: PublicLayoutProps) {
     : undefined;
 
   const footerLinks = site?.footer_links ?? undefined;
+  const footerKeywords = site?.footer_keywords?.length ? site.footer_keywords : undefined;
+  const footerTagline = site?.footer_tagline ?? undefined;
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
       <Header navMenus={navMenus} pool={pool} />
       <main className="flex-1 pt-16 lg:pt-20">{children}</main>
-      <Footer branding={branding} socialLinks={socialLinks} footerLinks={footerLinks} />
+      <Footer
+        branding={branding}
+        socialLinks={socialLinks}
+        footerLinks={footerLinks}
+        footerKeywords={footerKeywords}
+        footerTagline={footerTagline}
+      />
       <WhatsAppFloat phoneNumber={branding.whatsappNumber} />
     </div>
   );
