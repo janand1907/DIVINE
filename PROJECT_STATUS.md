@@ -7,8 +7,8 @@
 
 ## Current Sprint
 
-**Sprint 3 — Complete**
-Focus: Module detail pages with PageRenderer, pool-aware navigation, comprehensive seed data
+**Sprint 6 — Complete**
+Focus: Package detail page V2 — section-based rendering with PageRenderer fallback
 
 ---
 
@@ -20,9 +20,9 @@ Focus: Module detail pages with PageRenderer, pool-aware navigation, comprehensi
 | 1 | Full platform schema, admin CRUD, public pages, SEO, leads | Done | 2026-06-26 |
 | 2 | Admin page system, page builder, nav pool integration | Done | 2026-06-26 |
 | 3 | PageRenderer on module pages, pool navigation, seed data | Done | 2026-06-26 |
-| 4 | Section components — real data rendering | Not started | — |
-| 5 | Homepage builder live, mega-menu with pool data | Not started | — |
-| 6 | Package detail V2 (section-based) | Not started | — |
+| 4 | Section components — real data rendering | Done | 2026-06-26 |
+| 5 | Pool-aware mega-menu, section bug fixes | Done | 2026-06-26 |
+| 6 | Package detail V2 (section-based) | Done | 2026-06-26 |
 | 7 | Media library integration, image picker | Not started | — |
 | 8 | Enquiry form configs UI | Not started | — |
 | 9 | Hotel assistance module | Not started | — |
@@ -62,6 +62,7 @@ Focus: Module detail pages with PageRenderer, pool-aware navigation, comprehensi
 - [x] Domestic tours listing + detail with PageRenderer
 - [x] International tours listing + detail with PageRenderer
 - [x] Packages listing + detail (full itinerary, pricing, sticky CTA, inquiry form)
+- [x] Packages detail V2 with PageRenderer (sections replace fallback layout when configured)
 - [x] Vehicle rentals listing + detail with PageRenderer
 - [x] Airport transfers listing + detail with PageRenderer
 - [x] Blog listing + individual post (ToC, reading time, tags)
@@ -86,19 +87,23 @@ Focus: Module detail pages with PageRenderer, pool-aware navigation, comprehensi
 - [x] Polymorphic page_sections (works on any entity type)
 - [x] Module nav pool (auto-sync on create/update/delete)
 - [x] Pool-aware navigation fetch functions
+- [x] Pool-aware mega-menu in header (image grid dropdowns for tour/vehicle/transfer menus)
+- [x] All 22 section components wired to real data (package-grid, destination-grid, vehicle-grid, transfer-grid, testimonials, blog-grid fetch from DB; statistics, feature-cards, faq use config data)
+- [x] FAQ section supports `source: 'db'` for database-driven FAQ content
+- [x] RichText section supports both `config.content` and `config.html` field names
+- [x] CTA Banner and WhatsApp CTA use WhatsApp number from `theme_settings` (no hardcoding)
 
 ---
 
 ## Features in Development
 
-None. Sprint 3 is complete.
+None. Sprints 4 and 5 are complete.
 
 ---
 
-## Pending Work (Sprint 4+)
+## Pending Work (Sprint 6+)
 
-- Section components currently accept `config` props but most render placeholder or static content. Sprint 4 will wire each component to fetch real data based on `config.source`.
-- Mega-menu using nav pool data (Sprint 5)
+- Package detail page V2 using section-based rendering (Sprint 6)
 - Image picker in page builder using media library (Sprint 7)
 - Admin-configurable enquiry form fields UI (Sprint 8)
 - Hotel assistance module full build (Sprint 9)
@@ -121,7 +126,7 @@ None. Sprint 3 is complete.
 | `npm run typecheck` | Passing (0 errors) |
 | `npm run lint` | Passing |
 
-Last verified: 2026-06-26
+Last verified: 2026-06-26 (Sprint 6)
 
 ---
 

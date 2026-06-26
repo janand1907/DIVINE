@@ -1,5 +1,5 @@
 import { fetchSeoContext } from '@/lib/seo/metadata';
-import { fetchNavMenus } from '@/lib/nav/fetch';
+import { fetchNavWithPool } from '@/lib/nav/fetch';
 import type { Branding } from '@/lib/theme/theme-provider';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
@@ -10,9 +10,9 @@ export interface PublicLayoutProps {
 }
 
 export async function PublicLayout({ children }: PublicLayoutProps) {
-  const [{ theme }, navMenus] = await Promise.all([
+  const [{ theme }, { menus: navMenus, pool }] = await Promise.all([
     fetchSeoContext('/'),
-    fetchNavMenus(),
+    fetchNavWithPool(),
   ]);
 
   const branding: Branding = {
@@ -31,7 +31,7 @@ export async function PublicLayout({ children }: PublicLayoutProps) {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <Header navMenus={navMenus} />
+      <Header navMenus={navMenus} pool={pool} />
       <main className="flex-1 pt-16 lg:pt-20">{children}</main>
       <Footer branding={branding} />
       <WhatsAppFloat phoneNumber={branding.whatsappNumber} />

@@ -1,13 +1,18 @@
+import { createPublicClient } from '@/lib/supabase/server';
+
 interface Props {
   config: Record<string, unknown>;
 }
 
-export function WhatsappCta({ config }: Props) {
+export async function WhatsappCta({ config }: Props) {
   const heading = (config.heading as string) || 'Need Help? Chat with us!';
   const messageTemplate = (config.message_template as string) || 'Hi, I need help with my travel booking.';
   const buttonText = (config.button_text as string) || 'Chat on WhatsApp';
   const background = (config.background as string) || 'default';
-  const phone = '919876543210';
+
+  const supabase = createPublicClient();
+  const { data } = await supabase.from('theme_settings').select('whatsapp_number').eq('id', 1).maybeSingle();
+  const phone = (data?.whatsapp_number ?? '+919876543210').replace(/[^\d]/g, '');
 
   const bgClass = background === 'green' ? 'bg-[#25D366]/10' : 'bg-background';
 

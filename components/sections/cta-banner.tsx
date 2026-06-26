@@ -1,8 +1,10 @@
+import { createPublicClient } from '@/lib/supabase/server';
+
 interface Props {
   config: Record<string, unknown>;
 }
 
-export function CtaBanner({ config }: Props) {
+export async function CtaBanner({ config }: Props) {
   const heading = (config.heading as string) || '';
   const subheading = (config.subheading as string) || '';
   const ctaText = (config.cta_text as string) || 'Get in Touch';
@@ -12,12 +14,21 @@ export function CtaBanner({ config }: Props) {
   const background = (config.background as string) || 'dark';
   const includeWhatsapp = (config.include_whatsapp as boolean) ?? false;
 
+  let whatsappNumber = '+919876543210';
+  if (includeWhatsapp) {
+    const supabase = createPublicClient();
+    const { data } = await supabase.from('theme_settings').select('whatsapp_number').eq('id', 1).maybeSingle();
+    if (data?.whatsapp_number) whatsappNumber = data.whatsapp_number;
+  }
+
   const bgClass =
     background === 'primary' ? 'bg-primary text-primary-foreground' :
     background === 'gradient' ? 'bg-gradient-to-r from-brand-dark to-primary text-white' :
     'bg-brand-dark text-white';
 
   if (!heading && !ctaText) return null;
+
+  const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}`;
 
   return (
     <section className={`py-16 ${bgClass}`}>
@@ -47,7 +58,7 @@ export function CtaBanner({ config }: Props) {
           )}
           {includeWhatsapp && (
             <a
-              href="https://wa.me/919876543210"
+              href={waHref}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-medium text-white transition hover:bg-[#20bd5a]"

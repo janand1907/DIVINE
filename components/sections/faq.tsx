@@ -1,13 +1,36 @@
 import { ChevronDown } from 'lucide-react';
-import type { FaqItem } from '@/types/database';
+import { createPublicClient } from '@/lib/supabase/server';
+import type { FaqItem, FaqRow } from '@/types/database';
 
 interface Props {
   config: Record<string, unknown>;
 }
 
-export function Faq({ config }: Props) {
+export async function Faq({ config }: Props) {
   const heading = (config.heading as string) || 'Frequently Asked Questions';
-  const faqs = (config.faqs as FaqItem[]) || [];
+  const source = (config.source as string) || 'manual';
+  const categoryId = (config.category_id as string) || '';
+  const limit = (config.limit as number) || 20;
+  const manualFaqs = (config.faqs as FaqItem[]) || [];
+
+  let faqs: FaqItem[] = manualFaqs;
+
+  if (source === 'db' || source === 'all') {
+    const supabase = createPublicClient();
+    let query = supabase
+      .from('faqs')
+      .select('question,answer')
+      .eq('is_published', true)
+      .order('display_order', { ascending: true });
+
+    if (categoryId) query = query.eq('category_id', categoryId);
+
+    const { data } = await query.limit(limit);
+    faqs = ((data ?? []) as Pick<FaqRow, 'question' | 'answer'>[]).map((r) => ({
+      question: r.question,
+      answer: r.answer,
+    }));
+  }
 
   if (faqs.length === 0) return null;
 

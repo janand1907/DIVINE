@@ -5,6 +5,46 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## Sprint 6 — 2026-06-26
+
+### Changed
+- **Package detail page V2** (`app/(public)/packages/[slug]/page.tsx`):
+  - Wrapped in `<PageRenderer entityType="package" entityId={pkg.id} fallback={...}>` following the same pattern as destination, vehicle, and route pages
+  - When no sections are configured in the builder, the full existing hardcoded layout renders as fallback (zero regression)
+  - When sections are configured via the page builder, they replace the fallback layout with zero code changes required
+
+### Database Changes
+None.
+
+### Notes
+- `'package'` was already a valid `SectionEntityType` — no schema changes needed.
+
+---
+
+## Sprint 4+5 — 2026-06-26
+
+### Added
+- **Pool-aware mega-menu in header** (`components/layout/header.tsx`):
+  - Desktop: hovering over tour/vehicle/transfer nav items shows a rich dropdown with image cards from the module nav pool (3-column grid, up to 6 items, with badge labels)
+  - Mobile: accordion expands to show pool items as text links with badge chips
+  - URL-to-module mapping: `/domestic-tours` → `tours_domestic`, `/international-tours` → `tours_international`, `/vehicle-rentals` → `vehicles`, `/airport-transfers` → `transfers`
+- **`public-layout.tsx`** now calls `fetchNavWithPool()` (parallel fetch of menus + pool) and passes `pool` prop to Header
+- **FAQ section `source: 'db'` support**: `components/sections/faq.tsx` is now async and supports `config.source = 'db'` or `'all'` to fetch from the `faqs` table (with optional `category_id` filter and `limit`)
+
+### Fixed
+- **`rich-text.tsx`**: Section now reads `config.html` as a fallback if `config.content` is absent — resolves the seed data field name mismatch where seeded sections use `"html"` key
+- **`cta-banner.tsx`**: Converted to async server component; fetches WhatsApp number from `theme_settings` when `include_whatsapp: true`, replacing hardcoded number
+- **`whatsapp-cta.tsx`**: Converted to async server component; always fetches WhatsApp number from `theme_settings`, replacing hardcoded number
+
+### Database Changes
+None.
+
+### Notes
+- The warning `Critical dependency: the request of a dependency is an expression` comes from `@supabase/supabase-js` internals — it is pre-existing and not caused by our code.
+- Sections `statistics`, `feature-cards`, `timeline`, `image-gallery`, `image-text-split`, `pricing-cards`, `hero-banner`, `video-section`, and `html-block` continue to render from `config` props only — they have no DB-fetch requirement by design.
+
+---
+
 ## Sprint 3 — 2026-06-26
 
 ### Added

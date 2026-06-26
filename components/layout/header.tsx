@@ -15,9 +15,20 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import type { NavMenuWithItems } from '@/types/database';
+import type { PoolItem } from '@/lib/nav/fetch';
+
+// Maps nav menu URLs to their module key in the nav pool
+const URL_TO_MODULE: Record<string, string> = {
+  '/divine-tours': 'tours_divine',
+  '/domestic-tours': 'tours_domestic',
+  '/international-tours': 'tours_international',
+  '/vehicle-rentals': 'vehicles',
+  '/airport-transfers': 'transfers',
+};
 
 interface HeaderProps {
   navMenus?: NavMenuWithItems[];
+  pool?: Record<string, PoolItem[]>;
 }
 
 function isActive(pathname: string, href: string): boolean {
@@ -25,7 +36,7 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Header({ navMenus = [] }: HeaderProps) {
+export function Header({ navMenus = [], pool = {} }: HeaderProps) {
   const { brandName, whatsappNumber } = useBranding();
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -82,9 +93,12 @@ export function Header({ navMenus = [] }: HeaderProps) {
         >
           {navMenus.map((menu) => {
             const hasItems = menu.nav_items.length > 0;
+            const poolModule = URL_TO_MODULE[menu.url] ?? null;
+            const poolItems = poolModule ? (pool[poolModule] ?? []) : [];
+            const hasMega = poolItems.length > 0;
             const active = isActive(pathname, menu.url);
 
-            if (!hasItems) {
+            if (!hasItems && !hasMega) {
               return (
                 <Link
                   key={menu.id}
@@ -126,25 +140,89 @@ export function Header({ navMenus = [] }: HeaderProps) {
                 </Link>
 
                 {openMenu === menu.id && (
-                  <div
-                    className="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-xl border border-border bg-popover p-2 shadow-brand animate-fade-in"
-                    role="menu"
-                  >
-                    {menu.nav_items.map((item) => (
+                  hasMega ? (
+                    // Pool-aware mega dropdown with image cards
+                    <div
+                      className="absolute left-1/2 top-full z-50 mt-2 w-[480px] -translate-x-1/2 rounded-xl border border-border bg-popover p-4 shadow-brand animate-fade-in"
+                      role="menu"
+                    >
+                      {hasItems && (
+                        <div className="mb-3 flex flex-wrap gap-1 border-b border-border pb-3">
+                          {menu.nav_items.map((item) => (
+                            <Link
+                              key={item.id}
+                              href={item.url}
+                              prefetch
+                              role="menuitem"
+                              className="rounded-md px-3 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                            >
+                              {item.title}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                      <div className="grid grid-cols-3 gap-2">
+                        {poolItems.slice(0, 6).map((item) => (
+                          <Link
+                            key={item.url}
+                            href={item.url}
+                            prefetch
+                            role="menuitem"
+                            className="group flex flex-col overflow-hidden rounded-lg border border-border bg-card transition hover:border-primary/40 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                          >
+                            <div className="relative aspect-video w-full overflow-hidden bg-muted">
+                              {item.cover_image ? (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <img
+                                  src={item.cover_image}
+                                  alt={item.label}
+                                  className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                />
+                              ) : (
+                                <div className="flex h-full items-center justify-center">
+                                  <Sparkles className="h-5 w-5 text-muted-foreground/30" />
+                                </div>
+                              )}
+                              {item.badge_text && (
+                                <span className="absolute left-1.5 top-1.5 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground">
+                                  {item.badge_text}
+                                </span>
+                              )}
+                            </div>
+                            <p className="truncate px-2 py-1.5 text-xs font-medium text-foreground">{item.label}</p>
+                          </Link>
+                        ))}
+                      </div>
                       <Link
-                        key={item.id}
-                        href={item.url}
+                        href={menu.url}
                         prefetch
-                        role="menuitem"
-                        className="block rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="mt-3 block text-center text-xs font-medium text-primary hover:underline"
                       >
-                        <span className="font-medium text-foreground">{item.title}</span>
-                        {item.description && (
-                          <span className="mt-0.5 block text-xs text-muted-foreground">{item.description}</span>
-                        )}
+                        View all &rarr;
                       </Link>
-                    ))}
-                  </div>
+                    </div>
+                  ) : (
+                    // Standard dropdown
+                    <div
+                      className="absolute left-1/2 top-full z-50 mt-2 w-56 -translate-x-1/2 rounded-xl border border-border bg-popover p-2 shadow-brand animate-fade-in"
+                      role="menu"
+                    >
+                      {menu.nav_items.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={item.url}
+                          prefetch
+                          role="menuitem"
+                          className="block rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        >
+                          <span className="font-medium text-foreground">{item.title}</span>
+                          {item.description && (
+                            <span className="mt-0.5 block text-xs text-muted-foreground">{item.description}</span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  )
                 )}
               </div>
             );
@@ -193,10 +271,12 @@ export function Header({ navMenus = [] }: HeaderProps) {
 
               <nav aria-label="Mobile primary" className="flex flex-col gap-0.5">
                 {navMenus.map((menu) => {
-                  const hasItems = menu.nav_items.length > 0;
+                  const poolModule = URL_TO_MODULE[menu.url] ?? null;
+                  const poolItems = poolModule ? (pool[poolModule] ?? []) : [];
+                  const hasSubItems = menu.nav_items.length > 0 || poolItems.length > 0;
                   const expanded = mobileExpanded === menu.id;
 
-                  if (!hasItems) {
+                  if (!hasSubItems) {
                     return (
                       <Link
                         key={menu.id}
@@ -235,6 +315,21 @@ export function Header({ navMenus = [] }: HeaderProps) {
                               className="block rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                             >
                               {item.title}
+                            </Link>
+                          ))}
+                          {poolItems.slice(0, 8).map((item) => (
+                            <Link
+                              key={item.url}
+                              href={item.url}
+                              prefetch
+                              className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                            >
+                              <span>{item.label}</span>
+                              {item.badge_text && (
+                                <span className="rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                  {item.badge_text}
+                                </span>
+                              )}
                             </Link>
                           ))}
                         </div>

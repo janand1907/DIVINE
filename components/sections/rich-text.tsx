@@ -3,7 +3,7 @@ interface Props {
 }
 
 export function RichText({ config }: Props) {
-  const content = (config.content as string) || '';
+  const content = (config.content as string) || (config.html as string) || '';
   const maxWidth = (config.max_width as string) || 'normal';
   const background = (config.background as string) || 'default';
 
