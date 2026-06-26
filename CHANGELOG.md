@@ -5,170 +5,203 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## Sprint 6 — 2026-06-26
+## [2026-06-26] - Sprint 10: Analytics Dashboard (Late)
+
+### Added
+- Comprehensive analytics dashboard replacing basic stats
+- Date range filter (7, 30, 90, all days options)
+- Conversion funnel visualization
+- Daily leads line chart with recharts
+- Source breakdown bar chart with recharts
+- Lead priority distribution cards
+- Full analytics page at `/admin/analytics`
 
 ### Changed
-- **Package detail page V2** (`app/(public)/packages/[slug]/page.tsx`):
-  - Wrapped in `<PageRenderer entityType="package" entityId={pkg.id} fallback={...}>` following the same pattern as destination, vehicle, and route pages
-  - When no sections are configured in the builder, the full existing hardcoded layout renders as fallback (zero regression)
-  - When sections are configured via the page builder, they replace the fallback layout with zero code changes required
-
-### Database Changes
-None.
-
-### Notes
-- `'package'` was already a valid `SectionEntityType` — no schema changes needed.
+- Admin dashboard redesigned with analytics focus
 
 ---
 
-## Sprint 4+5 — 2026-06-26
+## [2026-06-26] - Sprint 9: Hotel Assistance Module (Late)
 
 ### Added
-- **Pool-aware mega-menu in header** (`components/layout/header.tsx`):
-  - Desktop: hovering over tour/vehicle/transfer nav items shows a rich dropdown with image cards from the module nav pool (3-column grid, up to 6 items, with badge labels)
-  - Mobile: accordion expands to show pool items as text links with badge chips
-  - URL-to-module mapping: `/domestic-tours` → `tours_domestic`, `/international-tours` → `tours_international`, `/vehicle-rentals` → `vehicles`, `/airport-transfers` → `transfers`
-- **`public-layout.tsx`** now calls `fetchNavWithPool()` (parallel fetch of menus + pool) and passes `pool` prop to Header
-- **FAQ section `source: 'db'` support**: `components/sections/faq.tsx` is now async and supports `config.source = 'db'` or `'all'` to fetch from the `faqs` table (with optional `category_id` filter and `limit`)
-
-### Fixed
-- **`rich-text.tsx`**: Section now reads `config.html` as a fallback if `config.content` is absent — resolves the seed data field name mismatch where seeded sections use `"html"` key
-- **`cta-banner.tsx`**: Converted to async server component; fetches WhatsApp number from `theme_settings` when `include_whatsapp: true`, replacing hardcoded number
-- **`whatsapp-cta.tsx`**: Converted to async server component; always fetches WhatsApp number from `theme_settings`, replacing hardcoded number
-
-### Database Changes
-None.
-
-### Notes
-- The warning `Critical dependency: the request of a dependency is an expression` comes from `@supabase/supabase-js` internals — it is pre-existing and not caused by our code.
-- Sections `statistics`, `feature-cards`, `timeline`, `image-gallery`, `image-text-split`, `pricing-cards`, `hero-banner`, `video-section`, and `html-block` continue to render from `config` props only — they have no DB-fetch requirement by design.
+- Hotel assistance module with city-based selection
+- `hotel_cities` table admin CRUD interface
+- Migration 0005: Added `display_order` column to `enquiry_form_configs`, seeded 5 form configs and 12 hotel cities
+- Public `/api/hotel-cities` endpoint for form selection
+- DB-driven city dropdown in hotel assistance form
+- Hotel Cities link in admin sidebar
 
 ---
 
-## Sprint 3 — 2026-06-26
+## [2026-06-26] - Sprint 8: Enquiry Form Configs (Late)
 
 ### Added
-- **PageRenderer with fallback pattern** on all module detail pages:
-  - `divine-tours/[slug]` — wraps existing layout as fallback
-  - `domestic-tours/[slug]` — wraps existing layout as fallback
-  - `international-tours/[slug]` — wraps existing layout as fallback
-  - `vehicle-rentals/[slug]` — wraps existing layout as fallback
-  - `airport-transfers/[slug]` — wraps existing layout as fallback
-- **Pool-aware navigation** in `lib/nav/fetch.ts`:
-  - `fetchNavPool(module?)` — fetch published pool items, optionally filtered by module
-  - `fetchNavWithPool()` — parallel fetch of curated menus + all pool items grouped by module
-- **Comprehensive seed data** (migration `0004_seed_demo_data.sql`):
-  - 3 vehicle categories (Sedan, SUV, Tempo Traveller)
-  - 8 destinations (Tirupati, Chennai, Pondicherry, Madurai, Ooty, Sri Lanka, Singapore, Bali)
-  - 6 tour packages with full details, inclusions/exclusions, cover images
-  - 4 vehicles (Innova Crysta, Dzire, 12-seat Tempo, Etios) with integer `luggage_capacity`
-  - 3 airport routes with jsonb vehicle pricing (Chennai↔Tirupati, Bangalore→Tirupati)
-  - 6 testimonials with tour references
-  - 3 blog posts (Tirupati guide, Chennai weekend escapes, Tempo Traveller tips)
-  - 11 module nav pool entries matching all seeded entities
-
-### Fixed
-- Unescaped HTML entities in `airport-transfers/[slug]/page.tsx` and `vehicle-rentals/[slug]/page.tsx` (arrow `→` as `&#8594;`, Rupee `₹` as `&#8377;`, car emoji as `&#128663;`)
-- Seed migration failures resolved:
-  - `luggage_capacity` column is `integer` — seed now uses numeric values (2, 3, 4, 12) not text
-  - `highlights`, `inclusions`, `features`, `tags` use Postgres array syntax `'{"item1","item2"}'`
-  - `airport_routes.vehicles` uses `'[...]'::jsonb` cast
-
-### Notes
-- PageRenderer uses progressive enhancement: if no sections exist for an entity, the fallback JSX renders. When sections are configured in the builder, they replace the fallback with zero code changes.
-- `luggage_capacity` in `types/database.ts` is typed as `number` matching the actual DB integer column.
+- Enquiry form configuration system for dynamic form management
+- Admin CRUD for enquiry form configs at `/admin/enquiry-form-configs`
+- Dynamic field builder UI for form configuration
+- 5 pre-configured form templates (seeded)
+- Migration 0005: Enhanced `enquiry_form_configs` table with `display_order` and seed data
 
 ---
 
-## Sprint 2 — 2026-06-26
-
-### Added
-- **Content Pages system** (`content_pages` table) — section-managed pages separate from legacy CMS pages
-- **Admin Content Pages manager** (`/admin/content-pages`) — list view with publish toggle, actions
-- **Admin Content Pages form** (`/admin/content-pages/new`) — create/edit with template selector
-- **Page Builder** (`/admin/content-pages/[id]/builder`) — full drag/reorder builder UI:
-  - Add sections from grouped palette (22 section types)
-  - Reorder with up/down arrows
-  - Toggle visibility per section
-  - Edit JSON config inline
-  - Delete sections
-- **`lib/sections/meta.ts`** — client-safe section type metadata and group definitions
-- **`lib/sections/templates.ts`** — 9 pre-built section templates
-- **Nav Pool auto-sync** on destinations, vehicle categories, and airport routes:
-  - `POST` creates entry in `module_nav_pool`
-  - `PUT/PATCH` updates entry
-  - `DELETE` removes entry
-- **`lib/nav/pool.ts`** — `upsertNavPool()`, `removeNavPool()`, mapper helpers
-- **Sidebar nav item** for Content Pages in admin
+## [2026-06-26] - Navigation Management Overhaul (Late)
 
 ### Changed
-- `lib/sections/registry.ts` refactored to re-export from `meta.ts` (resolves client/server boundary violation)
-- Admin API routes for destinations, vehicle categories, and airport routes now call nav pool helpers
-
-### Fixed
-- `components/admin/delete-button.tsx` — moved `useRouter()` to component scope (was called inside async handler, violating hooks rules)
-- `components/admin/leads-manager.tsx` — converted `fetchLeads` to `useCallback` at component scope (was defined inside `useEffect`)
-- Unescaped entity warnings across 6 files — replaced `'` with `&apos;` and `"` with `&quot;`
-
-### Database Changes
-- **Migration `0003_seed_content_pages.sql`** applied:
-  - 4 content pages (About Us, Contact Us, Corporate Tours, Group Tours)
-  - 24 page sections with realistic config jsonb
-
-### Notes
-- `components/admin/page-builder-client.tsx` is a client component that must import from `lib/sections/meta.ts` not `lib/sections/registry.ts` to avoid importing `next/headers` on the client side.
+- Menus manager completely rewritten from simple dialog to full two-panel CMS editor
+- Added drag-and-drop reordering for menu items
+- Integrated module nav pool system for item selection
+- Added badge support for menu items
+- Added open-in-new-tab toggle for links
+- Improved editor UI/UX for better usability
 
 ---
 
-## Sprint 1 — 2026-06-26
+## [2026-06-26] - Production Readiness Audit (Late)
+
+### Security
+- **SECURITY FIX**: Added `requireAdminApi()` to GET endpoints on `page-sections` and `content-pages` (were publicly accessible)
+
+### Fixed
+- **BUG**: Homepage builder `moveSection()` and `toggleEnabled()` now persist via Supabase (previously updated only local state)
+- **SEO**: Airport-transfers listing page converted from static metadata to dynamic `generateMetadata()` + `fetchSeoContext()`
+- **UI**: Replaced native `<select>` elements with shadcn `Select` component in `content-pages/new`
+- **BUILD**: Removed duplicate Icon import that broke build (`ImageIcon2` in `page-builder-client.tsx`)
+
+### Changed
+- Added `logActivity()` calls to `page-sections` and `content-pages` API routes for audit trail
+- Added input validation (field allowlists) to `page-sections/[id]` and `content-pages/[id]` PATCH routes
+- Template section creation refactored from sequential loop to parallel `Promise.all()`
+
+---
+
+## [2026-06-26] - Sprint 7: Media Library Integration (Mid)
 
 ### Added
-- Complete Next.js App Router project structure
+- Media library integration in page builder
+- Image picker component with search capability
+- Auto-recognition of image fields in sections
+- Multi-image gallery support
+- Copy image URL functionality
+
+---
+
+## [2026-06-26] - Sprint 6: Package Detail V2 with PageRenderer (Mid)
+
+### Added
+- Package detail pages now wrapped with `<PageRenderer>`
+- Section-based itinerary display
+- Section-based pricing display
+- Section-based FAQ display
+
+### Changed
+- Package detail page architecture migrated to PageRenderer pattern
+
+---
+
+## [2026-06-26] - Sprint 5: Pool-Aware Mega-Menu (Mid)
+
+### Added
+- Pool-aware mega-menu in header with image card dropdowns
+- Desktop: 3-column grid dropdowns for tour/vehicle/transfer menus (up to 6 items with badges)
+- Mobile: accordion-style menu with pool items as text links
+- Homepage builder live editing with section toggle/reorder/configure
+- `fetchNavWithPool()` helper for parallel menu + pool fetching
+
+### Fixed
+- Multiple section component bugs
+
+---
+
+## [2026-06-26] - Sprint 4: Section Component Data Integration (Mid)
+
+### Added
+- Real data integration for all 22 section components
+- Database queries for: `package_grid`, `destination_grid`, `vehicle_grid`, `transfer_grid`
+- Database queries for: `testimonials`, `blog_grid`, `faq` (with `source: 'db'`)
+- Theme-aware WhatsApp integration in `cta_banner` and `whatsapp_cta`
+
+### Changed
+- All data-driven sections now query live database
+- Sections fetch from `theme_settings` for dynamic values
+
+---
+
+## [2026-06-26] - Sprint 3: PageRenderer and Seed Data (Mid)
+
+### Added
+- `PageRenderer` with fallback pattern deployed to all module detail pages
+- Detail pages for: destinations, vehicles, routes, packages (initial)
+- Pool-aware navigation system in `lib/nav/fetch.ts`
+- Comprehensive seed data (migration 0004):
+  - 8 destinations with full details
+  - 6 tour packages with inclusions/exclusions
+  - 4 vehicles with luggage capacity
+  - 3 airport routes with JSON-B vehicle pricing
+  - 6 testimonials, 3 blog posts, 11 nav pool entries
+
+### Changed
+- Detail page architecture upgraded to progressive enhancement pattern
+
+---
+
+## [2026-06-26] - Sprint 2: Admin Page System and Section Builder (Mid)
+
+### Added
+- Content Pages system (`content_pages` table)
+- Admin Content Pages manager at `/admin/content-pages`
+- Full page builder with 22 section types (add, reorder, toggle, edit, delete)
+- Section templates system (9 pre-built templates)
+- Nav Pool auto-sync for content entities
+- Migration 0003: Seeded 4 content pages with 26 sections
+
+### Changed
+- Page management system redesigned with section-based architecture
+
+---
+
+## [2026-06-26] - Sprint 1: Initial Release (Early)
+
+### Added
+- Next.js 13.5 App Router project structure
 - Supabase integration (public, server, admin clients)
-- Full platform database schema (`0001_divine_travel_schema.sql`):
-  - All core tables with RLS enabled
-  - `touch_updated_at()` trigger function
-  - Polymorphic `page_sections` table (initially with `page_id`, renamed in Sprint 2)
-- All public-facing pages:
-  - Homepage with section-based HomepageBuilder
-  - Divine/domestic/international tours listing and detail
-  - Packages listing and full detail (itinerary, pricing, inquiry form)
-  - Vehicle rentals listing and detail
-  - Airport transfers listing and detail
-  - Blog listing and post detail (ToC, reading time)
-  - Contact, hotel assistance, gallery, FAQ, testimonials
-  - Dynamic CMS page renderer (`/[slug]`)
-  - Sitemap.xml and robots.txt
+- Complete database schema (`0001_divine_travel_schema.sql`):
+  - 20+ tables with RLS enabled
+  - Polymorphic `page_sections` table
+  - Triggers for `updated_at` management
+- Public pages:
+  - Homepage with section-based builder
+  - Tour listings (divine/domestic/international) and details
+  - Packages with full itinerary/pricing/FAQs
+  - Vehicle rentals and airport transfers
+  - Blog with table of contents and reading time
+  - Contact, gallery, FAQ, testimonials, hotel assistance
+  - Dynamic CMS renderer, sitemap, robots.txt
 - Complete admin panel:
-  - Login with Supabase Auth
-  - Protected layout with middleware + server guard
-  - Dashboard with stats cards
-  - Full CRUD for all content types
-  - Lead management (kanban + table + drawer + notes)
-  - Navigation menu editor
-  - SEO pages manager
-  - Site settings and theme editor
-  - Media library
-  - Activity log
-- SEO architecture:
-  - Three-level override system
-  - `buildMetadata()` and `fetchSeoContext()` helpers
-  - Full OG + Twitter card metadata
-  - JSON-LD structured data component
-- UTM tracking and cookie setter
-- Universal enquiry engine (`/api/leads`)
-- Activity logging on all admin mutations
-- 22 section components (accepting config props)
-- Middleware for auth-protected admin routes
-- Breadcrumb component with schema.org support
+  - Supabase Auth login and protected layout
+  - CRUD for all content types
+  - Lead management (kanban/table/drawer/notes)
+  - Navigation editor, SEO manager, theme editor
+  - Media library and activity log
+- SEO architecture with three-level override system
+- UTM tracking and universal enquiry engine (`/api/leads`)
+- 22 section components with config-driven rendering
+- Activity logging on all mutations
 
 ### Database Changes
-- **Migration `0001_divine_travel_schema.sql`** — full schema
-- **Migration `0002_fix_page_sections_polymorphic.sql`** — renamed `page_id` to `entity_id`, added `entity_type` column, updated index
+- Migration `0001_divine_travel_schema.sql` — complete schema setup
+- Migration `0002_fix_page_sections_polymorphic.sql` — polymorphic table fix
 
-### Fixed
-- Sprint 1 audit fixes (see Sprint 2 Fixed section — applied in same session)
+---
 
-### Notes
-- Theme colours, WhatsApp number, and contact details are configurable via `/admin/theme` without redeploy
-- Analytics IDs (GTM, GA4, Meta Pixel) are configurable via `/admin/site-settings`
+## [2026-06-23] - Sprint 0: Project Bootstrap
+
+### Added
+- Project structure and tooling
+- Database schema design (20+ tables)
+- Supabase Auth setup
+- Admin layout (sidebar, topbar) and login page
+- Migration `0001_divine_travel_schema.sql` with:
+  - All core tables (destinations, packages, vehicles, etc.)
+  - RLS policies on all tables
+  - Database triggers for common operations
+  - Theme and site settings tables
