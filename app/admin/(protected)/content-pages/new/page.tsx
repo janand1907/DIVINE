@@ -8,6 +8,13 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { ArrowLeft, Save, Loader as Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { getTemplateNames, TEMPLATES } from '@/lib/sections/templates';
 
 const PAGE_TYPES = ['general', 'landing', 'module', 'category'] as const;
@@ -95,21 +102,23 @@ export default function ContentPageFormPage() {
 
       if (!editId && template !== 'blank') {
         const sections = TEMPLATES[template] || [];
-        for (let i = 0; i < sections.length; i++) {
-          await fetch('/api/admin/page-sections', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              entity_type: 'content_page',
-              entity_id: data.id,
-              section_type: sections[i].section_type,
-              label: sections[i].label,
-              config: sections[i].config,
-              display_order: i,
-              is_enabled: true,
+        await Promise.all(
+          sections.map((section, i) =>
+            fetch('/api/admin/page-sections', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                entity_type: 'content_page',
+                entity_id: data.id,
+                section_type: section.section_type,
+                label: section.label,
+                config: section.config,
+                display_order: i,
+                is_enabled: true,
+              }),
             }),
-          });
-        }
+          ),
+        );
       }
 
       toast.success(editId ? 'Page updated' : 'Page created');
@@ -152,31 +161,35 @@ export default function ContentPageFormPage() {
             <Input id="slug" value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="about-us" />
           </div>
           <div className="grid gap-1.5">
-            <Label htmlFor="page_type">Page Type</Label>
-            <select
-              id="page_type"
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-              value={form.page_type}
-              onChange={e => setForm(f => ({ ...f, page_type: e.target.value }))}
-            >
-              {PAGE_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
+            <Label>Page Type</Label>
+            <Select value={form.page_type} onValueChange={v => setForm(f => ({ ...f, page_type: v }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                {PAGE_TYPES.map(t => (
+                  <SelectItem key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 
         {!editId && (
           <div className="grid gap-1.5">
-            <Label htmlFor="template">Start from Template</Label>
-            <select
-              id="template"
-              className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
-              value={template}
-              onChange={e => setTemplate(e.target.value)}
-            >
-              {getTemplateNames().map(t => (
-                <option key={t} value={t}>{t.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</option>
-              ))}
-            </select>
+            <Label>Start from Template</Label>
+            <Select value={template} onValueChange={setTemplate}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select template" />
+              </SelectTrigger>
+              <SelectContent>
+                {getTemplateNames().map(t => (
+                  <SelectItem key={t} value={t}>
+                    {t.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <p className="text-xs text-muted-foreground">
               Template creates pre-configured sections you can customize in the builder.
             </p>

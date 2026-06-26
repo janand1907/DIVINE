@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
+import { logActivity } from '@/lib/activity/log';
 
 export async function GET(request: Request) {
+  const session = await requireAdminApi();
+  if (session instanceof NextResponse) return session;
+
   const { searchParams } = new URL(request.url);
   const entityType = searchParams.get('entity_type') || '';
   const entityId = searchParams.get('entity_id') || '';
@@ -28,6 +32,11 @@ export async function POST(request: Request) {
   if (session instanceof NextResponse) return session;
 
   const body = await request.json();
+
+  if (!body.entity_type || !body.entity_id || !body.section_type) {
+    return NextResponse.json({ error: 'entity_type, entity_id, and section_type are required' }, { status: 422 });
+  }
+
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
@@ -45,5 +54,6 @@ export async function POST(request: Request) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  await logActivity({ action: 'create', entity: 'page_section', entityId: data.id, metadata: { entity_type: data.entity_type, section_type: data.section_type }, userEmail: session.email });
   return NextResponse.json(data, { status: 201 });
 }

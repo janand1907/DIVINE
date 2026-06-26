@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Loader2, Save, ArrowUp, ArrowDown, Eye } from 'lucide-react';
+import { Loader as Loader2, Save, ArrowUp, ArrowDown, Eye } from 'lucide-react';
 import { toast } from 'sonner';
 import Link from 'next/link';
 
@@ -43,11 +43,22 @@ export function HomepageBuilderClient({ sections }: HomepageBuilderClientProps) 
     );
   };
 
-  const toggleEnabled = (id: string, enabled: boolean) => {
+  const toggleEnabled = async (id: string, enabled: boolean) => {
     setItems((prev) => prev.map((s) => (s.id === id ? { ...s, is_enabled: enabled } : s)));
+    try {
+      const { error } = await supabase
+        .from('homepage_sections')
+        .update({ is_enabled: enabled })
+        .eq('id', id);
+      if (error) throw error;
+    } catch {
+      setItems((prev) => prev.map((s) => (s.id === id ? { ...s, is_enabled: !enabled } : s)));
+      toast.error('Failed to update visibility.');
+    }
   };
 
-  const move = (id: string, direction: 'up' | 'down') => {
+  const move = async (id: string, direction: 'up' | 'down') => {
+    let updates: { id: string; display_order: number }[] = [];
     setItems((prev) => {
       const sorted = [...prev].sort((a, b) => a.display_order - b.display_order);
       const idx = sorted.findIndex((s) => s.id === id);
@@ -55,10 +66,25 @@ export function HomepageBuilderClient({ sections }: HomepageBuilderClientProps) 
       const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
       if (swapIdx < 0 || swapIdx >= sorted.length) return prev;
       const currentOrder = sorted[idx].display_order;
-      sorted[idx].display_order = sorted[swapIdx].display_order;
-      sorted[swapIdx].display_order = currentOrder;
+      sorted[idx] = { ...sorted[idx], display_order: sorted[swapIdx].display_order };
+      sorted[swapIdx] = { ...sorted[swapIdx], display_order: currentOrder };
+      updates = [
+        { id: sorted[idx].id, display_order: sorted[idx].display_order },
+        { id: sorted[swapIdx].id, display_order: sorted[swapIdx].display_order },
+      ];
       return [...sorted];
     });
+    if (updates.length > 0) {
+      try {
+        await Promise.all(
+          updates.map(({ id: uid, display_order }) =>
+            supabase.from('homepage_sections').update({ display_order }).eq('id', uid),
+          ),
+        );
+      } catch {
+        toast.error('Failed to save order. Please refresh.');
+      }
+    }
   };
 
   const saveSection = async (section: HomepageSection) => {

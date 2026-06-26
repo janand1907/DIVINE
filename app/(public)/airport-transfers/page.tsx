@@ -1,16 +1,22 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
+import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { MapPin, Clock, Car } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/layout/section-heading';
 import type { AirportRouteRow } from '@/types/database';
 
-export const metadata: Metadata = {
-  title: 'Airport & City Transfers | Divine Travel',
-  description: 'Reliable cab transfers between Chennai, Trichy, Madurai, Bangalore and Tirupati. Fixed prices, AC cars, expert drivers for pilgrimages and travel.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { theme, site, seoPage } = await fetchSeoContext('/airport-transfers');
+  return buildMetadata({
+    path: '/airport-transfers',
+    title: 'Airport & City Transfers',
+    description: 'Reliable cab transfers between Chennai, Trichy, Madurai, Bangalore and Tirupati. Fixed prices, AC cars, expert drivers for pilgrimages and travel.',
+    theme, site, seoPage,
+  });
+}
 
 export default async function AirportTransfersPage() {
   const supabase = createPublicClient();

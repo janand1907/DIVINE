@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { requireAdminApi } from '@/lib/admin/api-guard';
+import { logActivity } from '@/lib/activity/log';
 import type { ContentPageRow } from '@/types/database';
 
 export async function GET() {
+  const session = await requireAdminApi();
+  if (session instanceof NextResponse) return session;
+
   const supabase = createAdminClient();
   const { data, error } = await supabase
     .from('content_pages')
@@ -19,6 +23,11 @@ export async function POST(request: Request) {
   if (session instanceof NextResponse) return session;
 
   const body = await request.json();
+
+  if (!body.title?.trim() || !body.slug?.trim()) {
+    return NextResponse.json({ error: 'title and slug are required' }, { status: 422 });
+  }
+
   const supabase = createAdminClient();
 
   const { data, error } = await supabase
@@ -43,5 +52,6 @@ export async function POST(request: Request) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
+  await logActivity({ action: 'create', entity: 'content_page', entityId: data.id, metadata: { title: data.title, slug: data.slug }, userEmail: session.email });
   return NextResponse.json(data, { status: 201 });
 }
