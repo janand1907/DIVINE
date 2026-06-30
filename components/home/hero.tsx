@@ -24,25 +24,21 @@ const CAROUSEL_IMAGES = [
     src: 'https://images.pexels.com/photos/3596389/pexels-photo-3596389.jpeg?auto=compress&cs=tinysrgb&w=1600',
     alt: 'Sacred temple at sunrise',
     title: 'Divine Pilgrimage Tours',
-    subtitle: 'Spiritual journeys crafted with care',
   },
   {
     src: 'https://images.pexels.com/photos/2412603/pexels-photo-2412603.jpeg?auto=compress&cs=tinysrgb&w=1600',
     alt: 'Kerala backwaters',
     title: 'Kerala Backwaters',
-    subtitle: 'Serene houseboats & lush landscapes',
   },
   {
     src: 'https://images.pexels.com/photos/1308940/pexels-photo-1308940.jpeg?auto=compress&cs=tinysrgb&w=1600',
     alt: 'Himalayan peaks',
     title: 'Himalayan Escapes',
-    subtitle: 'Majestic peaks & mountain valleys',
   },
   {
     src: 'https://images.pexels.com/photos/2901209/pexels-photo-2901209.jpeg?auto=compress&cs=tinysrgb&w=1600',
     alt: 'Royal Rajasthan palace',
     title: 'Royal Rajasthan',
-    subtitle: 'Palaces, forts & golden deserts',
   },
 ];
 
@@ -60,6 +56,7 @@ interface HeroProps {
 }
 
 export function Hero({ title, subtitle, whatsappNumber }: HeroProps) {
+  /* ── Carousel ─────────────────────────────────────────────────────── */
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -74,8 +71,9 @@ export function Hero({ title, subtitle, whatsappNumber }: HeroProps) {
   useEffect(() => {
     timerRef.current = setTimeout(() => goTo(current + 1), 5500);
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [current]);
+  }, [current]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  /* ── Form ─────────────────────────────────────────────────────────── */
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -89,7 +87,7 @@ export function Hero({ title, subtitle, whatsappNumber }: HeroProps) {
     },
   });
 
-  const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}?text=Hi, I'd like to plan a tour.`;
+  const waHref = `https://wa.me/${whatsappNumber.replace(/[^\d]/g, '')}?text=Hi%2C%20I%27d%20like%20to%20plan%20a%20tour.`;
 
   const onSubmit = async (values: LeadInput) => {
     setSubmitting(true);
@@ -115,9 +113,21 @@ export function Hero({ title, subtitle, whatsappNumber }: HeroProps) {
   };
 
   return (
-    <section className="relative isolate h-[780px] min-h-[600px] overflow-hidden lg:h-[820px]">
-      {/* ── Background Slider ─────────────────────────────────────────── */}
-      <div className="absolute inset-0 -z-10">
+    /* Outer wrapper — visible overflow so the form can bleed below the hero */
+    <div className="relative">
+
+      {/* ── Background slider section ──────────────────────────────────
+          Height uses clamp() for fluid responsive sizing:
+          - min  460px  (small mobile)
+          - preferred  65vh  (scales with viewport height)
+          - max  740px  (large desktop)
+      ──────────────────────────────────────────────────────────────── */}
+      <section
+        aria-label="Hero banner"
+        className="relative overflow-hidden"
+        style={{ height: 'clamp(460px, 65vh, 740px)' }}
+      >
+        {/* Slides */}
         {CAROUSEL_IMAGES.map((img, idx) => (
           <div
             key={img.src}
@@ -125,6 +135,7 @@ export function Hero({ title, subtitle, whatsappNumber }: HeroProps) {
               'absolute inset-0 transition-opacity duration-700 ease-in-out',
               idx === current ? 'opacity-100' : 'opacity-0',
             )}
+            aria-hidden={idx !== current}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -135,164 +146,183 @@ export function Hero({ title, subtitle, whatsappNumber }: HeroProps) {
             />
           </div>
         ))}
-        {/* Dark overlay */}
+
+        {/* Dark overlay — 55% opacity */}
         <div className="absolute inset-0 bg-black/55" />
-        {/* Bottom gradient for readability */}
-        <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/60 to-transparent" />
-      </div>
 
-      {/* ── Slide captions (top-left area) ────────────────────────────── */}
-      <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 pointer-events-none px-6 lg:px-16">
-        <div className="max-w-lg">
-          <p className="mb-3 inline-block rounded-full bg-white/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
-            Premium Pilgrimage &amp; Tours
-          </p>
-          <h1 className="font-heading text-4xl font-bold leading-tight text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.4)] sm:text-5xl lg:text-6xl">
-            {title}
-          </h1>
-          <p className="mt-3 text-lg text-white/85 [text-shadow:0_1px_8px_rgba(0,0,0,0.4)]">
-            {subtitle}
-          </p>
+        {/* Bottom gradient for extra text lift */}
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black/40 to-transparent" />
+
+        {/* ── Heading — vertically centered, nudged above mid ── */}
+        <div
+          className="absolute inset-0 z-10 flex flex-col justify-center px-5 sm:px-10 lg:px-16"
+          /* padding-bottom shifts content slightly above true center */
+          style={{ paddingBottom: 'clamp(40px, 8vh, 80px)' }}
+        >
+          <div className="max-w-xl">
+            <span className="mb-3 inline-block rounded-full bg-white/15 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-widest text-white backdrop-blur-sm">
+              Premium Pilgrimage &amp; Tours
+            </span>
+            <h1 className="font-heading text-3xl font-bold leading-tight text-white [text-shadow:0_2px_16px_rgba(0,0,0,0.45)] sm:text-4xl lg:text-5xl xl:text-[3.25rem]">
+              {title}
+            </h1>
+            <p className="mt-3 text-base text-white/85 [text-shadow:0_1px_8px_rgba(0,0,0,0.4)] sm:text-lg">
+              {subtitle}
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* ── Carousel controls ─────────────────────────────────────────── */}
-      <button
-        type="button"
-        onClick={() => goTo(current - 1)}
-        className="absolute left-4 top-1/2 z-10 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white lg:left-6"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </button>
-      <button
-        type="button"
-        onClick={() => goTo(current + 1)}
-        className="absolute right-4 top-1/2 z-10 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white lg:right-6"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-5 w-5" />
-      </button>
+        {/* ── Prev / Next arrows ── */}
+        <button
+          type="button"
+          onClick={() => goTo(current - 1)}
+          className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:left-5 sm:h-10 sm:w-10"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <button
+          type="button"
+          onClick={() => goTo(current + 1)}
+          className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition hover:bg-black/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:right-5 sm:h-10 sm:w-10"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
 
-      {/* Dot indicators */}
-      <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 lg:bottom-8">
-        {CAROUSEL_IMAGES.map((_, idx) => (
-          <button
-            key={idx}
-            type="button"
-            onClick={() => goTo(idx)}
-            className={cn(
-              'h-1.5 rounded-full transition-all duration-300',
-              idx === current ? 'w-8 bg-white' : 'w-1.5 bg-white/45 hover:bg-white/70',
-            )}
-            aria-label={`Go to slide ${idx + 1}`}
-          />
-        ))}
-      </div>
+        {/* ── Dot indicators — kept well above the overlap zone ── */}
+        <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
+          {CAROUSEL_IMAGES.map((_, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => goTo(idx)}
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-300',
+                idx === current ? 'w-7 bg-white' : 'w-1.5 bg-white/45 hover:bg-white/70',
+              )}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </section>
 
-      {/* ── Floating Enquiry Form ──────────────────────────────────────── */}
-      <div className="absolute inset-x-0 bottom-0 z-20 flex justify-center px-4 pb-10 lg:pb-14">
-        <div className="w-full max-w-3xl rounded-2xl bg-white/95 p-5 shadow-[0_20px_60px_rgba(0,0,0,0.35)] backdrop-blur-md sm:p-6 lg:rounded-[20px]">
-          {success ? (
-            <div className="flex flex-col items-center py-4 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <CheckCircle2 className="h-6 w-6 text-primary" />
+      {/* ── Enquiry form — overlaps hero bottom by ~56px ───────────────
+          -mt-14 = 56px negative margin pulls the card up into the hero.
+          relative + z-20 keeps it above the hero background.
+      ──────────────────────────────────────────────────────────────── */}
+      <div className="relative z-20 -mt-14 px-4 pb-10 sm:px-6">
+        <div className="mx-auto max-w-3xl">
+          <div className="rounded-2xl bg-white p-5 shadow-[0_8px_40px_rgba(0,0,0,0.18)] sm:p-6">
+            {success ? (
+              <div className="flex flex-col items-center py-4 text-center">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <CheckCircle2 className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="mt-3 font-heading text-lg font-semibold text-foreground">
+                  We&apos;ve received your request!
+                </h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Our travel expert will reach out within 24 hours.
+                </p>
+                <Button variant="outline" size="sm" className="mt-4" onClick={() => setSuccess(false)}>
+                  Submit another
+                </Button>
               </div>
-              <h3 className="mt-3 font-heading text-lg font-semibold text-foreground">
-                We&apos;ve received your request!
-              </h3>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Our travel expert will reach out within 24 hours.
-              </p>
-              <Button variant="outline" size="sm" className="mt-4" onClick={() => setSuccess(false)}>
-                Submit another
-              </Button>
-            </div>
-          ) : (
-            <>
-              <p className="mb-4 text-center text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
-                Plan Your Perfect Trip
-              </p>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {/* Destination */}
-                  <div className="space-y-1.5">
-                    <Label htmlFor="hero-destination" className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                      <MapPin className="h-3 w-3 text-primary" /> Destination
-                    </Label>
-                    <select
-                      id="hero-destination"
-                      className="flex h-11 w-full appearance-none rounded-[var(--radius-md)] border-[1.5px] border-input bg-background px-3 text-sm text-foreground transition-[border-color,box-shadow] hover:border-primary/45 focus:border-primary/70 focus:shadow-[0_0_0_3px_rgba(var(--primary-rgb)/0.10)] focus:outline-none"
-                      {...form.register('destination')}
+            ) : (
+              <>
+                <p className="mb-4 text-center text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+                  Plan Your Perfect Trip
+                </p>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    {/* Destination */}
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor="hero-destination"
+                        className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
+                      >
+                        <MapPin className="h-3 w-3 text-primary" /> Destination
+                      </Label>
+                      <select
+                        id="hero-destination"
+                        className="flex h-11 w-full appearance-none rounded-[var(--radius-md)] border-[1.5px] border-input bg-background px-3 text-sm text-foreground transition-[border-color,box-shadow] hover:border-primary/45 focus:border-primary/70 focus:shadow-[0_0_0_3px_rgba(var(--primary-rgb)/0.10)] focus:outline-none"
+                        {...form.register('destination')}
+                      >
+                        <option value="">Where do you want to go?</option>
+                        {DESTINATIONS.map((d) => (
+                          <option key={d} value={d}>{d}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Travel Date */}
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor="hero-date"
+                        className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
+                      >
+                        <Calendar className="h-3 w-3 text-primary" /> Travel Date
+                      </Label>
+                      <Input
+                        id="hero-date"
+                        type="date"
+                        className="h-11"
+                        {...form.register('travel_date')}
+                      />
+                    </div>
+
+                    {/* Travellers */}
+                    <div className="space-y-1.5">
+                      <Label
+                        htmlFor="hero-travellers"
+                        className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
+                      >
+                        <Users className="h-3 w-3 text-primary" /> Travellers
+                      </Label>
+                      <Input
+                        id="hero-travellers"
+                        type="number"
+                        min={1}
+                        placeholder="e.g. 2"
+                        className="h-11"
+                        {...form.register('adults', { valueAsNumber: true })}
+                      />
+                    </div>
+                  </div>
+
+                  {serverError && (
+                    <p className="mt-3 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                      {serverError}
+                    </p>
+                  )}
+
+                  <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                    <Button
+                      type="submit"
+                      loading={submitting}
+                      size="lg"
+                      className="flex-1 gap-2 text-sm font-semibold"
                     >
-                      <option value="">Where do you want to go?</option>
-                      {DESTINATIONS.map((d) => (
-                        <option key={d} value={d}>{d}</option>
-                      ))}
-                    </select>
-                    {form.formState.errors.destination && (
-                      <p className="text-[11px] text-destructive">{form.formState.errors.destination.message}</p>
-                    )}
+                      <Search className="h-4 w-4" />
+                      Search Tours
+                    </Button>
+                    <a
+                      href={waHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg border-2 border-[#25D366] px-6 text-sm font-semibold text-[#25D366] transition-colors hover:bg-[#25D366] hover:text-white"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      Get Free Quote
+                    </a>
                   </div>
-
-                  {/* Travel Date */}
-                  <div className="space-y-1.5">
-                    <Label htmlFor="hero-date" className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                      <Calendar className="h-3 w-3 text-primary" /> Travel Date
-                    </Label>
-                    <Input
-                      id="hero-date"
-                      type="date"
-                      className="h-11"
-                      {...form.register('travel_date')}
-                    />
-                  </div>
-
-                  {/* Travellers */}
-                  <div className="space-y-1.5">
-                    <Label htmlFor="hero-travellers" className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                      <Users className="h-3 w-3 text-primary" /> Travellers
-                    </Label>
-                    <Input
-                      id="hero-travellers"
-                      type="number"
-                      min={1}
-                      placeholder="e.g. 2"
-                      className="h-11"
-                      {...form.register('adults', { valueAsNumber: true })}
-                    />
-                  </div>
-                </div>
-
-                {serverError && (
-                  <p className="mt-3 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{serverError}</p>
-                )}
-
-                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                  <Button
-                    type="submit"
-                    loading={submitting}
-                    size="lg"
-                    className="flex-1 gap-2 text-sm font-semibold"
-                  >
-                    <Search className="h-4 w-4" />
-                    Search Tours
-                  </Button>
-                  <a
-                    href={waHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg border-2 border-[#25D366] px-6 text-sm font-semibold text-[#25D366] transition-colors hover:bg-[#25D366] hover:text-white"
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    Get Free Quote
-                  </a>
-                </div>
-              </form>
-            </>
-          )}
+                </form>
+              </>
+            )}
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }
