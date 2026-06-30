@@ -68,7 +68,7 @@ export default async function PackageDetailPage({ params }: Props) {
     .limit(3)
     .returns<PackageRow[]>();
 
-  const cover = pkg.cover_image ?? pkg.gallery?.[0] ?? 'https://images.pexels.com/photos/3596389/pexels-photo-3596389.jpeg?auto=compress&cs=tinysrgb&w=1600';
+  const cover = pkg.cover_image ?? pkg.gallery?.[0] ?? 'https://images.pexels.com/photos/3225531/pexels-photo-3225531.jpeg?auto=compress&cs=tinysrgb&w=1600';
 
   const breadcrumbs = [
     { name: 'Home', url: '/' },

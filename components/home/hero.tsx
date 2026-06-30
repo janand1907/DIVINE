@@ -21,23 +21,23 @@ import { Input } from '@/components/ui/input';
 
 const CAROUSEL_IMAGES = [
   {
-    src: 'https://images.pexels.com/photos/3596389/pexels-photo-3596389.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    alt: 'Sacred temple at sunrise',
+    src: 'https://images.pexels.com/photos/3757144/pexels-photo-3757144.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Ancient temple at golden hour',
     title: 'Divine Pilgrimage Tours',
   },
   {
-    src: 'https://images.pexels.com/photos/2412603/pexels-photo-2412603.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    alt: 'Kerala backwaters',
+    src: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Kerala houseboat on backwaters',
     title: 'Kerala Backwaters',
   },
   {
-    src: 'https://images.pexels.com/photos/1308940/pexels-photo-1308940.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    alt: 'Himalayan peaks',
+    src: 'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Snow-capped Himalayan peaks',
     title: 'Himalayan Escapes',
   },
   {
-    src: 'https://images.pexels.com/photos/2901209/pexels-photo-2901209.jpeg?auto=compress&cs=tinysrgb&w=1600',
-    alt: 'Royal Rajasthan palace',
+    src: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=1600',
+    alt: 'Royal Rajasthan palace at dusk',
     title: 'Royal Rajasthan',
   },
 ];

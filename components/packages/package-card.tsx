@@ -10,7 +10,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
   const cover =
     pkg.cover_image ??
     pkg.gallery?.[0] ??
-    'https://images.pexels.com/photos/2901215/pexels-photo-2901215.jpeg?auto=compress&cs=tinysrgb&w=800';
+    'https://images.pexels.com/photos/1271619/pexels-photo-1271619.jpeg?auto=compress&cs=tinysrgb&w=800';
   const href = pkg.canonical_path ?? `/packages/${pkg.slug}`;
 
   return (

@@ -10,9 +10,9 @@ interface BlogSectionProps {
 }
 
 const fallbackCovers = [
-  'https://images.pexels.com/photos/3596389/pexels-photo-3596389.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/2412603/pexels-photo-2412603.jpeg?auto=compress&cs=tinysrgb&w=800',
-  'https://images.pexels.com/photos/1308940/pexels-photo-1308940.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/2361/nature-sunset-golden-hour-agriculture.jpg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/1007427/pexels-photo-1007427.jpeg?auto=compress&cs=tinysrgb&w=800',
+  'https://images.pexels.com/photos/3581364/pexels-photo-3581364.jpeg?auto=compress&cs=tinysrgb&w=800',
 ];
 
 export function BlogSection({ heading, posts }: BlogSectionProps) {

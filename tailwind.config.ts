@@ -127,9 +127,9 @@ const config: Config = {
 
       /* ── Typography ── */
       fontFamily: {
-        heading: ['var(--font-poppins)', 'Poppins', 'system-ui', 'sans-serif'],
-        body:    ['var(--font-inter)',   'Inter',   'system-ui', 'sans-serif'],
-        sans:    ['var(--font-inter)',   'Inter',   'system-ui', 'sans-serif'],
+        heading: ['var(--font-cormorant)', 'Cormorant Garamond', 'Georgia', 'serif'],
+        body:    ['var(--font-manrope)',   'Manrope',   'system-ui', 'sans-serif'],
+        sans:    ['var(--font-manrope)',   'Manrope',   'system-ui', 'sans-serif'],
       },
       fontSize: {
         display:   ['clamp(2.5rem, 6vw, 4rem)',        { lineHeight: '1.1', fontWeight: '700' }],

@@ -38,7 +38,7 @@ export default async function BlogPage({ searchParams }: Props) {
   }
   const { data: posts } = await query.order('published_at', { ascending: false }).returns<BlogRow[]>();
 
-  const fallbackCover = 'https://images.pexels.com/photos/3596389/pexels-photo-3596389.jpeg?auto=compress&cs=tinysrgb&w=800';
+  const fallbackCover = 'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=800';
 
   return (
     <>

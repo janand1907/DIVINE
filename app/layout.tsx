@@ -1,14 +1,25 @@
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter, Poppins } from 'next/font/google';
+import { Cormorant_Garamond, Manrope } from 'next/font/google';
 import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { organizationJsonLd, jsonLdScript } from '@/lib/seo/json-ld';
 import { ThemeProvider, type Branding } from '@/lib/theme/theme-provider';
 import UtmCookieSetter from '@/components/analytics/utm-cookie-setter';
 import AnalyticsHead from '@/components/analytics/analytics-head';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
-const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-poppins', display: 'swap' });
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-cormorant',
+  display: 'swap',
+});
+
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const { theme, site, seoPage } = await fetchSeoContext('/');
@@ -42,7 +53,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   });
 
   return (
-    <html lang="en" className={`${inter.variable} ${poppins.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${cormorant.variable} ${manrope.variable}`} suppressHydrationWarning>
       <body className="font-body antialiased">
         <ThemeProvider branding={branding}>
           <AnalyticsHead

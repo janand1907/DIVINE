@@ -203,7 +203,7 @@ export function PageBuilderClient({ page, initialSections }: Props) {
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" asChild>
-            <Link href={`/${page.slug}`} target="_blank">
+            <Link href={`/${page.slug}?preview=true`} target="_blank">
               <ExternalLink className="mr-1.5 h-3.5 w-3.5" /> Preview
             </Link>
           </Button>

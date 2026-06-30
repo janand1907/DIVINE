@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { createPublicClient } from '@/lib/supabase/server';
+import { createPublicClient, createAdminClient } from '@/lib/supabase/server';
+import { createServerClient } from '@/lib/supabase/server';
 import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
 import { PageRenderer } from '@/components/sections/page-renderer';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,21 @@ import type { ContentPageRow, CmsPageRow, FaqItem } from '@/types/database';
 
 export const dynamic = 'force-dynamic';
 
-interface Props { params: { slug: string } }
+interface Props {
+  params: { slug: string };
+  searchParams: { preview?: string };
+}
+
+/** Check if the current user has an active admin session (no redirect on failure). */
+async function isAdminSession(): Promise<boolean> {
+  try {
+    const supabase = await createServerClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    return !!user;
+  } catch {
+    return false;
+  }
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = createPublicClient();
@@ -55,30 +70,72 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function DynamicPage({ params }: Props) {
-  const supabase = createPublicClient();
+export default async function DynamicPage({ params, searchParams }: Props) {
+  const isPreview = searchParams.preview === 'true' || searchParams.preview === '1';
+  const canPreview = isPreview && (await isAdminSession());
 
-  const { data: page } = await supabase
+  // Use admin client for preview (bypasses RLS / is_published filter)
+  const supabase = canPreview ? createAdminClient() : createPublicClient();
+
+  let pageQuery = supabase
     .from('content_pages')
     .select('*')
-    .eq('slug', params.slug)
-    .eq('is_published', true)
-    .maybeSingle<ContentPageRow>();
+    .eq('slug', params.slug);
 
-  if (page) {
-    return <PageRenderer entityType="content_page" entityId={page.id} />;
+  if (!canPreview) {
+    pageQuery = pageQuery.eq('is_published', true);
   }
 
-  const { data: legacy } = await supabase
+  const { data: page } = await pageQuery.maybeSingle<ContentPageRow>();
+
+  if (page) {
+    return (
+      <>
+        {canPreview && !page.is_published && (
+          <div className="sticky top-0 z-50 flex items-center justify-between bg-amber-500 px-4 py-2 text-sm font-medium text-white">
+            <span>Preview mode — this page is not yet published.</span>
+            <a
+              href={`/admin/content-pages/${page.id}/builder`}
+              className="underline hover:no-underline"
+            >
+              Back to Builder
+            </a>
+          </div>
+        )}
+        <PageRenderer entityType="content_page" entityId={page.id} />
+      </>
+    );
+  }
+
+  let legacyQuery = supabase
     .from('cms_pages')
     .select('*')
-    .eq('slug', params.slug)
-    .eq('is_published', true)
-    .maybeSingle<CmsPageRow>();
+    .eq('slug', params.slug);
+
+  if (!canPreview) {
+    legacyQuery = legacyQuery.eq('is_published', true);
+  }
+
+  const { data: legacy } = await legacyQuery.maybeSingle<CmsPageRow>();
 
   if (!legacy) notFound();
 
-  return <LegacyCmsPage page={legacy} />;
+  return (
+    <>
+      {canPreview && !legacy.is_published && (
+        <div className="sticky top-0 z-50 flex items-center justify-between bg-amber-500 px-4 py-2 text-sm font-medium text-white">
+          <span>Preview mode — this CMS page is not yet published.</span>
+          <a
+            href={`/admin/cms-pages/${legacy.id}/edit`}
+            className="underline hover:no-underline"
+          >
+            Back to Editor
+          </a>
+        </div>
+      )}
+      <LegacyCmsPage page={legacy} />
+    </>
+  );
 }
 
 function LegacyCmsPage({ page }: { page: CmsPageRow }) {
@@ -111,7 +168,7 @@ function LegacyCmsPage({ page }: { page: CmsPageRow }) {
         <section className="py-16">
           <div className="container-brand">
             <div
-              className="mx-auto max-w-3xl prose prose-lg max-w-none text-muted-foreground [&_h2]:font-heading [&_h2]:text-foreground [&_h3]:font-heading [&_h3]:text-foreground [&_strong]:text-foreground"
+              className="prose prose-lg mx-auto max-w-3xl text-muted-foreground [&_h2]:font-heading [&_h2]:text-foreground [&_h3]:font-heading [&_h3]:text-foreground [&_strong]:text-foreground"
               dangerouslySetInnerHTML={{ __html: page.content }}
             />
           </div>
@@ -137,7 +194,9 @@ function LegacyCmsPage({ page }: { page: CmsPageRow }) {
       {page.faqs.length > 0 && (
         <section className="py-16">
           <div className="container-brand">
-            <h2 className="mb-8 text-center font-heading text-2xl font-bold text-foreground">Frequently Asked Questions</h2>
+            <h2 className="mb-8 text-center font-heading text-2xl font-bold text-foreground">
+              Frequently Asked Questions
+            </h2>
             <div className="mx-auto max-w-2xl divide-y divide-border">
               {page.faqs.map((faq: FaqItem, i) => (
                 <details key={i} className="group py-5">
