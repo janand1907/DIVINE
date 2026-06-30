@@ -107,7 +107,7 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
           className="group flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0"
         >
           <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-brand-gradient text-white shadow-[var(--shadow-primary)] transition-transform duration-300 group-hover:scale-105">
-            <Sparkles className="h-4.5 w-4.5" aria-hidden="true" />
+            <Sparkles className="h-[18px] w-[18px]" aria-hidden="true" />
           </span>
           <span className={cn(
             'font-heading text-[17px] font-semibold leading-none tracking-tight transition-colors duration-300',
