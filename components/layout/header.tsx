@@ -95,7 +95,7 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
         'fixed inset-x-0 top-0 z-40 transition-all duration-300',
         scrolled
           ? 'bg-white/95 shadow-[0_2px_20px_rgba(0,0,0,0.08)] backdrop-blur-md'
-          : 'bg-transparent',
+          : 'bg-gradient-to-b from-black/50 to-transparent',
       )}
     >
       <div className="container-brand flex h-16 items-center justify-between gap-4 lg:h-[68px]">
@@ -110,8 +110,8 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
             <Sparkles className="h-[18px] w-[18px]" aria-hidden="true" />
           </span>
           <span className={cn(
-            'font-heading text-[17px] font-semibold leading-none tracking-tight transition-colors duration-300',
-            scrolled ? 'text-foreground' : 'text-white',
+            'font-heading text-[17px] font-semibold leading-none tracking-tight transition-colors duration-300 [text-shadow:0_1px_3px_rgba(0,0,0,0.3)]',
+            scrolled ? 'text-foreground [text-shadow:none]' : 'text-white',
           )}>
             {brandName}
           </span>
@@ -130,10 +130,10 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
               'relative px-3 py-2 text-[13.5px] font-medium transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg',
               scrolled
                 ? 'text-foreground/80 hover:text-foreground hover:bg-muted'
-                : 'text-white/90 hover:text-white hover:bg-white/10',
+                : 'text-white hover:text-white hover:bg-white/15 [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]',
               active && (scrolled
                 ? 'text-primary font-semibold'
-                : 'text-white font-semibold'),
+                : 'text-white font-semibold [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]'),
             );
 
             if (!hasItems && !hasMega) {
@@ -286,7 +286,7 @@ export function Header({ navMenus = [], pool = {} }: HeaderProps) {
               href={`tel:${contactPhone.replace(/[^\d+]/g, '')}`}
               className={cn(
                 'hidden items-center gap-1.5 rounded-lg px-3 py-2 text-[13px] font-medium transition-colors xl:flex',
-                scrolled ? 'text-foreground/70 hover:text-foreground' : 'text-white/80 hover:text-white',
+                scrolled ? 'text-foreground/70 hover:text-foreground' : 'text-white hover:text-white/80 [text-shadow:0_1px_3px_rgba(0,0,0,0.5)]',
               )}
             >
               <Phone className="h-3.5 w-3.5" />

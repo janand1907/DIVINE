@@ -34,9 +34,13 @@ export async function PATCH(request: Request, { params }: RouteParams) {
     'is_published', 'display_order', 'seo_title', 'seo_description',
     'og_image', 'canonical_path', 'robots_index', 'schema_type',
   ];
+  // UUID fields — empty string must become null to avoid postgres type error
+  const uuidFields = new Set(['entity_id']);
   const update: Record<string, unknown> = {};
   for (const key of allowed) {
-    if (key in body) update[key] = body[key];
+    if (key in body) {
+      update[key] = uuidFields.has(key) && body[key] === '' ? null : body[key];
+    }
   }
 
   if (Object.keys(update).length === 0) {
