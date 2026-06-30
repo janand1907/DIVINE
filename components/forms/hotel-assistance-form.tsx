@@ -6,8 +6,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { DatePicker } from '@/components/ui/date-picker';
 import { useToast } from '@/hooks/use-toast';
 import { CircleCheck as CheckCircle } from 'lucide-react';
+import { format } from 'date-fns';
 
 const BUDGET_OPTIONS = ['Under ₹1,000/night', '₹1,000–₹3,000/night', '₹3,000–₹7,000/night', '₹7,000–₹15,000/night', 'Above ₹15,000/night'];
 
@@ -25,14 +27,14 @@ export function HotelAssistanceForm({ cities }: HotelAssistanceFormProps) {
     mobile: '',
     email: '',
     city: '',
-    check_in: '',
-    check_out: '',
     rooms: '1',
     adults: '2',
     children: '0',
     budget: '',
     message: '',
   });
+  const [checkIn, setCheckIn] = useState<Date | undefined>();
+  const [checkOut, setCheckOut] = useState<Date | undefined>();
 
   const hasCities = cities && cities.length > 0;
 
@@ -67,8 +69,8 @@ export function HotelAssistanceForm({ cities }: HotelAssistanceFormProps) {
           source: 'hotel-assistance',
           hotel_data: {
             city: form.city,
-            check_in: form.check_in,
-            check_out: form.check_out,
+            check_in: checkIn ? format(checkIn, 'yyyy-MM-dd') : undefined,
+            check_out: checkOut ? format(checkOut, 'yyyy-MM-dd') : undefined,
             rooms: Number(form.rooms),
             budget: form.budget,
           },
@@ -152,12 +154,24 @@ export function HotelAssistanceForm({ cities }: HotelAssistanceFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="grid gap-1.5">
-          <Label htmlFor="check_in">Check-In Date *</Label>
-          <Input id="check_in" type="date" value={form.check_in} onChange={(e) => set('check_in', e.target.value)} required min={new Date().toISOString().split('T')[0]} />
+          <Label>Check-In Date *</Label>
+          <DatePicker
+            value={checkIn}
+            onChange={setCheckIn}
+            placeholder="Select check-in date"
+            fromDate={new Date()}
+            className="h-10"
+          />
         </div>
         <div className="grid gap-1.5">
-          <Label htmlFor="check_out">Check-Out Date *</Label>
-          <Input id="check_out" type="date" value={form.check_out} onChange={(e) => set('check_out', e.target.value)} required min={form.check_in || new Date().toISOString().split('T')[0]} />
+          <Label>Check-Out Date *</Label>
+          <DatePicker
+            value={checkOut}
+            onChange={setCheckOut}
+            placeholder="Select check-out date"
+            fromDate={checkIn ?? new Date()}
+            className="h-10"
+          />
         </div>
       </div>
 

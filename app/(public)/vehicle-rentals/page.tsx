@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { createPublicClient } from '@/lib/supabase/server';
 import { fetchSeoContext, buildMetadata } from '@/lib/seo/metadata';
-import { Users, Briefcase, Wind, Star } from 'lucide-react';
+import { Users, Briefcase, Wind, Car } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { SectionHeading } from '@/components/layout/section-heading';
@@ -127,55 +127,75 @@ function VehicleCard({ vehicle }: { vehicle: VehicleRow }) {
   return (
     <Link
       href={`/vehicle-rentals/${vehicle.slug}`}
-      className="group flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-brand transition-shadow duration-300 hover:shadow-lg"
+      className="group flex flex-col overflow-hidden rounded-[var(--radius-lg)] border border-border bg-white shadow-[var(--shadow-sm)] transition-all duration-[250ms] hover:-translate-y-1.5 hover:shadow-[var(--shadow-lg)]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      {/* Image */}
+      <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         {vehicle.cover_image ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={vehicle.cover_image}
             alt={vehicle.name}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.05]"
+            loading="lazy"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-gradient-to-br from-muted to-muted-foreground/10">
-            <span className="text-4xl">🚗</span>
+          <div className="flex h-full items-center justify-center bg-gradient-to-br from-muted to-neutral-200">
+            <Car className="h-14 w-14 text-muted-foreground/30" />
           </div>
         )}
-        {vehicle.is_featured && (
-          <div className="absolute left-3 top-3">
-            <Badge className="bg-primary text-primary-foreground">
-              <Star className="mr-1 h-3 w-3" /> Featured
-            </Badge>
-          </div>
+        {vehicle.badge_text && (
+          <span className="absolute left-3 top-3 rounded-full bg-secondary px-2.5 py-1 text-[11px] font-semibold text-white shadow-sm">
+            {vehicle.badge_text}
+          </span>
+        )}
+        {vehicle.is_featured && !vehicle.badge_text && (
+          <span className="absolute left-3 top-3 rounded-full bg-primary px-2.5 py-1 text-[11px] font-semibold text-primary-foreground shadow-sm">
+            Featured
+          </span>
         )}
       </div>
+
+      {/* Content */}
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-primary transition-colors">{vehicle.name}</h3>
-        <div className="mt-3 flex flex-wrap gap-3">
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Users className="h-4 w-4" /> {vehicle.seats} Seats
-          </div>
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Briefcase className="h-4 w-4" /> {vehicle.luggage_capacity} Bags
-          </div>
+        <h3 className="font-heading text-lg font-semibold text-foreground transition-colors group-hover:text-primary">
+          {vehicle.name}
+        </h3>
+
+        {/* Feature badges */}
+        <div className="mt-3 flex flex-wrap gap-2">
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+            <Users className="h-3 w-3" /> {vehicle.seats} Seats
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+            <Briefcase className="h-3 w-3" /> {vehicle.luggage_capacity} Bags
+          </span>
           {vehicle.is_ac && (
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <Wind className="h-4 w-4" /> AC
-            </div>
+            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              <Wind className="h-3 w-3" /> AC
+            </span>
+          )}
+          {vehicle.fuel_type && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              {vehicle.fuel_type}
+            </span>
           )}
         </div>
-        {vehicle.starting_price && (
-          <div className="mt-4 flex items-end justify-between">
+
+        {/* Price + CTA */}
+        <div className="mt-auto flex items-end justify-between pt-5">
+          {vehicle.starting_price ? (
             <div>
-              <span className="text-xs text-muted-foreground">Starting from</span>
-              <p className="font-heading text-xl font-bold text-primary">
+              <span className="block text-[11px] text-muted-foreground">Starting from</span>
+              <p className="font-heading text-2xl font-bold text-primary">
                 ₹{vehicle.starting_price.toLocaleString('en-IN')}
               </p>
             </div>
-            <span className="rounded-lg bg-primary/10 px-3 py-1 text-xs font-medium text-primary">View Details</span>
-          </div>
-        )}
+          ) : <div />}
+          <span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1.5 text-[12px] font-semibold text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+            View Details
+          </span>
+        </div>
       </div>
     </Link>
   );

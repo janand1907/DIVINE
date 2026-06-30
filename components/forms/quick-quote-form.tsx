@@ -8,7 +8,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Loader2, CheckCircle2 } from 'lucide-react';
+import { DatePicker } from '@/components/ui/date-picker';
+import { Loader as Loader2, CircleCheck as CheckCircle2 } from 'lucide-react';
+import { format } from 'date-fns';
 
 interface QuickQuoteFormProps {
   destinationPreset?: string;
@@ -26,6 +28,7 @@ export function QuickQuoteForm({ destinationPreset, packageId, packageSlug, comp
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [travelDate, setTravelDate] = useState<Date | undefined>();
 
   const form = useForm<LeadInput>({
     resolver: zodResolver(leadSchema),
@@ -52,7 +55,7 @@ export function QuickQuoteForm({ destinationPreset, packageId, packageSlug, comp
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, source: 'quick-quote' }),
+        body: JSON.stringify({ ...values, source: 'quick-quote', travel_date: travelDate ? format(travelDate, 'yyyy-MM-dd') : '' }),
       });
       if (!res.ok) {
         const data = await res.json().catch(() => null);
@@ -130,8 +133,14 @@ export function QuickQuoteForm({ destinationPreset, packageId, packageSlug, comp
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="space-y-1.5">
-          <Label htmlFor="qq-date">Travel Date</Label>
-          <Input id="qq-date" type="date" {...form.register('travel_date')} />
+          <Label>Travel Date</Label>
+          <DatePicker
+            value={travelDate}
+            onChange={setTravelDate}
+            placeholder="Pick a date"
+            fromDate={new Date()}
+            className="h-10"
+          />
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="qq-adults">Adults</Label>

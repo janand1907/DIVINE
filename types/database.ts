@@ -633,6 +633,48 @@ export interface AdminInviteRow {
   created_at: string;
 }
 
+// ── Popular Taxi Routes ───────────────────────────────────────
+export interface PopularRouteCategoryRow {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  display_order: number;
+  is_visible: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PopularRouteRow {
+  id: string;
+  category_id: string;
+  label: string;
+  url: string;
+  display_order: number;
+  created_at: string;
+}
+
+export interface PopularRouteCategoryWithRoutes extends PopularRouteCategoryRow {
+  popular_routes: PopularRouteRow[];
+}
+
+// ── Tariff ────────────────────────────────────────────────────
+export interface TariffEntryRow {
+  id: string;
+  vehicle: string;
+  seats: number | null;
+  price_4h_40km: number | null;
+  price_8h_80km: number | null;
+  extra_per_km: number | null;
+  extra_per_hour: number | null;
+  outstation_price: number | null;
+  driver_bata: number | null;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 // ── Database type map ────────────────────────────────────────
 export interface Database {
   public: {
@@ -668,6 +710,9 @@ export interface Database {
       enquiry_form_configs: { Row: EnquiryFormConfigRow; Insert: Partial<EnquiryFormConfigRow>; Update: Partial<EnquiryFormConfigRow> };
       hotel_cities: { Row: HotelCityRow; Insert: Partial<HotelCityRow>; Update: Partial<HotelCityRow> };
       admin_invites: { Row: AdminInviteRow; Insert: Partial<AdminInviteRow>; Update: Partial<AdminInviteRow> };
+      popular_route_categories: { Row: PopularRouteCategoryRow; Insert: Partial<PopularRouteCategoryRow>; Update: Partial<PopularRouteCategoryRow> };
+      popular_routes: { Row: PopularRouteRow; Insert: Partial<PopularRouteRow>; Update: Partial<PopularRouteRow> };
+      tariff_entries: { Row: TariffEntryRow; Insert: Partial<TariffEntryRow>; Update: Partial<TariffEntryRow> };
     };
   };
 }

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { signOut } from '@/lib/admin/auth-client';
-import { LayoutDashboard, Users, UserCog, Package, FileText, Star, Image as ImageIcon, Palette, Chrome as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut, Navigation, FileCode, Car, PlaneTakeoff, Hotel, ClipboardList, Images, CircleHelp as HelpCircle } from 'lucide-react';
+import { LayoutDashboard, Users, UserCog, Package, FileText, Star, Image as ImageIcon, Palette, Chrome as HomeIcon, Settings, Globe, MapPin, Tags, ScrollText, LogOut, Navigation, FileCode, Car, PlaneTakeoff, Hotel, ClipboardList, Images, CircleHelp as HelpCircle, Route, TableProperties } from 'lucide-react';
 
 const navGroups = [
   {
@@ -32,6 +32,8 @@ const navGroups = [
       { href: '/admin/vehicles', label: 'Vehicle Rentals', icon: Car },
       { href: '/admin/airport-routes', label: 'Airport Transfers', icon: PlaneTakeoff },
       { href: '/admin/hotel-cities', label: 'Hotel Cities', icon: Hotel },
+      { href: '/admin/popular-routes', label: 'Popular Routes', icon: Route },
+      { href: '/admin/tariff', label: 'Tariff Table', icon: TableProperties },
     ],
   },
   {
