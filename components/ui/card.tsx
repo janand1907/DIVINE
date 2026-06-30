@@ -9,13 +9,35 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'rounded-lg border bg-card text-card-foreground shadow-sm',
+      'bg-white overflow-hidden text-card-foreground',
+      'border border-border',
+      'rounded-[var(--radius-lg)]',
+      'shadow-[var(--shadow-sm)]',
+      'transition-[transform,box-shadow] duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)]',
+      'hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]',
       className
     )}
     {...props}
   />
 ));
 Card.displayName = 'Card';
+
+const CardImage = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, children, ...props }, ref) => (
+  <div
+    ref={ref}
+    data-card-image=""
+    className={cn('overflow-hidden', className)}
+    {...props}
+  >
+    <div className="transition-transform duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:scale-[1.04] [.card-brand:hover_&]:scale-[1.04]">
+      {children}
+    </div>
+  </div>
+));
+CardImage.displayName = 'CardImage';
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -30,13 +52,13 @@ const CardHeader = React.forwardRef<
 CardHeader.displayName = 'CardHeader';
 
 const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
+  HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
   <h3
     ref={ref}
     className={cn(
-      'text-2xl font-semibold leading-none tracking-tight',
+      'font-heading font-semibold tracking-tight leading-heading',
       className
     )}
     {...props}
@@ -50,7 +72,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-sm text-muted-foreground leading-body', className)}
     {...props}
   />
 ));
@@ -78,6 +100,7 @@ CardFooter.displayName = 'CardFooter';
 
 export {
   Card,
+  CardImage,
   CardHeader,
   CardFooter,
   CardTitle,
